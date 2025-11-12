@@ -1,0 +1,73 @@
+/* Date Show */
+main#bodyCalendarFirst {
+    /* color: #555555; */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    align-items: center;
+    /* height: 610px; */
+    /* background: linear-gradient(to bottom, #FFF8E7, #FFF8E7, #FFF8E7, #ffffff); */
+    /* background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff); */
+}
+
+main#bodyCalendarFirst article#moodRecordInfoWrapper {
+    display: flex;
+    width: 100%;
+    /* height: 510px; */
+    justify-content: center;
+    /* border: 1px solid; */
+}
+
+main#bodyCalendarFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    /* border: 2px solid; */
+    border-radius: 20px;
+    /* background-color: #ffffff; */
+}
+
+main#bodyCalendarFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper div {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 0;
+    width: 100%;
+    /* background-color: #BFE5C8; */
+    border-radius: 20px 20px 0 0;
+}
+
+/* Calendar Design */
+
+main#mainCalendarFirst {
+    display: flex;
+    justify-content: center;
+    padding: 0 0 50px 0;
+    background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
+    
+}
+
+main#mainCalendarFirst .customCalendar {
+  border-radius: 20px;
+  /* background-color: #fffaf0; */
+  width: 80%;
+}
+
+main#mainCalendarFirst .customCalendar .react-calendar__tile {
+    display: inline-block;
+    height: 50px;
+    border-radius: 20px;
+}
+
+main#mainCalendarFirst .customCalendar .react-calendar__tile:hover {
+    background: #e3ebf4;
+    width: 100px;
+}
+
+main#mainCalendarFirst .customCalendar .react-calendar__tile--now,
+main#mainCalendarFirst .customCalendar .react-calendar__tile--now:hover
+ {
+  background: #a7c7e7;
+  color: white;
+}

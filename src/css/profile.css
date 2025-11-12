@@ -1,0 +1,110 @@
+main#mainProfileFirst {
+    padding: 70px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 70px;
+}
+
+main#mainProfileFirst div.profileWrapper {
+    width: 60%;
+    margin: 0 auto;
+    /* background-color: #eff3ff; */
+    border-radius: 20px;
+}
+
+main#mainProfileFirst div.profileWrapper h2 {
+    padding: 15px;
+    background-color: #d1ddff;
+    border-radius: 30px 30px 0 0;
+    text-align: center;
+}
+
+main#mainProfileFirst div.profileWrapper div#profileContentWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+    padding: 40px 30px;
+    border: 3px solid #d6e0ff;
+    border-radius: 0 0 30px 30px;
+}
+
+main#mainProfileFirst div.profileWrapper div#profileContentWrapper div#profileImg {
+    width: 100px;
+    height: 100px;
+    border: 3px solid #d1d9ef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 55%;
+}
+
+main#mainProfileFirst div.profileWrapper div#profileContentWrapper section#personalInfoWrapper {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+
+}
+
+main#mainProfileFirst div.profileWrapper:nth-of-type(1) div#profileContentWrapper section#personalInfoWrapper aside {
+    flex: 0 0 48%;
+    border: 2px solid #e8eeff;
+    border-radius: 10px;
+    padding: 5px 20px;
+}
+
+main#mainProfileFirst div.profileWrapper:nth-of-type(2) div#profileContentWrapper section#personalInfoWrapper {
+    justify-content: center;
+}
+
+main#mainProfileFirst div.profileWrapper:nth-of-type(2) div#profileContentWrapper section#personalInfoWrapper button {
+    padding: 15px 70px;
+    border-radius: 15px;
+    /* background: linear-gradient(145deg, #ffb5b5, rgb(255, 206, 174), #faffb5, #abffc8, #bbdfff, #d6d5ff, #f1d6ff); */
+    background: linear-gradient(145deg,#abffc8, #efbbff, #ffe6d5, #f1d6ff);
+    /* background-color: #b2e7f9; */
+    border: 0px;
+    background-size: 150%;
+    transition: background-position 0.5s ease;
+    /* color: #555555; */
+    font-size: 2.3vh;
+    font-weight: bold;
+    font-family: "Itim";
+    font-size: 2.6vh;
+    transition: 0.3s ease;
+    /* display: none; */
+}
+
+main#mainProfileFirst div.profileWrapper:nth-of-type(2) div#profileContentWrapper section#personalInfoWrapper button:hover {
+    transform: scale(1.05);
+}
+
+main#mainProfileFirst div.profileWrapper:nth-of-type(2) div#profileContentWrapper section#personalInfoWrapper form {
+    opacity: 0;
+    display: none;
+    transition: none; /* Let GSAP handle transitions */
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+main#mainProfileFirst div.profileWrapper:nth-of-type(2) div#profileContentWrapper section#personalInfoWrapper form aside {
+    flex: 0 0 45%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+main#mainProfileFirst div.profileWrapper:nth-of-type(2) div#profileContentWrapper section#personalInfoWrapper form aside input[type="password"] {
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid #d1d9ef;
+}
+
+main#mainProfileFirst div.profileWrapper:nth-of-type(2) div#profileContentWrapper section#personalInfoWrapper form aside input[type="password"]:focus {
+    outline: none;
+    border: 1px solid #d1d9ef;
+}
+

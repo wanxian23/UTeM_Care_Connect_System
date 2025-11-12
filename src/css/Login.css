@@ -1,0 +1,48 @@
+main#bodyLoginFirst {
+    padding: 150px 0 100px 0;
+    background: linear-gradient(to bottom, #FFF8E7, #FFF8E7, #ffffff);
+    font-size: 2.5vh;
+}
+
+div#LoginFirst {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap:30px;
+    background-color: white;
+    width: 30%;
+    height: 300px;
+    margin: 0 auto;
+    border-radius: 25px;
+    box-shadow: 1px 1px 10px gray;
+}
+
+div#LoginFirst form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 90%;
+    align-items: center;
+    /* border: 1px solid; */
+}
+
+div#LoginFirst form article {
+    width: 60%;
+}
+
+div#LoginFirst form article input[type="text"],
+div#LoginFirst form article .button {
+    padding: 5px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+div#LoginFirst form article .button {
+    width: 100px;
+}
+
+div#LoginFirst form article#buttonWrapper {
+    display: flex;
+    gap: 40px;
+}
