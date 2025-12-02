@@ -4,13 +4,24 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import {Header, Footer} from "./HeaderFooterB4Login";
+import MessageBox from "./Modal";
+import "./css/Modal.css";
 
 import './css/View2.css';
-import cutieIcon from './image/cutie.png';
+import tuahLogo from './image/tuahLogo.png';
 import counsellingUnitInfoImg from './image/cousellingUnitInfo.jpeg';
 import pppImg from './image/pppUTeM.jpg';
 
 function View() {
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        
+        if(token){
+            // Token exists → user already logged in → redirect to dashboard
+            window.location.href = "/Dashboard";
+        }
+    }, []);
+    
     return(
         <>
             <Header />
@@ -23,12 +34,59 @@ function View() {
 }
 
 function Body1() {
-    const navigate = useNavigate();
 
-    const buttonGoToMain = () => {
-        navigate("/Dashboard");
-    }
+    // For form handling and messageBox (Modal)
+    const [messagebox, setMessagebox] = useState({
+        show: false,
+        title: "",
+        message: "",
+        buttonValue: ""
+    });
 
+    // Modal button click handler → put this inside the component
+    const handleModalButton = () => {
+        setMessagebox({ ...messagebox, show: false }); // hide modal
+        if (localStorage.getItem("token")) {
+            window.location.href = "/Dashboard"; // redirect after login success
+        }
+    };
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+
+        const response = await fetch("http://localhost:8080/care_connect_system/backend/api/login.php", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if(result.success){
+            // Store token and user info
+            localStorage.setItem("token", result.token);
+            localStorage.setItem("userType", result.type);
+            localStorage.setItem("userId", result.userId);
+
+            setMessagebox({
+                show: true,
+                title: "Login Successful",
+                message: "Welcome back! Redirecting...",
+                buttonValue: "OK"
+            });
+        } else {
+            setMessagebox({
+                show: true,
+                title: "Login Failed",
+                message: result.message,
+                buttonValue: "Try Again"
+            });
+        }
+    };
+
+
+    // For GSAP
     // Add [] means that below is a boolean not an array
     const [isClicked, setIsClicked] = useState(false);
     const titleBoxRef = useRef();
@@ -101,18 +159,18 @@ function Body1() {
                     </article>
                     <article id="viewLoginForm" ref={formBoxRef}>
                         <h2>UTeM Account Login</h2>
-                        <form>
+                        <form onSubmit={handleLogin}>
                             <div>
                                 <label>Email</label><br></br>
-                                <input type="text"></input>
+                                <input type="text" name="email" placeholder="Enter Your University Email" required autoFocus="autofocus"></input>
                             </div>
                             <div>
                                 <label>Password</label><br></br>
-                                <input type="password"></input>
+                                <input type="password" name="password" placeholder="Enter Password" required></input>
                             </div>
                             <div>
                                 <input type="reset" value={"Clear"}></input>
-                                <input type="submit" value={"Login"} onClick={buttonGoToMain}></input>
+                                <input type="submit" value={"Login"}></input>
                             </div>
                             <div>
                                 <Link to="" className="forgetPassword">Forget Password</Link>
@@ -120,7 +178,7 @@ function Body1() {
                         </form>
                     </article>
                     <article>
-                        <img src={cutieIcon}></img>
+                        <img src={tuahLogo}></img>
                     </article>                    
                 </div>
                 <div id='downWrapper'>
@@ -133,6 +191,13 @@ function Body1() {
                     </svg>
                 </div>
             </main>   
+            <MessageBox 
+                show={messagebox.show}
+                title={messagebox.title}
+                message={messagebox.message}
+                buttonValue={messagebox.buttonValue}
+                onClose={handleModalButton}
+            />
         </>
     );
 }

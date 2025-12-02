@@ -114,7 +114,7 @@ main#first div#upWrapper article:nth-of-type(1) p {
 main#first div#upWrapper article:nth-of-type(1) div button {
     padding: 15px 80px;
     border-radius: 15px;
-    background: linear-gradient(145deg, #ffb5b5, rgb(255, 206, 174), #faffb5, #abffc8, #bbdfff, #d6d5ff, #f1d6ff);
+    background: linear-gradient(145deg, #ffb5b5, #ffd6a4, #faffb5, #abffc8, #bbdfff, #d6d5ff, #f1d6ff);
     /* background-color: #b2e7f9; */
     border: 0px;
     background-size: 150%;
@@ -133,12 +133,13 @@ main#first div#upWrapper article:nth-of-type(1) div button:hover {
 }
 
 main#first div#upWrapper article:nth-of-type(3) {
-    width: 22%;
+    width: 25%;
     justify-content: right;
 }
 
 main#first div#upWrapper article:nth-of-type(3) img {
     transition: 0.3s;
+    width: 100%;
 }
 
 main#first div#upWrapper article:nth-of-type(3) img:hover {

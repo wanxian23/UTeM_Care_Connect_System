@@ -177,7 +177,6 @@ main#MainSecond textarea {
     /* background-color: #eff7ff; */
     background-color: white;
     box-shadow: 3px 3px 3px #d4d9ff;
-    line-height: 25px;
 }
 
 main#MainSecond textarea:focus {
@@ -216,17 +215,6 @@ main#MainThird section#wholeEntriesWrapper {
   gap: 50px; /* optional spacing between items */
 }
 
-.hiddenCheckbox {
-    display: none;
-}
-
-.entriesSelectionArea {
-    padding: 20px 40px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: 0.25s ease;
-}
-
 main#MainThird section#wholeEntriesWrapper > div {
     display: flex;
     flex-direction: column;
@@ -235,47 +223,45 @@ main#MainThird section#wholeEntriesWrapper > div {
     box-sizing: border-box;
     /* border: 2px solid #adbfe0; */
     background-color: #f1eaff;
-    /* padding: 30px 15px; */
+    padding: 30px 15px;
     border-radius: 20px;
     transition: 0.1s ease;
 }
 
-main#MainThird section#wholeEntriesWrapper > div div.iconContainer {
+main#MainThird section#wholeEntriesWrapper > div div {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     gap: 20px;
     flex-wrap: wrap; /* allows new rows */
 }
 
-main#MainThird section#wholeEntriesWrapper > div div.iconContainer div.iconItem {
+main#MainThird section#wholeEntriesWrapper > div div label {
     flex: 0 1 calc(20% ); /* ✅ 5 per row (100% ÷ 5 = 20%) minus gap */
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
 }
 
-main#MainThird  span.iconLabel {
+main#MainThird span.iconLabel {
     background: #BFE5C8;
     padding: 5px 10px;
     border-radius: 20px;
     /* opacity: 0; */
+    text-align: center;
     height: 55px;
     display: flex;
     align-items: center;
     /* margin: 20px 0 5px 0; */
 }
 
-.entriesSelectionArea:hover {
-    border: 4px solid #d4bfff;  
+main#MainThird section#wholeEntriesWrapper div.entriesSelectionArea:hover {
+    border: 4px solid #d4bfff;
 }
 
-.entriesSelectionArea.selected {
-    background-color: #653eb4;
-    border: 4px solid #9e6dff;
-    box-shadow: 1px 1px 12px #4f279e;
+main#MainThird section#wholeEntriesWrapper div input[type="checkbox"] {
+    display: none;
+}
+
+main#MainThird section#wholeEntriesWrapper div input[type="checkbox"]:checked + 
+main#MainThird section#wholeEntriesWrapper div.entriesSelectionArea {
+    border: 3px solid black;
 }
 
 /* For normal entries select */
@@ -293,9 +279,9 @@ main#MainThird section#wholeEntriesWrapper > div div img {
     transition: 0.2s ease;
 }
 
-/* main#MainThird section#wholeEntriesWrapper > div div img:hover {
+main#MainThird section#wholeEntriesWrapper > div div img:hover {
     transform: scale(1.1);
-} */
+}
 
 main#MainThird section#wholeEntriesWrapper > div:nth-of-type(7) {
     flex: 0 0 70%; 
@@ -445,18 +431,4 @@ main.MainMoodFourth article.stressRecordDialogBox {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.finishRecorded {
-    padding: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.finishRecorded p {
-    padding: 10px 40px;
-    background-color: #fff0db;
-    border-radius: 20px;
-    box-shadow: 1px 1px 10px 10px #fff0db;
 }

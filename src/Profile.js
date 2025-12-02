@@ -4,20 +4,66 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import {Header, Footer} from "./HeaderFooter";
+import MessageBox from "./Modal";
 
 import "./css/profile.css";
 
 function Profile() {
+
+    const [profileData, setProfileData] = useState(null);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if(!token){
+            // No token, redirect to login
+            window.location.href = "/";
+            return;
+        }
+
+        fetch("http://localhost:8080/care_connect_system/backend/api/getProfile.php", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
+            
+            if(data.success){
+                setProfileData({
+                    userId: data.userId,
+                    matricNo: data.matricNo,
+                    name: data.name,
+                    email: data.email,
+                    contact: data.contact,
+                    course: data.course,
+                    memberSince: data.memberSince,
+                    faculty: data.faculty,
+                    yearOfStudy: data.yearOfStudy,
+                    section: data.section,
+                    group: data.group
+                });
+            } else {
+                // Token invalid → clear storage & redirect
+                localStorage.clear();
+                window.location.href = "/";
+            }
+        })
+        .catch(err => console.error(err));
+    }, []);
+
     return(
         <>
             <Header />
-            <Body1 />
+            <Body1 data={profileData}/>
             <Footer />
         </>
     );
 }
 
-function Body1() {
+function Body1({data}) {
     // Add [] means that below is a boolean not an array
     const [isClicked, setIsClicked] = useState(false);
     const formBoxRef = useRef();
@@ -49,6 +95,86 @@ function Body1() {
         });
     };
 
+
+    // Password Matching Checking
+    const [password, setPassword] = useState(null);
+    const [rePassword, setRePassword] = useState(null);
+
+    // For form handling and messageBox (Modal)
+    const [messagebox, setMessagebox] = useState({
+        show: false,
+        title: "",
+        message: "",
+        buttonValue: "",
+        redirect: true
+    });
+
+    // Modal button click handler → put this inside the component
+    const handleModalButton = () => {
+        const shouldRedirect = messagebox.redirect; // Capture current value first
+        setMessagebox({ ...messagebox, show: false }); // hide modal
+        if (shouldRedirect) {
+            window.location.href = "/Profile";
+        }
+    };
+
+    const token = localStorage.getItem("token");
+
+
+    const handleChangePassword = async (e) => {
+        e.preventDefault();
+
+        if (password !== rePassword) {
+             setMessagebox({
+                show: true,
+                title: "Password Matching Error",
+                message: "Password and Re-Enter Password Must Be The Same!",
+                buttonValue: "OK",
+                redirect: false
+            });    
+
+            return;
+        } else {
+
+            const formData = new FormData(e.target);
+
+            const response = await fetch("http://localhost:8080/care_connect_system/backend/api/changePassword.php", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            const result = await response.json();
+
+            if(result.success){
+                setMessagebox({
+                    show: true,
+                    title: "Password Changed Successful",
+                    message: result.message,
+                    buttonValue: "OK",
+                    redirect: true
+                });
+            } else {
+                setMessagebox({
+                    show: true,
+                    title: "Password Changed Failed",
+                    message: result.message,
+                    buttonValue: "Try Again",
+                    redirect: false
+                });
+            }
+
+        }
+    };
+
+    if (!data) return (
+        <main id="mainProfileFirst">
+            <p>Loading...</p>
+        </main>
+    );
+
     return(
         <>
             <main id="mainProfileFirst">
@@ -59,27 +185,35 @@ function Body1() {
                         <section id="personalInfoWrapper">
                             <aside>
                                 <label>Name:</label>
-                                <p>XXX</p>
+                                <p>{data.name}</p>
                             </aside>
-                        <aside>
+                            <aside>
+                                <label>Email:</label>
+                                <p>{data.email}</p>
+                            </aside>
+                            <aside>
+                                <label>Contact:</label>
+                                <p>{data.contact}</p>
+                            </aside>
+                            <aside>
+                                <label>Course:</label>
+                                <p>{data.course}</p>
+                            </aside>
+                            <aside>
                                 <label>Faculty:</label>
-                                <p>XXX</p>
+                                <p>{data.faculty}</p>
                             </aside>
-                        <aside>
+                            <aside>
                                 <label>Section & Group:</label>
-                                <p>XXX</p>
+                                <p>{data.section} {data.group}</p>
                             </aside>
-                        <aside>
-                                <label>Member Since:</label>
-                                <p>XXX</p>
+                            <aside>
+                                <label>Year Of Study:</label>
+                                <p>{data.yearOfStudy}</p>
                             </aside>
                             <aside>
                                 <label>Member Since:</label>
-                                <p>XXX</p>
-                            </aside>
-                            <aside>
-                                <label>Member Since:</label>
-                                <p>XXX</p>
+                                <p>{data.memberSince}</p>
                             </aside>
                         </section>
                     </div>
@@ -92,14 +226,14 @@ function Body1() {
                             <aside>
                                 <button onClick={changePassword} ref={buttonRef} id="changePassBt">Change Your Password</button>
                             </aside>
-                            <form ref={formBoxRef}>
+                            <form ref={formBoxRef} onSubmit={handleChangePassword}>
                                 <aside>
                                     <label>New Password:</label>
-                                    <input type="password" placeholder="New Password"></input>
+                                    <input type="password" placeholder="New Password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} required></input>
                                 </aside>
                                 <aside>
                                     <label>Type Again Password:</label>
-                                    <input type="password" placeholder="Type Again New Password"></input>
+                                    <input type="password" placeholder="Type Again New Password" name="rePass" value={rePassword} onChange={(e) => setRePassword(e.target.value)} required></input>
                                 </aside>
                                 <aside>
                                     <button>Save</button>
@@ -108,6 +242,13 @@ function Body1() {
                         </section>
                     </div>
                 </div>
+                <MessageBox 
+                    show={messagebox.show}
+                    title={messagebox.title}
+                    message={messagebox.message}
+                    buttonValue={messagebox.buttonValue}
+                    onClose={handleModalButton}
+                />
             </main>
         </>
     );

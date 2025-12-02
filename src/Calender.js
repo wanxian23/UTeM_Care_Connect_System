@@ -3,17 +3,53 @@ import { gsap } from "gsap";
 import { useNavigate } from "react-router-dom";
 import {Header, Footer} from "./HeaderFooter";
 import { NavLink } from "react-router-dom";
+import MessageBox from "./Modal";
+
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
 import "./css/calendar.css";
 
+
 function Calender() {
+
+    const [calendarData, setCalendarData] = useState(null);
+
+     useEffect(() => {
+         const token = localStorage.getItem("token");
+ 
+         if(!token){
+             // No token, redirect to login
+             window.location.href = "/";
+             return;
+         }
+ 
+         fetch("http://localhost:8080/care_connect_system/backend/api/getCalendar.php", {
+             method: "GET",
+             headers: {
+                 "Authorization": "Bearer " + token
+             }
+         })
+         .then(res => res.json())
+         .then(data => {
+             console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
+             
+             if(data.success){
+                 setCalendarData(data);
+             } else {
+                 // Token invalid → clear storage & redirect
+                 localStorage.clear();
+                 window.location.href = "/";
+             }
+         })
+         .catch(err => console.error(err));
+     }, []);
+
     return(
         <>
             <Header />
             <DateShow />
-            <CalendarDesign />
+            <CalendarDesign data={calendarData} />
             <Footer />
         </>
     );
@@ -76,20 +112,51 @@ function DateShow() {
     );
 }
 
-function CalendarDesign() {
-    const [value, setValue] = useState(new Date());
+function CalendarDesign({ data }) {
 
-    return(
-        <>
+    if (!data || !data.dayRecord) {
+        return (
             <main id="mainCalendarFirst">
-                <Calendar
-                onChange={setValue}
-                value={value}
-                className="customCalendar"
-                />
+                Loading....
             </main>
-        </>
+        );
+    }
+
+    // Convert dayRecord object keys to array of date strings
+    const selectedDates = Object.keys(data.dayRecord);
+
+    return (
+        <main id="mainCalendarFirst">
+            <Calendar
+                className="customCalendar"
+                tileContent={({ date, view }) => {
+                    if (view !== "month") return null;
+
+                    // Format current tile date as YYYY-MM-DD
+                    const dateString = date.toISOString().split('T')[0];
+                    
+                    // Check if this date is in our selected dates
+                    const isSelected = selectedDates.includes(dateString);
+
+                    return isSelected ? (
+                        <>
+                            <div className="titleContent">
+                                <img 
+                                    src={data.moodStoreLocation[dateString]} 
+                                    alt={data.moodStatus[dateString]}
+                                />
+                                <h4>{data.moodStatus[dateString]}</h4>
+                            </div>
+                            <div className="titleContent">
+                                <h4>Mood Record: {1}</h4>
+                            </div>
+                        </>
+                    ) : null;
+                }}
+            />
+        </main>
     );
 }
+
 
 export default Calender;

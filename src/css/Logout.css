@@ -1,0 +1,24 @@
+
+main.logoutBodyWrapper {
+    padding: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
+
+}
+
+main.logoutBodyWrapper button {
+    width: 150px;
+    padding: 10px;
+    border-radius: 15px;
+    border: 0;
+    background: linear-gradient(145deg,#abffc8, #bbdfff, #d6d5ff, #f1d6ff);
+    transition: 0.2s ease;
+}
+
+main.logoutBodyWrapper button:hover {
+    font-weight: bold;
+    transform: scale(1.1);
+}

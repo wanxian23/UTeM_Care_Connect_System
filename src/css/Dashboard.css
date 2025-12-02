@@ -1,43 +1,133 @@
 main#bodyDashboardFirst {
     /* color: #555555; */
-    padding: 50px;
+    padding: 30px 50px;
     display: flex;
     flex-direction: column;
     justify-content:space-between;
     align-items: center;
-    height: 610px;
+    height: 680px;
     /* background: linear-gradient(to bottom, #FFF8E7, #FFF8E7, #FFF8E7, #ffffff); */
     background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
+    gap: 20px;
 }
 
 main#bodyDashboardFirst article#moodRecordInfoWrapper {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     /* height: 510px; */
     justify-content: center;
     /* border: 1px solid; */
+    gap: 20px;
 }
 
 main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80%;
-    /* border: 2px solid; */
-    border-radius: 20px;
-    /* background-color: #ffffff; */
-    gap: 50px;
-    padding-bottom: 50px;
-}
-
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper div {
-    display: flex;
     justify-content: space-around;
-    border-bottom: 2px solid #c2bfe5;
+    /* border-bottom: 2px solid #c2bfe5; */
     padding: 20px 0;
-    width: 100%;
+    width: 80%;
     /* background-color: #BFE5C8; */
     border-radius: 20px 20px 0 0;
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper h2 {
+    text-align: center;
+    /* color: #555555; */
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper h2 label {
+    padding: 5px 20px;
+    background-color: #f2c89f;
+    border-radius: 20px;
+    /* color: black; */
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper:nth-of-type(2) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper div.quoteFeedbackWrapper {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5vh;
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper div.quoteFeedbackWrapper button {
+    background: none;
+    padding: 0 10px;
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper div.quoteFeedbackWrapper svg {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper div.quoteFeedbackWrapper svg:hover {
+    transform: scale(1.05);
+    opacity: 1;
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper:last-child section {
+    width: 100%;
+    /* border-top:  2px solid #c2bfe5; */
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper:last-child section.first:first-child {
+    border-right: 2px solid #c2bfe5;
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper:first-child {
+    border-bottom: 2px solid #c2bfe5;
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper section > h3 {
+    padding: 5px 20px;
+    background-color: #d6d5ff;
+    border-radius: 25px;
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper section div.moodResultWrapper {
+    /* border: 1px solid; */
+    display: flex;
+    /* flex-direction: column; */
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+    gap: 20px;
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper section div.moodResultWrapper img {
+    height: 140px;
+    width: 140px;
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper section div.moodResultWrapper div.stressIcon {
+    width: 90px;
+    height: 90px;
+    /* border: 1px solid; */
+    border-radius: 50%;
+    margin: 28px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper section {
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
 }
 
 main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper button {
@@ -70,9 +160,9 @@ main#bodyDashboardFirst article#moodRecordInfoWrapper img {
     transition: 0.3s ease;
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper img:hover {
+/* main#bodyDashboardFirst article#moodRecordInfoWrapper img:hover {
     transform: scale(1.05);
-}
+} */
 
 main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardTeacherDialogWrapper {
     display: flex;
@@ -110,4 +200,49 @@ main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardTeacherDialog
 
 main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardTeacherDialogWrapper button:hover {
     background-position: center;
+}
+
+/* MoodCount Function */
+main.moodCountDashboardWrapper {
+    width: 100%;
+    text-align: center;
+    padding: 100px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    background-color: white;
+}
+
+main.moodCountDashboardWrapper article.emojiWrapper {
+    display: flex;
+    justify-content: space-around;
+    width: 90%;
+}
+
+main.moodCountDashboardWrapper article.emojiWrapper div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+main.moodCountDashboardWrapper article.emojiWrapper div h3 {
+    padding: 10px 20px;
+    background-color: #9cc1ef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main.moodCountDashboardWrapper img {
+    width: 150px;
+    height: 130px;
+    transition: 0.3s;
+}
+
+main.moodCountDashboardWrapper img:hover {
+    transform: scale(1.1, 1.1);
 }

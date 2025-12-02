@@ -1,0 +1,142 @@
+main.bodyMoodRecordViewFirst {
+    /* color: #555555; */
+    padding: 80px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    align-items: center;
+    /* background: linear-gradient(to bottom, #FFF8E7, #FFF8E7, #FFF8E7, #ffffff); */
+    background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 80px;
+    width: 70%;
+    /* height: 510px; */
+    justify-content: center;
+    border: 2px solid #fff4ce;
+    border-radius: 40px;
+    box-shadow: 1px 1px 10px #d0beda;
+    background-color: #fff;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper {
+    display: flex;
+    padding: 30px 0;
+    align-items: center;
+    justify-content: space-around;
+    border-bottom: 2px solid #c2bfe5;
+    width: 100%;
+    /* background-color: #BFE5C8; */
+    border-radius: 20px 20px 0 0;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper svg {
+    cursor: pointer;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:first-child {
+    justify-content: space-between;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:last-child {
+    border-bottom: 0;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper section {
+    /* border: 1px solid; */
+    padding: 20px 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:nth-of-type(2) section:first-child {
+    border-right: 2px solid #c2bfe5;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper section div.moodResultWrapper {
+    /* border: 1px solid; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    transition: 0.2s ease;
+    gap: 20px;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:nth-last-child(2) section div.moodResultWrapper {
+    flex-direction: row;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper section > h3 {
+    padding: 8px 30px;
+    background-color: #cfccea;
+    text-align: center;
+    border-radius: 20px;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper section div.moodResultWrapper:hover {
+    transform: scale(1.05);
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:nth-last-child(2) section div.moodResultWrapper:hover, 
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:last-child section div.moodResultWrapper:hover {
+    transform: scale(1);
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper section div.moodResultWrapper img {
+    width: 140px;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper section div.moodResultWrapper h3.entryLabel {
+    padding: 10px 20px;
+    background-color: #aadaff;
+    border-radius: 20px;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:nth-last-child(2) section div.moodResultWrapper div.entriesIconWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+    flex-wrap: nowrap;
+    padding: 25px 0 0 0;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:nth-last-child(2) section div.moodResultWrapper div.entriesIconWrapper:hover {
+    transform: scale(1.05);
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:nth-last-child(2) section div.moodResultWrapper img {
+    width: 25%;
+    margin: 25px 0;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper section div.moodResultWrapper div.stressIcon {
+    width: 90px;
+    height: 90px;
+    /* border: 1px solid; */
+    border-radius: 50%;
+    margin: 28px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper section div.moodResultWrapper p {
+    padding: 20px 0 0 0;
+    word-wrap: break-word;
+    text-align: justify;
+    word-spacing: 10px;
+    border-spacing: 10px;
+    line-height: 30px;
+    /* text-indent: 50px; */
+    /* width: 100%; */
+}

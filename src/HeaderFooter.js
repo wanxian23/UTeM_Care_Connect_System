@@ -34,7 +34,7 @@ export function Header() {
                     <Link to='/MoodRecord' >Mood Record</Link>
                     <Link to='/Calender' >Calender</Link>
                     <Link to='/Statistic' >Statistic</Link>
-                    <Link to='/' >Logout</Link>
+                    <Link to='/Logout' >Logout</Link>
                     {/* <a href='' id='signup'>Signup</a> */}
                 </nav>
                 <aside>

@@ -1,7 +1,7 @@
 /* Date Show */
 main#bodyCalendarFirst {
     /* color: #555555; */
-    padding: 20px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content:space-between;
@@ -43,31 +43,142 @@ main#bodyCalendarFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrappe
 main#mainCalendarFirst {
     display: flex;
     justify-content: center;
-    padding: 0 0 50px 0;
+    padding: 0 0 100px 0;
     background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
-    
 }
 
 main#mainCalendarFirst .customCalendar {
-  border-radius: 20px;
-  /* background-color: #fffaf0; */
-  width: 80%;
+    border: none;
+    box-shadow: 1px 1px 10px #567fbd;
+    border-radius: 30px;
+    background-color: #ffffff;
+    width: 80%;
+    font-size: 3.3vh;
+    font-family: "Itim", sans-serif;
 }
 
+/* Whole title/navigation bar */
+.customCalendar .react-calendar__navigation {
+    background-color: #afb9e9;
+    border-radius: 30px 30px 0 0;
+    height:80px;
+    box-shadow: 1px 1px 5px #515d97;
+    margin: 0;
+    z-index: 1;
+    position: relative;
+}
+
+/* Title text (e.g., December 2025) */
+.customCalendar .react-calendar__navigation__label {
+    font-weight: bold;
+    font-family: "Itim", sans-serif;
+}
+
+/* Arrow buttons (Include Title Month) */
+.customCalendar .react-calendar__navigation button {
+    color: rgb(50, 54, 155);
+    transition: 0.3s ease;
+    font-size: 3.5vh;
+}
+
+.customCalendar .react-calendar__navigation button:hover {
+    background-color: #c3cdff;
+}
+
+.customCalendar .react-calendar__navigation button:focus {
+    background-color: #afb9e9;
+}
+
+.customCalendar .react-calendar__navigation button:first-child {
+    border-radius: 30px 0 0 0;
+}
+
+.customCalendar .react-calendar__navigation button:last-child {
+    border-radius: 0 30px 0 0;
+}
+
+/* Customize Day (Exp: MON, TUE) */
+.customCalendar .react-calendar__month-view__weekdays {
+    background-color: #d7ddfc;
+    z-index: -1;
+    padding: 10px 0;
+    /* margin-bottom: 20px; */
+}
+
+.customCalendar .react-calendar__month-view__weekdays__weekday {
+    padding: 10px 0;
+    font-weight: bold;
+    color: #567fbd;
+    text-transform: uppercase;
+}
+
+.customCalendar .react-calendar__month-view__weekdays__weekday abbr {
+    text-decoration: none;
+}
+
+/* Customize each day (Exp, 1, 2, 11, 15) */
 main#mainCalendarFirst .customCalendar .react-calendar__tile {
-    display: inline-block;
-    height: 50px;
-    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 180px;
+    /* border-radius: 20px; */
+    border: 1px solid #d8e8ff;
+    gap: 15px;
+    transition: 0.2s ease;
+}
+
+main#mainCalendarFirst .customCalendar .react-calendar__tile:nth-of-type(29) {
+    border-radius: 0 0 0 30px;
+}
+
+main#mainCalendarFirst .customCalendar .react-calendar__tile:last-child {
+    border-radius: 0 0 30px 0;
 }
 
 main#mainCalendarFirst .customCalendar .react-calendar__tile:hover {
-    background: #e3ebf4;
+    background-color: #f7f1ff;
     width: 100px;
+}
+
+main#mainCalendarFirst .customCalendar .react-calendar__tile--active,
+main#mainCalendarFirst .customCalendar .react-calendar__tile--active:hover {
+    background-color: #936fcd;
 }
 
 main#mainCalendarFirst .customCalendar .react-calendar__tile--now,
 main#mainCalendarFirst .customCalendar .react-calendar__tile--now:hover
  {
-  background: #a7c7e7;
-  color: white;
+  background-color: #cbb7eb;
+  color: black;
+}
+
+/* Customize for extra */
+/* Like the last day of december is wed, but there got thu, fri, sat, and sun for 1,2,3,4 for jan */
+main#mainCalendarFirst .customCalendar .react-calendar__month-view__days__day--neighboringMonth,
+main#mainCalendarFirst .customCalendar .react-calendar__month-view__days__day--neighboringMonth:hover {
+    background-color: #e6f4ff;
+    color: #b2b2b2;
+}
+
+/* Content inside each tile (Inside each day) */
+main#mainCalendarFirst .customCalendar div.titleContent {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+main#mainCalendarFirst .customCalendar div.titleContent img {
+    width: 50px;
+}
+
+main#mainCalendarFirst .customCalendar div.titleContent h4 {
+    padding: 5px 10px;
+    background-color: rgb(255, 235, 220);
+    border-radius: 20px;
+    color: black;
+}
+
+main#mainCalendarFirst .customCalendar div.titleContent:nth-of-type(2) h4 {
+    background-color: rgb(194, 247, 215);
 }
