@@ -16,6 +16,13 @@ body {
     user-select: none;
 }
 
+button, input[type="submit"], input[type="reset"] {
+    cursor: pointer;
+    font-family: "Itim", sans-serif;
+    font-weight: bold;
+    font-size: 2.6vh;
+}
+
 #headerMargin {
     height:80px;
 }
@@ -102,6 +109,7 @@ header aside svg{
 header section#profileWrapper {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 20px;
     /* background-color: #ffe6ad; */
     padding: 20px;
@@ -109,6 +117,120 @@ header section#profileWrapper {
     color: #555555;
 }
 
+/* Controlling Notification Box */
+header section#profileWrapper div.notificationWrapper {
+    position:relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* border: 1px solid; */
+}
+
+header section#profileWrapper svg {
+    width: 70%;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper {
+    position:absolute;
+    top: 100%;
+    right: 0;
+    padding: 20px 20px 30px 20px;
+    /* border: 1px solid; */
+    border-radius: 20px;
+    width: 500px;
+    background-color: #ffd9ce;
+    max-height: 450px;
+    display: none;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiTitle {
+    display: flex;
+    /* justify-content: space-between; */
+    justify-content: center;
+    align-items: center;
+    padding: 10px 10px 20px 10px;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiTitle h5 {
+    display: flex;
+    align-items: center;
+    transition: 0.3s ease;
+    cursor: pointer;
+    color: #5e7feb;
+    /* border: 1px solid; */
+    height: 30px;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiTitle h5:hover {
+    color: #90a8f5;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiTitle h5 svg {
+    width: 15%;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiTitle h5 svg:hover {
+    transform: scale(1);
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiContent {
+    position: relative;
+    border-radius: 20px;
+    /* border: 1px solid; */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 85%;
+    overflow-y:auto;
+    padding: 0 20px 0 0;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiContent section {
+    padding: 10px 20px;
+    border-radius: 15px;
+    /* border: 1px solid; */
+    font-size: 2.5vh;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: 0.2s ease;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiContent section.UNREAD {
+    background-color: #fef3f0;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiContent section.UNREAD:hover {
+    background-color: #fff9f9;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiContent section.UNREAD:active {
+    background-color: #e4ad9f;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiContent section.READ {
+    background-color: #ffe9e3ff;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiContent section p {
+    text-align: justify;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiContent section h4 {
+    display: flex;
+    justify-content: space-between;
+}
+
+header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiContent section h4 p {
+    font-size: 1.8vh;
+    opacity: 0.7;
+}
+
+/* Controlling Profile */
 header section#profileWrapper .link {
     text-decoration: none;
     color: #555555;
@@ -122,6 +244,7 @@ header section#profileWrapper .link {
     transition: 0.3s ease;
 }
 
+header section#profileWrapper svg:hover,
 header section#profileWrapper .link:hover {
     transform: scale(1.1);
 }

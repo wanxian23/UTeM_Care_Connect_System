@@ -95,7 +95,7 @@ main#first div#upWrapper article {
 }
 
 main#first div#upWrapper article:nth-of-type(1) {
-    width: 40%;
+    width: 45%;
     flex-direction: column;
     gap: 30px;
     text-align: justify;
@@ -139,7 +139,7 @@ main#first div#upWrapper article:nth-of-type(3) {
 
 main#first div#upWrapper article:nth-of-type(3) img {
     transition: 0.3s;
-    width: 100%;
+    width: 112%;
 }
 
 main#first div#upWrapper article:nth-of-type(3) img:hover {

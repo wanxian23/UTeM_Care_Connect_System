@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import {Header, Footer} from "./HeaderFooter";
-import {SubHeader} from "./MoodRecord";
-import { Link } from "react-router-dom";
 
 import "./css/MoodRecordView.css";
 import MessageBox from "./Modal";
@@ -15,11 +14,14 @@ function MoodRecordEntries() {
     const [stressLevel, setStressLevel] = useState("");
     const [stressColor, setStressColor] = useState("");
 
+    // Get the date from calendar.js
+    const { selectedDate } = useParams();
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         if(!token){ window.location.href = "/"; return; }
 
-        fetch("http://localhost:8080/care_connect_system/backend/api/getMoodRecordView.php", {
+        fetch(`http://localhost:8080/care_connect_system/backend/api/getCalendarMoodRecordView.php?selectedDate=${selectedDate}`, {
             method: "GET",
             headers: { "Authorization": "Bearer " + token }
         })
@@ -68,7 +70,6 @@ function MoodRecordEntries() {
     return (
         <>
             <Header />
-            <SubHeader />
             <Body1 
                 data={currentRecord} 
                 stressLevel={stressLevel} 
@@ -77,6 +78,7 @@ function MoodRecordEntries() {
                 onPrev={goPrev}
                 disablePrev={currentIndex === 0}
                 disableNext={currentIndex === moodRecords.length - 1}
+                date={selectedDate}
                 currentRecord={currentRecord}
             />
             <Footer />
@@ -85,8 +87,8 @@ function MoodRecordEntries() {
 }
 
 
-function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, disablePrev, currentRecord}) {
-    
+function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, disablePrev, date, currentRecord}) {
+
     const navigate = useNavigate();
 
     // For form handling and messageBox (Modal)
@@ -109,38 +111,72 @@ function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, dis
         onCancel: null
     });
 
+    // For messageBox
+    const handleModalButton = () => {
+        const shouldRedirect = messagebox.redirect; // Capture current value first
+        setMessagebox({ ...messagebox, show: false }); // hide modal
+        if (shouldRedirect) {
+            window.location.href = `/CalendarMoodRecordView/${date}`;
+        }
+    };
+
     // Showing today date
     const today = new Date();
-
+    // en-GB format the order of the date (Follow day, month, and year)
     const formattedDateToday = today.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+    });
+
+    // Since date is pass from calendar.js
+    // It is a string during pass
+    // So you gonna convert to date format first before make conversion
+    const realDate = new Date(date);
+
+    const formattedDate = realDate.toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "long",
         year: "numeric",
     }); 
 
-    const weekDay = today.toLocaleDateString("en-GB", {
+    const weekDay = realDate.toLocaleDateString("en-GB", {
         weekday: "long"
     });
 
     // Showing realtime
-    const [time, setTime] = useState(new Date());
+    // const [time, setTime] = useState(new Date());
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-        setTime(new Date()); // update every second
-        }, 1000);
-
-        return () => clearInterval(timer); // cleanup when component unmounts
-    }, []);
-
-    const formattedTime = time.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-    });
+    // const formattedTime = date.toLocaleTimeString("en-US", {
+    //     hour: "2-digit",
+    //     minute: "2-digit",
+    // });
 
     // en-GB format the order of the date (Follow day, month, and year)
     // Suppose data.moodRecordTime = "2025-12-01 10:30:00"
     // Safe formatting for mood record date (Avoid null)
+    let formattedWeekdayBasedOnRecord = "No record";
+    if (data?.moodRecordTime) {
+        const moodDate = new Date(data.moodRecordTime);
+        if (!isNaN(moodDate)) {
+            formattedWeekdayBasedOnRecord = moodDate.toLocaleDateString("en-GB", {
+                weekday: "long"
+            });
+        }
+    }
+
+    let formattedDateBasedOnRecord = "No Record";
+    if (data?.moodRecordTime) {
+        const moodDate = new Date(data.moodRecordTime);
+        if (!isNaN(moodDate)) {
+            formattedDateBasedOnRecord = moodDate.toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+            });
+        }
+    }
+    
     let formattedTimeBasedOnRecord = "No record";
     if (data?.moodRecordTime) {
         const moodDate = new Date(data.moodRecordTime);
@@ -152,17 +188,8 @@ function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, dis
         }
     }
 
-    // For messageBox
-    const handleModalButton = () => {
-        const shouldRedirect = messagebox.redirect; // Capture current value first
-        setMessagebox({ ...messagebox, show: false }); // hide modal
-        if (shouldRedirect) {
-            window.location.href = "/MoodRecordView";
-        }
-    };
-
     const goToEditMoodRecord = (id) => {
-        navigate(`/EditMoodRecord/${id}/Today`);
+        navigate(`/EditMoodRecord/${id}/Calendar`);
     };
 
     const openDeleteModal = () => {
@@ -221,6 +248,7 @@ function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, dis
         });
     };
 
+    console.log("moodId: ", currentRecord?.moodId);
 
     // In JSX, return and ( must at the same line (Next line will get ignore)
     if (!data) return (
@@ -228,11 +256,15 @@ function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, dis
             <article className="moodRecordInfoWrapper">
                 <div className="moodRecordEachInfoWrapper">
                     <h2>{weekDay}</h2>
-                    <h2>{formattedDateToday}</h2>
-                    <h2>{formattedTime}</h2>
+                    <h2>{formattedDate}</h2>
+                    <h2>00:00 AM</h2>
                 </div>
                 <div className="moodRecordEachInfoWrapper">
-                    <p>You Haven't Record For Today Mood!</p>
+                    {formattedDate === formattedDateToday ?
+                        <p>You Haven't Record Any Mood For Today!</p>
+                    :
+                        <p>You Haven't Record Any Mood During {formattedDate}!</p>
+                    }
                 </div>
             </article>
         </main>
@@ -255,8 +287,8 @@ function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, dis
                             <path fillRule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
                         </svg>
 
-                        <h2>{weekDay}</h2>
-                        <h2>{formattedDateToday}</h2>
+                        <h2>{formattedWeekdayBasedOnRecord}</h2>
+                        <h2>{formattedDateBasedOnRecord}</h2>
                         <h2>{formattedTimeBasedOnRecord}</h2>
                         
                         <svg 

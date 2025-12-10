@@ -69,9 +69,6 @@ main#mainProfileFirst div.profileWrapper:nth-of-type(2) div#profileContentWrappe
     background-size: 150%;
     transition: background-position 0.5s ease;
     /* color: #555555; */
-    font-size: 2.3vh;
-    font-weight: bold;
-    font-family: "Itim";
     font-size: 2.6vh;
     transition: 0.3s ease;
     /* display: none; */
@@ -108,3 +105,27 @@ main#mainProfileFirst div.profileWrapper:nth-of-type(2) div#profileContentWrappe
     border: 1px solid #d1d9ef;
 }
 
+/* Control Logout */
+div.profileWrapper:last-child {
+    display: flex;
+    justify-content: center;
+}
+
+div.profileWrapper button {
+    padding: 15px 70px;
+    border-radius: 15px;
+    /* background: linear-gradient(145deg, #ffb5b5, rgb(255, 206, 174), #faffb5, #abffc8, #bbdfff, #d6d5ff, #f1d6ff); */
+    background: linear-gradient(145deg,#abffc8, #efbbff, #ffe6d5, #f1d6ff);
+    /* background-color: #b2e7f9; */
+    border: 0px;
+    background-size: 150%;
+    transition: background-position 0.5s ease;
+    /* color: #555555; */
+    font-size: 2.6vh;
+    transition: 0.3s ease;
+    /* display: none; */
+}
+
+div.profileWrapper button:hover {
+    transform: scale(1.05);
+}

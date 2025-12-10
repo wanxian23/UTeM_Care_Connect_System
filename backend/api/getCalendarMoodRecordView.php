@@ -9,13 +9,15 @@ require "authStudent.php";
 $user = validateToken($conn);
 $userId = $user['studentId'];
 
+$selectedDate = $_GET['selectedDate'];
+
 // Fetch ALL mood records for today
 $stmtMoodData = $conn->prepare("
     SELECT * FROM moodTracking 
-    WHERE studentId = ? AND DATE(datetimeRecord) = CURDATE()
+    WHERE studentId = ? AND DATE(datetimeRecord) = ?
     ORDER BY datetimeRecord ASC
 ");
-$stmtMoodData->bind_param("i", $userId);
+$stmtMoodData->bind_param("is", $userId, $selectedDate);
 $stmtMoodData->execute();
 $resultMoodData = $stmtMoodData->get_result();
 $allMoodRecords = $resultMoodData->fetch_all(MYSQLI_ASSOC);

@@ -1,0 +1,168 @@
+main.studentInfoContentMain {
+    padding: 50px 0 70px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
+}
+
+main.studentInfoContentMain div.profileWrapper {
+    width: 85%;
+    margin: 0 auto;
+    /* background-color: #eff3ff; */
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+main.studentInfoContentMain div.profileWrapper h2 {
+    padding: 15px;
+    background-color: #d1ddff;
+    border-radius: 30px 30px 0 0;
+    text-align: center;
+}
+
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+    padding: 40px 30px;
+    border: 3px solid #d6e0ff;
+    border-radius: 0 0 30px 30px;
+}
+
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper div.profileImg {
+    width: 100px;
+    height: 100px;
+    border: 3px solid #d1d9ef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 55%;
+}
+
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.personalInfoWrapper {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+}
+
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.personalInfoWrapper aside {
+    flex: 25%;
+    border: 2px solid #e8eeff;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.personalInfoWrapper aside p a {
+    text-decoration: none;
+    color: #446b92;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.personalInfoWrapper aside p a svg {
+    width: 4%;
+}
+
+/* Mood Today Part */
+main.studentInfoContentMain div.separateWrapper {
+    padding: 0;
+    display: flex;
+    width: 85%;
+    /* border: 1px solid; */
+    flex-direction: row;
+    gap: 50px;
+    text-align: center;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileContentWrapper {
+    border: 3px solid #BFE5C8;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper h2{
+    background-color: #BFE5C8;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileContentWrapper aside {
+    /* border: 2px solid #daf0de; */
+    border: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+    flex: 20%;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileContentWrapper aside label {
+    padding: 5px 20px;
+    background-color: #d1ddff;
+    border-radius: 20px;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileContentWrapper aside p {
+    margin-top: 10px;
+    text-align: center;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileContentWrapper aside img {
+    width: 55%;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper:last-child div.profileContentWrapper aside img {
+    width: 35%;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper:first-child {
+    flex: 7;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper:last-child {
+    flex: 3;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper:first-child aside:first-child,
+main.studentInfoContentMain div.separateWrapper div.profileWrapper:first-child aside:last-child {
+    width: 100%;
+    flex: 100%;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper:first-child aside:first-child {
+    border: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 10px;
+    align-items: center;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper:first-child aside:first-child svg {
+    cursor: pointer;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper:first-child aside:first-child svg.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper:last-child section.personalInfoWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileContentWrapper aside div.expandWrapper {
+    padding: 20px 0 0 0;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    align-items: center;
+    cursor: pointer;
+}

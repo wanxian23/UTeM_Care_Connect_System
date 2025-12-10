@@ -1,3 +1,4 @@
+
 main#bodyDashboardFirst {
     /* color: #555555; */
     padding: 30px 50px;
@@ -140,9 +141,6 @@ main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapp
     background-size: 150%;
     transition: background-position 0.5s ease;
     /* color: #555555; */
-    font-size: 2.3vh;
-    font-weight: bold;
-    font-family: "Itim";
     font-size: 2.6vh;
     transition: 0.3s ease;
 }
@@ -235,6 +233,11 @@ main.moodCountDashboardWrapper article.emojiWrapper div h3 {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+main.moodCountDashboardWrapper article.emojiWrapper div h3:first-child {
+    border-radius: 20px;
+    background-color: #9fe7c4;
 }
 
 main.moodCountDashboardWrapper img {

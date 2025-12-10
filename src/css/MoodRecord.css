@@ -2,6 +2,9 @@ body {
     background-color: #fffdf7;
 }
 
+button, input, label, textarea {
+    font-size: 2.6vh;
+}
 
 main#MoodRecordSubHeaderWrapper {
     display: flex;
@@ -17,7 +20,6 @@ main#MoodRecordSubHeaderWrapper {
     /* border: 1px solid; */
 } 
 
-
 main#MoodRecordSubHeaderWrapper .subButton {
     /* border: 3px solid; */
     /* background-color: #cddff1; */
@@ -30,16 +32,14 @@ main#MoodRecordSubHeaderWrapper .subButton {
     transition: 0.2s ease;
 }
 
-
-
 main#MoodRecordSubHeaderWrapper .selectedSubHeader {
     /* background-color: #cef8e6; */
     background-color: #c9d4ff;
     font-weight: bold;
 } 
 
-/* For form mood, stress, entries, & note record */
 
+/* For form mood, stress, entries, & note record */
 form#formFirst {
     display: flex;
     flex-direction: column;
@@ -75,7 +75,6 @@ form#formFirst div#buttonMoodRecordWrapper input[type='reset']:hover {
 }
 
 /* For Mood Record */
-
 /* Control each box */
 main#MainFirst, main#MainSecond, main#MainThird, main.MainMoodFourth {
     width: 97%;
@@ -165,6 +164,14 @@ main#MainSecond {
     width: 80%;
 }
 
+main#MainSecond div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 20px;
+}
+
 main#MainSecond textarea {
     width: 100%;
     height: 150px;
@@ -183,6 +190,19 @@ main#MainSecond textarea {
 main#MainSecond textarea:focus {
     outline: none;
     border: 1px solid #b6beff;
+}
+
+main#MainSecond div label {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    color: #fa5f5f;
+}
+
+main#MainSecond div label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
 }
 
 /* For Entry Record */

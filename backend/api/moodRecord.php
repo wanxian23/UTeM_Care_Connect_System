@@ -18,6 +18,7 @@ function runInBackground($url) {
 $mood = $_POST["mood"];
 $stress = $_POST['stress'];
 $note = $_POST['note'];
+$notePrivacy = isset($_POST['notePrivacy']) ? 1 : 0;
 $entries = isset($_POST['entries']) ? $_POST['entries'] : [];
 
 $user = validateToken($conn);
@@ -39,9 +40,9 @@ $resultCheckMoodDataMorning = $stmtCheckMoodDataMorning->get_result();
 // $moodDataMorning = $resultCheckMoodDataMorning->fetch_assoc();
 
 if ($resultCheckMoodDataMorning->num_rows < 2) {
-    $stmtRecordMood = $conn->prepare("INSERT INTO moodTracking(moodTypeId, stressLevel, note, studentId)
-                        VALUES(?, ?, ?, ?)");
-    $stmtRecordMood->bind_param("issi", $mood, $stress, $note, $studentId);
+    $stmtRecordMood = $conn->prepare("INSERT INTO moodTracking(moodTypeId, stressLevel, note, studentId, notePrivacy)
+                        VALUES(?, ?, ?, ?, ?)");
+    $stmtRecordMood->bind_param("issii", $mood, $stress, $note, $studentId, $notePrivacy);
     $stmtRecordMood->execute();
 
     // Get the newly inserted primary key (moodId)

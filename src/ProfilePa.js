@@ -3,7 +3,7 @@ import { gsap } from "gsap";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-import {Header, Footer} from "./HeaderFooter";
+import {HeaderPa, Footer} from "./HeaderFooter";
 import MessageBox from "./Modal";
 import ConfirmationModal from "./ConfirmationModal";
 
@@ -22,7 +22,7 @@ function Profile() {
             return;
         }
 
-        fetch("http://localhost:8080/care_connect_system/backend/api/getProfile.php", {
+        fetch("http://localhost:8080/care_connect_system/backend/api/getProfilePa.php", {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -33,19 +33,7 @@ function Profile() {
             console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
             
             if(data.success){
-                setProfileData({
-                    userId: data.userId,
-                    matricNo: data.matricNo,
-                    name: data.name,
-                    email: data.email,
-                    contact: data.contact,
-                    course: data.course,
-                    memberSince: data.memberSince,
-                    faculty: data.faculty,
-                    yearOfStudy: data.yearOfStudy,
-                    section: data.section,
-                    group: data.group
-                });
+                setProfileData(data);
             } else {
                 // Token invalid → clear storage & redirect
                 localStorage.clear();
@@ -57,7 +45,7 @@ function Profile() {
 
     return(
         <>
-            <Header />
+            <HeaderPa />
             <Body1 data={profileData}/>
             <Footer />
         </>
@@ -65,13 +53,13 @@ function Profile() {
 }
 
 function Body1({data}) {
-    
     // Add [] means that below is a boolean not an array
     const [isClicked, setIsClicked] = useState(false);
     const formBoxRef = useRef();
     const buttonRef = useRef();
 
     const [redirectLocation, setRedirectLocation] = useState("");
+
 
     const changePassword = () => {
         setIsClicked(true);
@@ -98,6 +86,7 @@ function Body1({data}) {
             },
         });
     };
+
 
     // Password Matching Checking
     const [password, setPassword] = useState(null);
@@ -156,6 +145,7 @@ function Body1({data}) {
 
     const token = localStorage.getItem("token");
 
+
     const handleChangePassword = async (e) => {
         e.preventDefault();
 
@@ -173,7 +163,7 @@ function Body1({data}) {
 
             const formData = new FormData(e.target);
 
-            const response = await fetch("http://localhost:8080/care_connect_system/backend/api/changePassword.php", {
+            const response = await fetch("http://localhost:8080/care_connect_system/backend/api/changePasswordPa.php", {
                 method: "POST",
                 body: formData,
                 headers: {
@@ -200,10 +190,9 @@ function Body1({data}) {
                     redirect: false
                 });
             }
-
         }
-
-        setRedirectLocation("/Profile");
+        
+        setRedirectLocation("/ProfilePa");
     };
 
     // Modal button click handler → put this inside the component
@@ -242,20 +231,16 @@ function Body1({data}) {
                                 <p>{data.contact}</p>
                             </aside>
                             <aside>
-                                <label>Course:</label>
-                                <p>{data.course}</p>
-                            </aside>
-                            <aside>
                                 <label>Faculty:</label>
                                 <p>{data.faculty}</p>
                             </aside>
                             <aside>
-                                <label>Section & Group:</label>
-                                <p>{data.section} {data.group}</p>
+                                <label>Office:</label>
+                                <p>{data.office}</p>
                             </aside>
                             <aside>
-                                <label>Year Of Study:</label>
-                                <p>{data.yearOfStudy}</p>
+                                <label>Role:</label>
+                                <p>{data.role}</p>
                             </aside>
                             <aside>
                                 <label>Member Since:</label>

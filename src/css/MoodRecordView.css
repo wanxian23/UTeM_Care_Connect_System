@@ -1,6 +1,6 @@
 main.bodyMoodRecordViewFirst {
     /* color: #555555; */
-    padding: 80px 0;
+    padding: 50px 0 80px 0;
     display: flex;
     flex-direction: column;
     justify-content:space-between;
@@ -9,6 +9,36 @@ main.bodyMoodRecordViewFirst {
     background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
 }
 
+/* Control action perform */
+main.bodyMoodRecordViewFirst div.actionWrapper {
+    /* border: 1px solid; */
+    display: flex;
+    justify-content: right;
+    gap: 30px;
+    width: 70%;
+    padding: 0 0 40px 0;
+}
+
+main.bodyMoodRecordViewFirst div.actionWrapper button {
+    padding: 10px;
+    width: 16%;
+    border-radius: 15px;
+    /* background: linear-gradient(145deg, #ffb5b5, rgb(255, 206, 174), #faffb5, #abffc8, #bbdfff, #d6d5ff, #f1d6ff); */
+    background: linear-gradient(145deg,#abffc8, #bbdfff, #d6d5ff, #f1d6ff);
+    /* background-color: #b2e7f9; */
+    border: 0px;
+    background-size: 150%;
+    transition: background-position 0.5s ease;
+    /* color: #555555; */
+    font-size: 2.6vh;
+    transition: 0.3s ease;
+}
+
+main.bodyMoodRecordViewFirst div.actionWrapper button:hover {
+    transform: scale(1.05);
+}
+
+/* Control data */
 main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper {
     display: flex;
     flex-direction: column;

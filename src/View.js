@@ -35,6 +35,8 @@ function View() {
 
 function Body1() {
 
+    const [navigateTo, setNavigateTo] = useState(null);
+
     // For form handling and messageBox (Modal)
     const [messagebox, setMessagebox] = useState({
         show: false,
@@ -47,7 +49,7 @@ function Body1() {
     const handleModalButton = () => {
         setMessagebox({ ...messagebox, show: false }); // hide modal
         if (localStorage.getItem("token")) {
-            window.location.href = "/Dashboard"; // redirect after login success
+            window.location.href = navigateTo; // redirect after login success
         }
     };
 
@@ -68,6 +70,12 @@ function Body1() {
             localStorage.setItem("token", result.token);
             localStorage.setItem("userType", result.type);
             localStorage.setItem("userId", result.userId);
+            
+            if (result.type == "staff") {
+                setNavigateTo("/DashboardPa");
+            } else {
+                setNavigateTo("/Dashboard");
+            }
 
             setMessagebox({
                 show: true,

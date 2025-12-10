@@ -1,6 +1,9 @@
+import React, { useState, useEffect, useRef } from "react";
+import { gsap } from "gsap";
 import './css/styleAfterLogin.css';
 import careConnectIcon from './image/careConnectIcon.png';
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import utemLogo from "./image/utemLogo.png";
 import ftmkLogo from "./image/ftmkLogo.png";
@@ -22,6 +25,118 @@ function HeaderMargin() {
 }
 
 export function Header() {
+    
+    const navigate = useNavigate();
+
+    const [studentData, setStudentData] = useState(null);
+    const [notificationData, setNotificationData] = useState(null);
+
+    const notificationRef = useRef(null); // Ref for the dropdown
+    const [showNoti, setShowNoti] = useState(false);
+    
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if(!token){
+            // No token, redirect to login
+            window.location.href = "/";
+            return;
+        }
+
+        fetch("http://localhost:8080/care_connect_system/backend/api/getStudentDetails.php", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
+            
+            if(data.success){
+                setStudentData(data);
+            } else {
+                // Token invalid → clear storage & redirect
+                localStorage.clear();
+                window.location.href = "/";
+            }
+        })
+        .catch(err => console.error(err));
+    }, []);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if(!token){
+            // No token, redirect to login
+            window.location.href = "/";
+            return;
+        }
+
+        fetch("http://localhost:8080/care_connect_system/backend/api/getNotification.php", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
+            
+            if(data.success){
+                setNotificationData(data);
+            } else {
+                // Token invalid → clear storage & redirect
+                localStorage.clear();
+                window.location.href = "/";
+            }
+        })
+        .catch(err => console.error(err));
+    }, []);
+
+    // Notification box toggle
+    const toggleNotification = () => {
+        if(!showNoti){
+            gsap.to(notificationRef.current, {duration: 0.3, opacity: 1, height: 'auto', display: 'block'});
+        } else {
+            gsap.to(notificationRef.current, {duration: 0.3, opacity: 0, height: 0, display: 'none'});
+        }
+        setShowNoti(!showNoti);
+    }
+
+    const handleNotificationClick = (notiId, index) => {
+        // Navigate to MoodRecord
+        navigate("/MoodRecord");
+
+            // Call the API to update the status
+        const token = localStorage.getItem("token");
+        fetch(`http://localhost:8080/care_connect_system/backend/api/updateNotificationStatus.php?notificationId=${notiId}`, {
+            method: "GET", // since your PHP expects GET
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Notification status updated:", data);
+
+            // Update local state immediately to reflect change
+            setNotificationData(prev => {
+                return {
+                    ...prev,
+                    notificationData: prev.notificationData.map(noti => {
+                        if(noti.notificationId === notiId){
+                            return {...noti, notiStatus: "READ"};
+                        }
+                        return noti;
+                    })
+                };
+            });
+        })
+        .catch(err => console.error(err));
+    }
+
+
     return(
         <>
             <header>
@@ -34,7 +149,6 @@ export function Header() {
                     <Link to='/MoodRecord' >Mood Record</Link>
                     <Link to='/Calender' >Calender</Link>
                     <Link to='/Statistic' >Statistic</Link>
-                    <Link to='/Logout' >Logout</Link>
                     {/* <a href='' id='signup'>Signup</a> */}
                 </nav>
                 <aside>
@@ -43,8 +157,244 @@ export function Header() {
                     </svg>
                 </aside>
                 <section id='profileWrapper'>
+                    <div className="notificationWrapper">
+                        <svg onClick={toggleNotification} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
+                        </svg>
+                        <div className="notificationContentWrapper" ref={notificationRef}>
+                            <div className="notiTitle">
+                                <h3>Notification</h3>
+                                {/* <h5>
+                                    View All Notification
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
+                                    </svg>
+                                </h5> */}
+                            </div>
+                            <div className="notiContent">
+                                {notificationData?.notificationData?.map((notiData, index) => (
+                                    <section 
+                                        key={index} 
+                                        onClick={() => {
+                                            handleNotificationClick(notiData.notificationId, index);
+                                        }}
+                                        className={notiData.notiStatus}
+                                        style={{
+                                            opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5
+                                        }}
+                                    >
+                                        <h4>{notiData.title}
+                                            <p>
+                                                {/* Get formated date (Exp: 22 DEC 09:22 AM) */}
+                                                {new Date(notiData.notiCreatedDateTime).toLocaleString('en-US', {
+                                                    day: '2-digit',
+                                                    month: 'short',  // "Dec"
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                    hour12: true     // 12-hour format with AM/PM
+                                                }).replace(',', ',')
+                                                .toUpperCase()} 
+                                            </p>
+                                        </h4>
+                                        <p>{notiData.description}</p>
+                                    </section>
+                                ))}
+                                <h4 style={{textAlign: "center", fontSize: "2vh"}}>-- Only this month’s notifications are shown --</h4>
+                            </div>
+                        </div>
+                    </div>
                     {/* <h3>xxx</h3> */}
-                    <Link to='/Profile' className='link'>X</Link>
+                    <Link to='/Profile' className='link'>
+                        {studentData?.studentData.studentName[0]}
+                    </Link>
+                </section>
+            </header>
+            <HeaderMargin />
+        </>
+    );
+}
+
+export function HeaderPa() {
+
+    const navigate = useNavigate();
+
+    const [PAData, setPAData] = useState(null);
+    const [notificationData, setNotificationData] = useState(null);
+
+    const notificationRef = useRef(null); // Ref for the dropdown
+    const [showNoti, setShowNoti] = useState(false);
+    
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if(!token){
+            // No token, redirect to login
+            window.location.href = "/";
+            return;
+        }
+
+        fetch("http://localhost:8080/care_connect_system/backend/api/getPADetails.php", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
+            
+            if(data.success){
+                setPAData(data);
+            } else {
+                // Token invalid → clear storage & redirect
+                localStorage.clear();
+                window.location.href = "/";
+            }
+        })
+        .catch(err => console.error(err));
+    }, []);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if(!token){
+            // No token, redirect to login
+            window.location.href = "/";
+            return;
+        }
+
+        fetch("http://localhost:8080/care_connect_system/backend/api/getNotificationPa.php", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
+            
+            if(data.success){
+                setNotificationData(data);
+            } else {
+                // Token invalid → clear storage & redirect
+                localStorage.clear();
+                window.location.href = "/";
+            }
+        })
+        .catch(err => console.error(err));
+    }, []);
+    
+    // Notification box toggle
+    const toggleNotification = () => {
+        if(!showNoti){
+            gsap.to(notificationRef.current, {duration: 0.3, opacity: 1, height: 'auto', display: 'block'});
+        } else {
+            gsap.to(notificationRef.current, {duration: 0.3, opacity: 0, height: 0, display: 'none'});
+        }
+        setShowNoti(!showNoti);
+    }
+
+    const handleNotificationClick = (notiId, index) => {
+        // Navigate to MoodRecord
+        navigate("/MoodRecord");
+
+            // Call the API to update the status
+        const token = localStorage.getItem("token");
+        fetch(`http://localhost:8080/care_connect_system/backend/api/updateNotificationStatus.php?notificationId=${notiId}`, {
+            method: "GET", // since your PHP expects GET
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Notification status updated:", data);
+
+            // Update local state immediately to reflect change
+            setNotificationData(prev => {
+                return {
+                    ...prev,
+                    notificationData: prev.notificationData.map(noti => {
+                        if(noti.notificationId === notiId){
+                            return {...noti, notiStatus: "READ"};
+                        }
+                        return noti;
+                    })
+                };
+            });
+        })
+        .catch(err => console.error(err));
+    }
+
+    return(
+        <>
+            <header>
+                <a href='/DashboardPa' id='logo'>
+                    <img src={careConnectIcon} alt='Logo'></img>
+                    <label>UTeM CareConnect</label>
+                </a>
+                <nav>
+                    <Link to='/DashboardPa' >Dashboard</Link>
+                    <Link to='/StudentTableData' >Table Data</Link>
+                    <Link to='/StatisticPa' >Statistic</Link>
+                    {/* <a href='' id='signup'>Signup</a> */}
+                </nav>
+                <aside>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                    </svg>
+                </aside>
+                <section id='profileWrapper' >
+                    <div className="notificationWrapper">
+                        <svg onClick={toggleNotification} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
+                        </svg>
+                        <div className="notificationContentWrapper" ref={notificationRef}>
+                            <div className="notiTitle">
+                                <h3>Notification</h3>
+                                {/* <h5>
+                                    View All Notification
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
+                                    </svg>
+                                </h5> */}
+                            </div>
+                            <div className="notiContent">
+                                {notificationData?.notificationData?.map((notiData, index) => (
+                                    <section 
+                                        key={index} 
+                                        className={notiData.notiStatus}
+                                        onClick={() => {
+                                            handleNotificationClick(notiData.notificationId, index);
+                                        }}
+                                        style={{
+                                            opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5
+                                        }}
+                                    >
+                                        <h4>{notiData.title}
+                                            <p>
+                                                {/* Get formated date (Exp: 22 DEC 09:22 AM) */}
+                                                {new Date(notiData.notiCreatedDateTime).toLocaleString('en-US', {
+                                                    day: '2-digit',
+                                                    month: 'short',  // "Dec"
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                    hour12: true     // 12-hour format with AM/PM
+                                                }).replace(',', ',')
+                                                .toUpperCase()} 
+                                            </p>
+                                        </h4>
+                                        <p>{notiData.description}</p>
+                                    </section>
+                                ))}
+                                <h4 style={{textAlign: "center", fontSize: "2vh"}}>-- Only this month’s notifications are shown --</h4>
+                            </div>
+                        </div>
+                    </div>
+                    {/* <h3>xxx</h3> */}
+                    <Link to='/ProfilePa' className='link'>
+                        {PAData?.PAData.staffName[0]}
+                    </Link>
                 </section>
             </header>
             <HeaderMargin />

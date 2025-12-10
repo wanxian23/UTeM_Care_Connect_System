@@ -1,0 +1,224 @@
+main.StudentInfoMain {
+    padding: 60px 40px;
+    background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
+}
+
+button,
+input {
+    font-family: "Itim", sans-serif;
+    font-size: 2.2vh;
+}
+
+/* main.StudentInfoMain button {
+    padding: 12px 25px;
+    background: #4285f4;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+} */
+
+main.StudentInfoMain nav div {
+    display: inline-block;
+    padding: 0;
+}
+
+main.StudentInfoMain nav div:last-child {
+    /* Self Customization The Shape of Element */
+    /* clip-path: polygon(
+        0% 0%,   top-left indent
+        80% 0%,   top-right indent
+        100% 100%,bottom-right full width
+        0% 100%   bottom-left full width
+    ); */
+}
+
+main.StudentInfoMain nav div button {
+    background-color: #ddf3e2;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    width: 180px;
+}
+
+main.StudentInfoMain nav div button:hover {
+    background-color: #d2edd8;
+}
+
+main.StudentInfoMain nav div:first-child button {
+    border-radius: 20px 0 0 0;
+}
+
+main.StudentInfoMain nav div:last-child button {
+    border-radius: 0 20px 0 0;
+}
+
+main.StudentInfoMain nav div button.activeBtn {
+    background-color: #BFE5C8;
+    font-weight: bold;
+}
+
+/* Search Bar */
+main.StudentInfoMain section.searchbarWrapper {
+    background-color: #BFE5C8;
+    border-radius: 0 20px 0 0;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+main.StudentInfoMain section.searchbarWrapper form {
+    display: flex;
+    gap: 30px;
+    width: 60%;
+}
+
+main.StudentInfoMain section.searchbarWrapper form input[type="text"] {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    width: 350px;
+}
+
+main.StudentInfoMain section.searchbarWrapper div {
+    width: 30%;
+    display: flex;
+    justify-content: right;
+    gap: 20px;
+}
+
+main.StudentInfoMain section.searchbarWrapper form input[type="submit"],
+main.StudentInfoMain section.searchbarWrapper div button,
+td button {
+    padding: 0px 20px;
+    border-radius: 20px;
+    border: 0;
+    background-color: #a3c3ab;
+    transition: 0.2s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+main.StudentInfoMain section.searchbarWrapper div button.inactive:hover {
+    background-color: #a3c3ab;
+}
+
+main.StudentInfoMain section.searchbarWrapper div button.inactive {
+    cursor: not-allowed;
+}
+
+main.StudentInfoMain section.searchbarWrapper form input[type="submit"]:hover,
+main.StudentInfoMain section.searchbarWrapper div button:hover {
+    background-color: #d6f4dd;
+}
+
+/* Table */
+main.StudentInfoMain table {
+    border-spacing: 0px;
+    width: 100%;
+}
+
+main.StudentInfoMain table th,
+main.StudentInfoMain table td 
+{
+    padding: 20px 20px;
+    /* border-width: 1px;
+    border-style: solid; */
+    background-color: #e4fae9;
+    /* border-right: 2px solid #7aad86; */
+    /* border-bottom: 2px solid #7aad86; */
+    text-align: center;
+    border-bottom: 2px solid #BFE5C8;
+}
+
+main.StudentInfoMain table th {
+    background-color: #BFE5C8;
+}
+
+main.StudentInfoMain table input[type="checkbox"] {
+    transform: scale(1.2);
+}
+
+main.StudentInfoMain table.gotRecordWrapper tbody tr:last-child td:first-child {
+    border-radius: 0 0 0 20px;
+}
+
+main.StudentInfoMain table.gotRecordWrapper tbody tr:last-child td:last-child {
+    border-radius: 0 0 20px 0;
+}
+
+main.StudentInfoMain table.gotRecordWrapper th:nth-of-type(3),
+main.StudentInfoMain table.gotRecordWrapper td:nth-of-type(3),
+main.StudentInfoMain table.gotRecordWrapper th:nth-of-type(4),
+main.StudentInfoMain table.gotRecordWrapper td:nth-of-type(4)
+{
+    width: 200px;
+}
+
+main.StudentInfoMain table.gotRecordWrapper th:last-child,
+main.StudentInfoMain table.gotRecordWrapper td:last-child {
+    border-right: none;
+} 
+
+main.StudentInfoMain table td div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+main.StudentInfoMain table td img {
+    width:52%;
+}
+
+main.StudentInfoMain table td label {
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+main.StudentInfoMain table td:nth-of-type(5) div {
+    padding-top: 22px;
+    gap: 5px;
+}
+
+main.StudentInfoMain table td:nth-of-type(5) div label:first-child {
+    height: 55px;
+    width: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main.StudentInfoMain table td:nth-of-type(5) div label:last-child {
+    border-radius: 20px;
+}
+
+main.StudentInfoMain table td:last-child div {
+    gap: 15px;
+}
+
+main.StudentInfoMain table td div button {
+   padding: 5px 10px;
+   background-color: #b9d8c1;
+}
+
+main.StudentInfoMain table td div button svg {
+    width: 13%;
+    height: 15px;
+}
+
+main.StudentInfoMain table td div button:hover {
+    background-color: #d1ead7;
+}
+
+/* No Record */
+table.noRecordWrapper tbody tr td {
+    border-radius:  0 0 20px 20px;
+    padding: 20px 0;
+}

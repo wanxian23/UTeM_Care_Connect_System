@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import "./css/Logout.css";
-import {Header, Footer} from "./HeaderFooter";
+import {HeaderPa, Footer} from "./HeaderFooter";
 import MessageBox from "./Modal";
 
 function Logout() {
     
     return(
         <>
-            <Header />
+            <HeaderPa />
             <LogoutConfirmation />
             <Footer />
         </>
@@ -62,5 +62,4 @@ function LogoutConfirmation() {
         </>
     );
 }
-
 export default Logout;

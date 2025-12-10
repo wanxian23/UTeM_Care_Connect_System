@@ -16,6 +16,13 @@ body {
     user-select: none;
 }
 
+button, input[type="submit"], input[type="reset"] {
+    cursor: pointer;
+    font-family: "Itim", sans-serif;
+    font-weight: bold;
+    font-size: 2.6vh;
+}
+
 #headerMargin {
     height:80px;
 }

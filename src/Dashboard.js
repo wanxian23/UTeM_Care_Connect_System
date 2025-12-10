@@ -145,43 +145,43 @@ function Body1({data, stressLevel, stressColor, quoteTitle}) {
         }
     };
 
-        // Use to button clicked (Act as form)
-        // Handler function that sends feedback directly
-        const submitFeedback = async (feedbackValue) => {
-            const formData = new FormData();
-            formData.append("thumbUp", feedbackValue); // PHP will receive this
+    // Use to button clicked (Act as form)
+    // Handler function that sends feedback directly
+    const submitFeedback = async (feedbackValue) => {
+        const formData = new FormData();
+        formData.append("thumbUp", feedbackValue); // PHP will receive this
 
-            const response = await fetch(
-                "http://localhost:8080/care_connect_system/backend/api/quoteFeedbackRecord.php",
-                {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        "Authorization": "Bearer " + token
-                    }
+        const response = await fetch(
+            "http://localhost:8080/care_connect_system/backend/api/quoteFeedbackRecord.php",
+            {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "Authorization": "Bearer " + token
                 }
-            );
-
-            const result = await response.json();
-
-            if (result.success) {
-                setMessagebox({
-                    show: true,
-                    title: "Thank you for your feedback!",
-                    message: result.message,
-                    buttonValue: "OK",
-                    redirect: true
-                });
-            } else {
-                setMessagebox({
-                    show: true,
-                    title: "Failed To Record Feedback!",
-                    message: "Failed To Record Your Feedback. Please Try Again!",
-                    buttonValue: "Try Again",
-                    redirect: false
-                });
             }
-        };
+        );
+
+        const result = await response.json();
+
+        if (result.success) {
+            setMessagebox({
+                show: true,
+                title: "Thank you for your feedback!",
+                message: result.message,
+                buttonValue: "OK",
+                redirect: true
+            });
+        } else {
+            setMessagebox({
+                show: true,
+                title: "Failed To Record Feedback!",
+                message: "Failed To Record Your Feedback. Please Try Again!",
+                buttonValue: "Try Again",
+                redirect: false
+            });
+        }
+    };
 
     if (!data || !data.hasRecord) return (
         <main id="bodyDashboardFirst">
@@ -304,8 +304,6 @@ function Body1({data, stressLevel, stressColor, quoteTitle}) {
 }
 
 function MoodCount({data}) {
-    const [hoverText, setHoverText] = useState("Try hover an emoji to see what it's feeling ;)");
-    const textRef = useRef(null);
 
     const items = [
         { 
@@ -379,6 +377,7 @@ function MoodCount({data}) {
                 <article className='emojiWrapper'>
                     {items.map((emoji, index) => (
                         <div key={emoji.id}>
+                            <h3>{emoji.label}</h3>
                             <img 
                                 src={emoji.img}
                                 alt={emoji.label}
@@ -391,4 +390,5 @@ function MoodCount({data}) {
         </>
     );
 }
+
 export default Dashboard;

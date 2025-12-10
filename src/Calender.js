@@ -50,6 +50,7 @@ function Calender() {
             <Header />
             <DateShow />
             <CalendarDesign data={calendarData} />
+            <MoodCount data={calendarData}/>
             <Footer />
         </>
     );
@@ -114,7 +115,9 @@ function DateShow() {
 
 function CalendarDesign({ data }) {
 
-    if (!data || !data.dayRecord) {
+    const navigate = useNavigate();
+
+    if (!data || !data.dailyMood) {
         return (
             <main id="mainCalendarFirst">
                 Loading....
@@ -122,41 +125,142 @@ function CalendarDesign({ data }) {
         );
     }
 
-    // Convert dayRecord object keys to array of date strings
-    const selectedDates = Object.keys(data.dayRecord);
+    const dailyDates = Object.keys(data.dailyMood);
 
     return (
         <main id="mainCalendarFirst">
             <Calendar
                 className="customCalendar"
+
+                // ✅ Handle date click
+                onClickDay={(value) => {
+                    const clickedDate = value.getFullYear() + '-' +
+                                        String(value.getMonth() + 1).padStart(2, '0') + '-' +
+                                        String(value.getDate()).padStart(2, '0');
+
+                    navigate(`/CalendarMoodRecordView/${clickedDate}`);
+                }}
+
                 tileContent={({ date, view }) => {
                     if (view !== "month") return null;
 
-                    // Format current tile date as YYYY-MM-DD
-                    const dateString = date.toISOString().split('T')[0];
-                    
-                    // Check if this date is in our selected dates
-                    const isSelected = selectedDates.includes(dateString);
+                    const dateString = date.getFullYear() + '-' +
+                                       String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                                       String(date.getDate()).padStart(2, '0');
 
-                    return isSelected ? (
+                    if (!dailyDates.includes(dateString)) return null;
+
+                    const moodInfo = data.dailyMood[dateString];
+
+                    return (
                         <>
                             <div className="titleContent">
                                 <img 
-                                    src={data.moodStoreLocation[dateString]} 
-                                    alt={data.moodStatus[dateString]}
+                                    src={moodInfo.moodStoreLocation} 
+                                    alt={moodInfo.moodStatus}
                                 />
-                                <h4>{data.moodStatus[dateString]}</h4>
+                                <h4>{moodInfo.moodStatus}</h4>
                             </div>
                             <div className="titleContent">
-                                <h4>Mood Record: {1}</h4>
+                                <h4>Mood Record: {moodInfo.totalRecords}</h4>
                             </div>
                         </>
-                    ) : null;
+                    );
                 }}
             />
         </main>
     );
 }
+
+
+function MoodCount({data}) {
+
+    const items = [
+        { 
+            id: 1, 
+            label: "Excited", 
+            message: "You seem really excited today! Something awesome must've happened!", 
+            img: "/EmotionCuteEmoji/4.png"
+        },
+        { 
+            id: 2, 
+            label: "Happy", 
+            message: "You look really happy today! Keep spreading those positive vibes!", 
+            img: "/EmotionCuteEmoji/1.png"
+        },
+        { 
+            id: 3, 
+            label: "Neutral", 
+            message: "Feeling neutral today? That's completely okay — not every day has to be emotional.", 
+            img: "/EmotionCuteEmoji/10.png"
+        },
+        { 
+            id: 4, 
+            label: "Sad", 
+            message: "Feeling a bit sad today? It's okay — tough moments don't last, and you're not alone.", 
+            img: "/EmotionCuteEmoji/11.png"
+        },
+        { 
+            id: 5, 
+            label: "Crying", 
+            message: "Aww… feeling overwhelmed? It's okay to cry — you're doing your best, and that's enough.", 
+            img: "/EmotionCuteEmoji/7.png"
+        },
+        { 
+            id: 6, 
+            label: "Angry", 
+            message: "You seem a bit angry… it's alright. Take a deep breath — you've got this.", 
+            img: "/EmotionCuteEmoji/6.png"
+        },
+        { 
+            id: 7, 
+            label: "Anxious", 
+            message: "Feeling anxious today? It's okay — take things one step at a time. You're stronger than you think.", 
+            img: "/EmotionCuteEmoji/12.png"
+        },
+        { 
+            id: 8, 
+            label: "Annoying", 
+            message: "Something's annoying you, huh? It's okay — sometimes small things can really get to us.", 
+            img: "/EmotionCuteEmoji/13.png"
+        }
+    ];
+
+    // Check if data exists
+    if (!data || !data.monthlyMoodCount) {
+        return(
+            <>
+                <main className="moodCountDashboardWrapper">
+                    <h1>Monthly Mood Count</h1>
+                    <article className='emojiWrapper'>
+                        Loading...
+                    </article>
+                </main>
+            </>
+        );
+    }
+
+    return(
+        <>
+            <main className="moodCountDashboardWrapper">
+                <h1>Monthly Mood Count</h1>
+                <article className='emojiWrapper'>
+                    {items.map((emoji, index) => (
+                        <div key={emoji.id}>
+                            <h3>{emoji.label}</h3>
+                            <img 
+                                src={emoji.img}
+                                alt={emoji.label}
+                            />
+                            <h3>{data.monthlyMoodCount[index] || 0}</h3>
+                        </div>
+                    ))}
+                </article>
+            </main>
+        </>
+    );
+}
+
 
 
 export default Calender;
