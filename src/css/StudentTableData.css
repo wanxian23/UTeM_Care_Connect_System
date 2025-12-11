@@ -141,7 +141,7 @@ main.StudentInfoMain table th {
 }
 
 main.StudentInfoMain table input[type="checkbox"] {
-    transform: scale(1.2);
+    transform: scale(1.6);
 }
 
 main.StudentInfoMain table.gotRecordWrapper tbody tr:last-child td:first-child {

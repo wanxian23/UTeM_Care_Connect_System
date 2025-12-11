@@ -13,6 +13,10 @@ import "./css/calendar.css";
 
 function Calender() {
 
+    useEffect(() => {
+        document.title = "Calendar";
+    }, []);
+
     const [calendarData, setCalendarData] = useState(null);
 
      useEffect(() => {

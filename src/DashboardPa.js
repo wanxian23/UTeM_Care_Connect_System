@@ -9,6 +9,10 @@ import MessageBox from "./Modal";
 
 function Dashboard() {
 
+    useEffect(() => {
+        document.title = "Dashboard";
+    }, []);
+
     const [dashboardData, setDashboardData] = useState(null);
 
      useEffect(() => {

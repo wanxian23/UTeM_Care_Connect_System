@@ -10,6 +10,11 @@ import MessageBox from "./Modal";
 import ConfirmationModal from "./ConfirmationModal";
 
 function MoodRecordEntries() {
+
+    useEffect(() => {
+        document.title = "Mood Record View";
+    }, []);
+
     const [moodRecords, setMoodRecords] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [stressLevel, setStressLevel] = useState("");
@@ -301,7 +306,7 @@ function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, dis
                     </div>
                     <div className="moodRecordEachInfoWrapper">
                         <section>
-                            <h3>Note About Todays</h3>
+                            <h3>Note About Today</h3>
                             <div className="moodResultWrapper">
                                 <p dangerouslySetInnerHTML={{ __html: data.note }} />
                             </div>

@@ -9,6 +9,10 @@ import MessageBox from "./Modal";
 
 function Dashboard() {
 
+    useEffect(() => {
+        document.title = "Dashboard";
+    }, []);
+
     const [dashboardData, setDashboardData] = useState(null);
 
      const [stressLevel, setStressLevel] = useState(null);
@@ -57,7 +61,7 @@ function Dashboard() {
                      level = "Very High Stress";
                  }
 
-                 const quoteValue = data.quoteType;
+                 const quoteValue = data.quoteType?.toLowerCase();
                  let quoteSentence = "";
                  if (quoteValue == "game") {
                     quoteSentence = "Game Time";
@@ -357,18 +361,18 @@ function MoodCount({data}) {
     ];
 
     // Check if data exists
-    if (!data || !data.weeklyMoodCount) {
-        return(
-            <>
-                <main className="moodCountDashboardWrapper">
-                    <h1>Weekly Mood Count</h1>
-                    <article className='emojiWrapper'>
-                        Loading...
-                    </article>
-                </main>
-            </>
-        );
-    }
+    // if (!data) {
+    //     return(
+    //         <>
+    //             <main className="moodCountDashboardWrapper">
+    //                 <h1>Weekly Mood Count</h1>
+    //                 <article className='emojiWrapper'>
+    //                     Loading...
+    //                 </article>
+    //             </main>
+    //         </>
+    //     );
+    // }
 
     return(
         <>
@@ -382,7 +386,7 @@ function MoodCount({data}) {
                                 src={emoji.img}
                                 alt={emoji.label}
                             />
-                            <h3>{data.weeklyMoodCount[index] || 0}</h3>
+                            <h3>{data?.weeklyMoodCount[index] || 0}</h3>
                         </div>
                     ))}
                 </article>

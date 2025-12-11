@@ -44,12 +44,11 @@ main#mainProfileFirst div.profileWrapper div#profileContentWrapper section#perso
     width: 100%;
     flex-wrap: wrap;
     gap: 30px;
-    justify-content: center;
-
+    justify-content: space-around;
 }
 
 main#mainProfileFirst div.profileWrapper:nth-of-type(1) div#profileContentWrapper section#personalInfoWrapper aside {
-    flex: 0 0 48%;
+    flex: 0 0 45%;
     border: 2px solid #e8eeff;
     border-radius: 10px;
     padding: 5px 20px;

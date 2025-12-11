@@ -104,13 +104,12 @@ export function Header() {
         setShowNoti(!showNoti);
     }
 
-    const handleNotificationClick = (notiId, index) => {
-        // Navigate to MoodRecord
-        navigate("/MoodRecord");
+    const handleNotificationClick = (notiData, index) => {
+        navigate(notiData.location);
 
             // Call the API to update the status
         const token = localStorage.getItem("token");
-        fetch(`http://localhost:8080/care_connect_system/backend/api/updateNotificationStatus.php?notificationId=${notiId}`, {
+        fetch(`http://localhost:8080/care_connect_system/backend/api/updateNotificationStatus.php?notificationId=${notiData.notificationId}`, {
             method: "GET", // since your PHP expects GET
             headers: {
                 "Authorization": "Bearer " + token
@@ -125,7 +124,7 @@ export function Header() {
                 return {
                     ...prev,
                     notificationData: prev.notificationData.map(noti => {
-                        if(noti.notificationId === notiId){
+                        if(noti.notificationId === notiData.notificationId){
                             return {...noti, notiStatus: "READ"};
                         }
                         return noti;
@@ -176,7 +175,7 @@ export function Header() {
                                     <section 
                                         key={index} 
                                         onClick={() => {
-                                            handleNotificationClick(notiData.notificationId, index);
+                                            handleNotificationClick(notiData, index);
                                         }}
                                         className={notiData.notiStatus}
                                         style={{

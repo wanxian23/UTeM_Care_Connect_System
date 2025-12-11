@@ -6,6 +6,11 @@ import "./css/StudentInfo.css";
 import {HeaderPa, Footer} from "./HeaderFooter";
 
 function StatisticPa() {
+
+    useEffect(() => {
+        document.title = "Statistic";
+    }, []);
+    
     return(
         <>
             <HeaderPa />

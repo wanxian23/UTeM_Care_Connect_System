@@ -11,6 +11,10 @@ import "./css/profile.css";
 
 function Profile() {
 
+    useEffect(() => {
+        document.title = "Profile";
+    }, []);
+
     const [profileData, setProfileData] = useState(null);
 
     useEffect(() => {

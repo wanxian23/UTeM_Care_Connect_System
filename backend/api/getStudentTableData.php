@@ -12,6 +12,7 @@ $userId = $user['staffId'];
 $stmtGetAllStudent = $conn->prepare("
     SELECT * FROM Student
     WHERE staffId = ?
+    ORDER BY studentName
 ");
 $stmtGetAllStudent->bind_param("i", $userId);
 $stmtGetAllStudent->execute();

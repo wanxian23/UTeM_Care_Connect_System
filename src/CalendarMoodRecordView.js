@@ -9,6 +9,11 @@ import MessageBox from "./Modal";
 import ConfirmationModal from "./ConfirmationModal";
 
 function MoodRecordEntries() {
+
+    useEffect(() => {
+        document.title = "Mood Record View";
+    }, []);
+
     const [moodRecords, setMoodRecords] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [stressLevel, setStressLevel] = useState("");

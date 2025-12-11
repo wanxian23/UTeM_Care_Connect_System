@@ -7,6 +7,11 @@ import "./css/MoodRecord.css";
 import MessageBox from "./Modal";
 
 function MoodRecord() {
+
+    useEffect(() => {
+        document.title = "Mood Record";
+    }, []);
+
     return(
         <>
             <Header />
@@ -266,7 +271,7 @@ function StressLevelRecord() {
     return(
         <>
             <main className='MainMoodFourth'>
-                <h1>Do you feel stress today ?</h1>
+                <h1>Do You Feel Stress Today ?</h1>
                 <article className='stressWrapper'>
                     <div className="markWrapper"
                         style={{
@@ -353,19 +358,19 @@ function EntriesAdd() {
         { id: 9, label: "Device Problem", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
             img: "/TechnicalIcon/deviceProblemIcon.png"
         },
-        { id: 10, label: "Difficult Subject", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
+        { id: 10, label: "Online Learning Issue", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
             img: "/TechnicalIcon/onlineLearningIcon.png"
         },
-        { id: 11, label: "Exam", message: "Every big idea starts with a little spark — take your time to think it through.",
+        { id: 11, label: "Submission Problem", message: "Every big idea starts with a little spark — take your time to think it through.",
             img: "/TechnicalIcon/submissionProblemIcon.png"
         }
     ];
 
     const social = [
-        { id: 12, label: "Friendship Problem", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
+        { id: 12, label: "Bully", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
             img: "/SocialIcon/bullyIcon.png"
         },
-        { id: 13, label: "Difficult Subject", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
+        { id: 13, label: "Friendship Problem", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
             img: "/SocialIcon/friendshipIcon.png"
         },
         { id: 14, label: "Loneliness", message: "Every big idea starts with a little spark — take your time to think it through.",
@@ -374,25 +379,25 @@ function EntriesAdd() {
         { id: 15, label: "Peer Comparison", message: "Every big idea starts with a little spark — take your time to think it through.",
             img: "/SocialIcon/peerComparisonIcon.png"
         },
-        { id: 16, label: "Relationship", message: "Every big idea starts with a little spark — take your time to think it through.",
+        { id: 16, label: "Relationship Problem", message: "Every big idea starts with a little spark — take your time to think it through.",
             img: "/SocialIcon/relationshipIcon.png"
         }
     ];
 
     const emotional = [
-        { id: 17, label: "Friendship Problem", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
+        { id: 17, label: "Burnout Exhausted", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
             img: "/EmotionalIcon/burnout_ExhaustedIcon.png"
         },
-        { id: 18, label: "Difficult Subject", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
+        { id: 18, label: "Low Motivation", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
             img: "/EmotionalIcon/lowMotivationIcon.png"
         },
-        { id: 19, label: "Loneliness", message: "Every big idea starts with a little spark — take your time to think it through.",
+        { id: 19, label: "Poor Eating Habit", message: "Every big idea starts with a little spark — take your time to think it through.",
             img: "/EmotionalIcon/poorEatingHabitIcon.png"
         },
-        { id: 20, label: "Peer Comparison", message: "Every big idea starts with a little spark — take your time to think it through.",
+        { id: 20, label: "Self Doubt", message: "Every big idea starts with a little spark — take your time to think it through.",
             img: "/EmotionalIcon/selfDoubtIcon.png"
         },
-        { id: 21, label: "Relationship", message: "Every big idea starts with a little spark — take your time to think it through.",
+        { id: 21, label: "Sleep Problem", message: "Every big idea starts with a little spark — take your time to think it through.",
             img: "/EmotionalIcon/sleepProblemIcon.png"
         }
     ];
@@ -413,16 +418,16 @@ function EntriesAdd() {
     ];
 
     const health = [
-        { id: 26, label: "Financial Problem", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
+        { id: 26, label: "Lack of Exercise", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
             img: "/HealthIcon/lackOfExerciseIcon.png"
         },
-        { id: 27, label: "Accomodation Issue", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
+        { id: 27, label: "Mental Health Issue", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
             img: "/HealthIcon/mentalHealthIcon.png"
         },
-        { id: 28, label: "Parttime Stress", message: "Every big idea starts with a little spark — take your time to think it through.",
+        { id: 28, label: "Physical Illness", message: "Every big idea starts with a little spark — take your time to think it through.",
             img: "/HealthIcon/physicalIllnessIcon.png"
         },
-        { id: 29, label: "Transportation Issue", message: "Every big idea starts with a little spark — take your time to think it through.",
+        { id: 29, label: "Unconfortable Environment", message: "Every big idea starts with a little spark — take your time to think it through.",
             img: "/HealthIcon/unconfortableEnvironmentIcon.png"
         }
     ];

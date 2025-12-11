@@ -7,6 +7,10 @@ import {HeaderPa, Footer} from "./HeaderFooter";
 
 function StudentInfo() {
 
+    useEffect(() => {
+        document.title = "Student Info";
+    }, []);
+
     const [studentInfoData, setStudentInfoData] = useState(null);
     const [allData, setAllData] = useState(null);
     const [moodRecords, setMoodRecords] = useState([]);
@@ -258,7 +262,7 @@ function StudentInfoContent({
                                         </aside>
                                         <aside>
                                             <label>Stress Factors</label>
-                                            <div style={{margin: "23px 0 0 0"}}>
+                                            <div className="stressorWrapper">
                                                 {currentRecord.entriesData.map((entry, idx) => (
                                                     <span key={idx}>{entry.entriesType}</span>
                                                 ))}

@@ -66,13 +66,19 @@ $moodInfo = $resultMoodInfo->fetch_assoc();
 $moodCount = [];
 
 // Get Weekly data of recorded
-$stmtMoodDataWeekly = $conn->prepare("SELECT * FROM moodTracking WHERE studentId = ? AND YEARWEEK(datetimeRecord, 1) = YEARWEEK(CURDATE(), 1)");
+$stmtMoodDataWeekly = $conn->prepare("
+    SELECT * FROM moodTracking 
+    WHERE studentId = ? AND 
+    YEARWEEK(datetimeRecord, 1) = YEARWEEK(CURDATE(), 1)
+");
 $stmtMoodDataWeekly->bind_param("i", $userId);
 $stmtMoodDataWeekly->execute();
 $resultMoodDataWeekly = $stmtMoodDataWeekly->get_result();
 $moodDataWeekly = $resultMoodDataWeekly->fetch_all(MYSQLI_ASSOC);
 
 // Initialize 8 mood counters
+// Start with index 0 and create 8 items
+// Last initialize all to zero
 $moodCount = array_fill(0, 8, 0);
 
 // Count mood occurrences
@@ -145,9 +151,9 @@ if ($stressData) {
             "hasRecord" => true,
 
             // Daily mood info
-            "moodStatus" => $moodInfo['moodStatus'],
-            "moodStoreLocation" => $moodInfo['moodStoreLocation'],
-            "stressLevel" => $avgStress,
+            "moodStatus" => $moodInfo['moodStatus'] ?? null,
+            "moodStoreLocation" => $moodInfo['moodStoreLocation'] ?? null,
+            "stressLevel" => $avgStress ?? null,
 
             // Recommendation info
             "quote" => $recommendation ? $recommendation['quote'] : "Be Happy Everyday!",

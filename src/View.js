@@ -13,6 +13,11 @@ import counsellingUnitInfoImg from './image/cousellingUnitInfo.jpeg';
 import pppImg from './image/pppUTeM.jpg';
 
 function View() {
+
+    useEffect(() => {
+        document.title = "Overview";
+    }, []);
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         

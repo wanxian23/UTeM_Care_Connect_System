@@ -9,6 +9,7 @@ import Calender from "./Calender";
 import CalendarMoodRecordView from "./CalendarMoodRecordView";
 import Profile from "./Profile";
 import Statistic from "./Statistic";
+import DassAssessment from "./DassAssessment";
 import Notification from "./Notification";
 import Logout from "./Logout";
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/CalendarMoodRecordView/:selectedDate" element={<CalendarMoodRecordView />} />
         <Route path="/Profile" element={<Profile />} />
         <Route path="/Statistic" element={<Statistic />} />
+        <Route path="/DassAssessment/:dassId/:staffId/:studentId" element={<DassAssessment />} />
         <Route path="/Notification" element={<Notification />} />
         <Route path="/Logout" element={<Logout />} />
 
