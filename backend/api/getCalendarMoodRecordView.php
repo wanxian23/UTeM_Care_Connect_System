@@ -1,6 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Authorization, Content-Type");
+header("Content-Type: application/json");
 
 require "../database.php";
 require "authStudent.php";
@@ -11,7 +12,7 @@ $userId = $user['studentId'];
 
 $selectedDate = $_GET['selectedDate'];
 
-// Fetch ALL mood records for today
+// Fetch ALL mood records for the selected date
 $stmtMoodData = $conn->prepare("
     SELECT * FROM moodTracking 
     WHERE studentId = ? AND DATE(datetimeRecord) = ?
@@ -21,6 +22,20 @@ $stmtMoodData->bind_param("is", $userId, $selectedDate);
 $stmtMoodData->execute();
 $resultMoodData = $stmtMoodData->get_result();
 $allMoodRecords = $resultMoodData->fetch_all(MYSQLI_ASSOC);
+
+// Get stress level from the separate stress table for the selected date (1 record per day)
+$stmtCheckStress = $conn->prepare("
+    SELECT stressLevel, datetimeRecord 
+    FROM stress 
+    WHERE studentId = ? AND DATE(datetimeRecord) = ?
+");
+$stmtCheckStress->bind_param("is", $userId, $selectedDate);
+$stmtCheckStress->execute();
+$resultCheckStress = $stmtCheckStress->get_result();
+$stressData = $resultCheckStress->fetch_assoc();
+
+// Get stress level (single record per day)
+$stressLevel = $stressData ? (float)$stressData['stressLevel'] : null;
 
 if ($resultMoodData->num_rows > 0) {
 
@@ -55,13 +70,12 @@ if ($resultMoodData->num_rows > 0) {
             $completeEntriesData[] = array_merge($entry, $entriesType);
         }
 
-        // Build one mood record
+        // Build one mood record (removed stressLevel from here)
         $finalRecords[] = [
             "moodId" => $record['moodId'],
             "moodStatus" => $moodType['moodStatus'],
             "moodStoreLocation" => $moodType['moodStoreLocation'],
             "moodRecordTime" => $record['datetimeRecord'],
-            "stressLevel" => $record['stressLevel'],
             "note" => nl2br(htmlspecialchars($record['note'])),
             "entriesData" => $completeEntriesData
         ];
@@ -70,15 +84,19 @@ if ($resultMoodData->num_rows > 0) {
     echo json_encode([
         "success" => true,
         "records" => $finalRecords,
-        "total" => count($finalRecords)
+        "total" => count($finalRecords),
+        "stressLevel" => $stressLevel, // Single stress level for the day
+        "stressRecordTime" => $stressData ? $stressData['datetimeRecord'] : null
     ]);
 
 } else {
     echo json_encode([
         "success" => true,
         "hasRecord" => false,
-        "entriesData" => [],
-        "message" => "No mood record for today"
+        "records" => [],
+        "message" => "No mood record for this date",
+        "stressLevel" => $stressLevel, // Still return stress even if no mood
+        "stressRecordTime" => $stressData ? $stressData['datetimeRecord'] : null
     ]);
 }
 ?>

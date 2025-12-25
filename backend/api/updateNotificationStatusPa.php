@@ -4,10 +4,10 @@ header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 require "../database.php";
-require "authStudent.php"; // ✅ Add authentication
+require "authPa.php"; // ✅ Add authentication
 
 $user = validateToken($conn);
-$studentId = $user['studentId'];
+$staffId = $user['staffId'];
 
 $newStatus = "";
 $currentStatus = "";
@@ -16,8 +16,8 @@ if (isset($_GET['notificationId'])) {
     $notificationId = intval($_GET['notificationId']);
 
     // ✅ Use prepared statement to get current status
-    $stmt = $conn->prepare("SELECT notiStatus FROM notification WHERE notificationId = ? AND studentId = ?");
-    $stmt->bind_param("ii", $notificationId, $studentId);
+    $stmt = $conn->prepare("SELECT notiStatus FROM notification WHERE notificationId = ? AND staffId = ?");
+    $stmt->bind_param("ii", $notificationId, $staffId);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -33,16 +33,16 @@ if (isset($_GET['notificationId'])) {
     $newStatus = ($currentStatus === "READ") ? "UNREAD" : "READ"; // ✅ Use === for comparison
 
     // ✅ Update status with prepared statement
-    $stmtUpdate = $conn->prepare("UPDATE notification SET notiStatus = ? WHERE notificationId = ? AND studentId = ?");
-    $stmtUpdate->bind_param("sii", $newStatus, $notificationId, $studentId);
+    $stmtUpdate = $conn->prepare("UPDATE notification SET notiStatus = ? WHERE notificationId = ? AND staffId = ?");
+    $stmtUpdate->bind_param("sii", $newStatus, $notificationId, $staffId);
     $exec = $stmtUpdate->execute();
 
 } else if (isset($_GET['notificationIdReadOnly'])) {
     $notificationId = intval($_GET['notificationIdReadOnly']);
 
     // ✅ Update status with prepared statement
-    $stmtUpdate = $conn->prepare("UPDATE notification SET notiStatus = 'READ' WHERE notificationId = ? AND studentId = ?");
-    $stmtUpdate->bind_param("ii", $notificationId, $studentId);
+    $stmtUpdate = $conn->prepare("UPDATE notification SET notiStatus = 'READ' WHERE notificationId = ? AND staffId = ?");
+    $stmtUpdate->bind_param("ii", $notificationId, $staffId);
     $exec = $stmtUpdate->execute();
 
 } else {

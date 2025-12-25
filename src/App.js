@@ -5,6 +5,7 @@ import Dashboard from "./Dashboard";
 import MoodRecord from "./MoodRecord";
 import EditMoodRecord from "./EditMoodRecord";
 import MoodRecordView from "./MoodRecordView";
+import MoodRecordViewSpecific from "./MoodRecordViewSpecific";
 import Calender from "./Calender";
 import CalendarMoodRecordView from "./CalendarMoodRecordView";
 import Profile from "./Profile";
@@ -16,6 +17,7 @@ import Logout from "./Logout";
 import DashboardPa from "./DashboardPa";
 import StudentTableData from "./StudentTableData";
 import StudentInfo from "./StudentInfo";
+import StudentInfoStatistic from "./StudentInfoStatistic";
 import StatisticPa from "./StatisticPa";
 import ProfilePa from "./ProfilePa";
 import NotificationPa from "./NotificationPa";
@@ -31,6 +33,7 @@ function App() {
         <Route path="/MoodRecord" element={<MoodRecord />} />
         <Route path="/EditMoodRecord/:moodId/:from" element={<EditMoodRecord />} />
         <Route path="/MoodRecordView" element={<MoodRecordView />} />
+        <Route path="/MoodRecordViewSpecific/:moodId" element={<MoodRecordViewSpecific />} />
         <Route path="/Calender" element={<Calender />} />
         <Route path="/CalendarMoodRecordView/:selectedDate" element={<CalendarMoodRecordView />} />
         <Route path="/Profile" element={<Profile />} />
@@ -45,6 +48,7 @@ function App() {
         {/* Then inside app.js, you gonna declare/ write as below first for the url */}
         {/* Otherwise, the interface for the file would be blank */}
         <Route path="/StudentInfo/:id" element={<StudentInfo />} />
+        <Route path="/StudentInfoStatistic/:id" element={<StudentInfoStatistic />} />
         <Route path="/StatisticPa" element={<StatisticPa />} />
         <Route path="/ProfilePa" element={<ProfilePa />} />
         <Route path="/NotificationPa" element={<NotificationPa />} />

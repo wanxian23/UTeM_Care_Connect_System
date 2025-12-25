@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import {Header, Footer} from "./HeaderFooter";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import "./css/MoodRecordView.css";
 import MessageBox, { ConfirmationModal } from "./Modal";
@@ -13,20 +15,18 @@ function MoodRecordEntries() {
         document.title = "Mood Record View";
     }, []);
 
+    const { moodId } = useParams();
+
     const [moodRecords, setMoodRecords] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [stressLevel, setStressLevel] = useState("");
     const [stressColor, setStressColor] = useState("");
-    const [stressValue, setStressValue] = useState(null); // Store actual stress number
-
-    // Get the date from calendar.js
-    const { selectedDate } = useParams();
 
     useEffect(() => {
         const token = localStorage.getItem("token");
         if(!token){ window.location.href = "/"; return; }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getCalendarMoodRecordView.php?selectedDate=${selectedDate}`, {
+        fetch(`http://localhost:8080/care_connect_system/backend/api/getMoodRecordView.php?moodId=${moodId}`, {
             method: "GET",
             headers: { "Authorization": "Bearer " + token }
         })
@@ -36,25 +36,13 @@ function MoodRecordEntries() {
 
             if(data.success && data.records && data.records.length > 0){
                 setMoodRecords(data.records);
-                // Get stress from top level, not from individual records
-                setStressValue(data.stressLevel);
-                calculateStress(data.stressLevel);
-            } else if(data.success && data.stressLevel !== null) {
-                // Even if no mood records, show stress if available
-                setStressValue(data.stressLevel);
-                calculateStress(data.stressLevel);
+                calculateStress(data.records[0].stressLevel);
             }
         })
         .catch(err => console.error(err));
-    }, [selectedDate]);
+    }, []);
 
     const calculateStress = (value) => {
-        if (value === null || value === undefined) {
-            setStressLevel("No Stress Data");
-            setStressColor("#cccccc");
-            return;
-        }
-
         let level = "", color = "";
         if (value <= 20) { color = "#BFE5C8"; level = "Very Low Stress"; }
         else if (value <= 40) { color = "#d9f2dfff"; level = "Low Stress"; }
@@ -66,47 +54,52 @@ function MoodRecordEntries() {
         setStressColor(color);
     }
 
-    const goNext = () => {
-        if(currentIndex < moodRecords.length - 1){
-            const newIndex = currentIndex + 1;
-            setCurrentIndex(newIndex);
-            // Stress is per day, not per mood record, so don't recalculate
-        }
-    }
-
-    const goPrev = () => {
-        if(currentIndex > 0){
-            const newIndex = currentIndex - 1;
-            setCurrentIndex(newIndex);
-            // Stress is per day, not per mood record, so don't recalculate
-        }
-    }
-
     const currentRecord = moodRecords[currentIndex] || null;
 
     return (
         <>
             <Header />
+            <SubHeader moodId={moodId}/>
             <Body1 
                 data={currentRecord} 
                 stressLevel={stressLevel} 
                 stressColor={stressColor}
-                stressValue={stressValue}
-                onNext={goNext}
-                onPrev={goPrev}
-                disablePrev={currentIndex === 0}
-                disableNext={currentIndex === moodRecords.length - 1}
-                date={selectedDate}
                 currentRecord={currentRecord}
+                moodId={moodId}
             />
             <Footer />
         </>
     );
 }
 
+function SubHeader({moodId}) {
+    return(
+        <>
+            <main id="MoodRecordSubHeaderWrapper">
+            <NavLink
+                to="/MoodRecord"
+                className={({ isActive }) =>
+                    isActive ? "subButton selectedSubHeader leftSelected" : "subButton"
+                }
+            >
+            Record Your Mood
+            </NavLink>
 
-function Body1({data, stressLevel, stressColor, stressValue, onNext, onPrev, disableNext, disablePrev, date, currentRecord}) {
+            <NavLink
+                to={"/MoodRecordViewSpecific/" + moodId}
+                className={({ isActive }) =>
+                    isActive ? "subButton selectedSubHeader rightSelected" : "subButton"
+                }
+            >
+            Mood Record View
+            </NavLink>
+            </main>
+        </>
+    );
+}
 
+function Body1({data, stressLevel, stressColor, currentRecord, moodId}) {
+    
     const navigate = useNavigate();
 
     // For form handling and messageBox (Modal)
@@ -129,64 +122,38 @@ function Body1({data, stressLevel, stressColor, stressValue, onNext, onPrev, dis
         onCancel: null
     });
 
-    // For messageBox
-    const handleModalButton = () => {
-        const shouldRedirect = messagebox.redirect; // Capture current value first
-        setMessagebox({ ...messagebox, show: false }); // hide modal
-        if (shouldRedirect) {
-            window.location.href = `/CalendarMoodRecordView/${date}`;
-        }
-    };
-
     // Showing today date
     const today = new Date();
-    // en-GB format the order of the date (Follow day, month, and year)
+
     const formattedDateToday = today.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-    });
-
-    // Since date is pass from calendar.js
-    // It is a string during pass
-    // So you gonna convert to date format first before make conversion
-    const [year, month, day] = date.split("-");
-    const realDate = new Date(year, month - 1, day);
-
-
-    const formattedDate = realDate.toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "long",
         year: "numeric",
     }); 
 
-    const weekDay = realDate.toLocaleDateString("en-GB", {
+    const weekDay = today.toLocaleDateString("en-GB", {
         weekday: "long"
     });
 
-    // Safe formatting for mood record date (Avoid null)
-    let formattedWeekdayBasedOnRecord = "No record";
-    if (data?.moodRecordTime) {
-        const moodDate = new Date(data.moodRecordTime);
-        if (!isNaN(moodDate)) {
-            formattedWeekdayBasedOnRecord = moodDate.toLocaleDateString("en-GB", {
-                weekday: "long"
-            });
-        }
-    }
+    // Showing realtime
+    const [time, setTime] = useState(new Date());
 
-    let formattedDateBasedOnRecord = "No Record";
-    if (data?.moodRecordTime) {
-        const moodDate = new Date(data.moodRecordTime);
-        if (!isNaN(moodDate)) {
-            formattedDateBasedOnRecord = moodDate.toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-            });
-        }
-    }
-    
+    useEffect(() => {
+        const timer = setInterval(() => {
+        setTime(new Date()); // update every second
+        }, 1000);
+
+        return () => clearInterval(timer); // cleanup when component unmounts
+    }, []);
+
+    const formattedTime = time.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+
+    // en-GB format the order of the date (Follow day, month, and year)
+    // Suppose data.moodRecordTime = "2025-12-01 10:30:00"
+    // Safe formatting for mood record date (Avoid null)
     let formattedTimeBasedOnRecord = "No record";
     if (data?.moodRecordTime) {
         const moodDate = new Date(data.moodRecordTime);
@@ -198,8 +165,17 @@ function Body1({data, stressLevel, stressColor, stressValue, onNext, onPrev, dis
         }
     }
 
+    // For messageBox
+    const handleModalButton = () => {
+        const shouldRedirect = messagebox.redirect; // Capture current value first
+        setMessagebox({ ...messagebox, show: false }); // hide modal
+        if (shouldRedirect) {
+            window.location.href = `/MoodRecordViewSpecific/${moodId}`;
+        }
+    };
+
     const goToEditMoodRecord = (id) => {
-        navigate(`/EditMoodRecord/${id}/${date}`);
+        navigate(`/EditMoodRecord/${id}/Specific`);
     };
 
     const openDeleteModal = () => {
@@ -258,7 +234,6 @@ function Body1({data, stressLevel, stressColor, stressValue, onNext, onPrev, dis
         });
     };
 
-    console.log("moodId: ", currentRecord?.moodId);
 
     // In JSX, return and ( must at the same line (Next line will get ignore)
     if (!data) return (
@@ -266,28 +241,11 @@ function Body1({data, stressLevel, stressColor, stressValue, onNext, onPrev, dis
             <article className="moodRecordInfoWrapper">
                 <div className="moodRecordEachInfoWrapper">
                     <h2>{weekDay}</h2>
-                    <h2>{formattedDate}</h2>
-                    <h2>00:00 AM</h2>
+                    <h2>{formattedDateToday}</h2>
+                    <h2>{formattedTime}</h2>
                 </div>
                 <div className="moodRecordEachInfoWrapper">
-                    {formattedDate === formattedDateToday ?
-                        <p>You Haven't Record Any Mood For Today!</p>
-                    :
-                        <p>You Haven't Record Any Mood During {formattedDate}!</p>
-                    }
-                    {/* Show stress even if no mood */}
-                    {stressValue !== null && (
-                        <section style={{ marginTop: '20px' }}>
-                            <h3 className="sectionTitle">Stress Level for This Day</h3>
-                            <div className="moodResultWrapper">
-                                <div className="stressIcon"
-                                     style={{
-                                        backgroundColor: `${stressColor}`
-                                     }}><h2>{stressValue}%</h2></div>
-                                <h3>{stressLevel}</h3>
-                            </div>
-                        </section>
-                    )}
+                    <p>Mood Record Has Been Deleted!</p>
                 </div>
             </article>
         </main>
@@ -302,25 +260,9 @@ function Body1({data, stressLevel, stressColor, stressValue, onNext, onPrev, dis
                 </div>
                 <article className="moodRecordInfoWrapper">
                     <div className="moodRecordEachInfoWrapper">
-                        <svg 
-                            onClick={onPrev} 
-                            style={{ cursor: disablePrev ? "not-allowed" : "pointer", opacity: disablePrev ? 0.5 : 1 }}
-                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
-                            className="bi bi-chevron-left" viewBox="0 0 16 16">
-                            <path fillRule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
-                        </svg>
-
-                        <h2>{formattedWeekdayBasedOnRecord}</h2>
-                        <h2>{formattedDateBasedOnRecord}</h2>
+                        <h2>{weekDay}</h2>
+                        <h2>{formattedDateToday}</h2>
                         <h2>{formattedTimeBasedOnRecord}</h2>
-                        
-                        <svg 
-                            onClick={onNext} 
-                            style={{ cursor: disableNext ? "not-allowed" : "pointer", opacity: disableNext ? 0.5 : 1 }}
-                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
-                            className="bi bi-chevron-right" viewBox="0 0 16 16">
-                            <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
-                        </svg>
                     </div>
                     <div className="moodRecordEachInfoWrapper">
                         <section>
@@ -336,7 +278,7 @@ function Body1({data, stressLevel, stressColor, stressValue, onNext, onPrev, dis
                                 <div className="stressIcon"
                                      style={{
                                         backgroundColor: `${stressColor}`
-                                     }}><h2>{stressValue !== null ? `${stressValue}%` : 'N/A'}</h2></div>
+                                     }}><h2>{data.stressLevel}%</h2></div>
                                 <h3>{stressLevel}</h3>
                             </div> 
                         </section>
@@ -356,7 +298,7 @@ function Body1({data, stressLevel, stressColor, stressValue, onNext, onPrev, dis
                     </div>
                     <div className="moodRecordEachInfoWrapper">
                         <section>
-                            <h3 className="sectionTitle">Note About Todays</h3>
+                            <h3 className="sectionTitle">Note About Today</h3>
                             <div className="moodResultWrapper">
                                 <p dangerouslySetInnerHTML={{ __html: data.note }} />
                             </div>

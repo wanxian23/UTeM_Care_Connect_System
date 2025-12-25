@@ -72,3 +72,166 @@
     justify-content: space-around;
     width: 70%;
 }
+
+
+/* For mood record recommendation box */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-box {
+  background: #fff;
+  width: 400px;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  animation: popIn 0.25s ease;
+  display: flex;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-title {
+  text-align: center;
+}
+
+div.recordedDetailsWrapper {
+    /* border: 1px solid; */
+    display: flex;
+    width: 85%;
+    justify-content: space-between;
+}
+
+div.recordedDetailsWrapper section:first-child {
+    /* border-right: 2px solid #d1e0ff; */
+}
+
+div.recordedDetailsWrapper section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 50%;
+    flex-direction: column;
+    gap: 10px;
+    /* border: 1px solid; */
+}
+
+div.recordedDetailsWrapper section:first-child {
+    gap: 0px;
+}
+
+div.recordedDetailsWrapper section img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; 
+}
+
+div.recordedDetailsWrapper section p {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: red;
+}
+
+.stress-text.red { color: #e53935; }
+.stress-text.orange { color: #fb8c00; }
+.stress-text.green { color: #43a047; }
+
+div.recommendationWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+div.recommendationWrapper a {
+    text-decoration: none;
+    color: #3976b4;
+    transition: 0.2s ease;
+    line-height: 25px;
+    transition: 0.2s ease;
+}
+
+div.recommendationWrapper a:hover {
+    transform: scale(1.02);
+}
+
+div.recommendationWrapper svg {
+    margin-left: 10px;
+    height: 15px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.btn {
+  flex: 80%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  color: black !important;
+  font-weight: bold !important;
+}
+
+.btn.primary {
+  background: #a0efbf;
+}
+
+.btn.primary:hover {
+    background: #c5f6d9;
+}
+
+.btn.secondary {
+  background: #dfdfdf;
+}
+
+.btn.secondary:hover {
+    background: #eaeaea;
+}
+
+/* Background bar */
+.sectionTitle::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40%;          /* controls how much of text is covered */
+    background: #d7ddf4 !important;  /* your background color */
+    z-index: -1;
+}
+
+.sectionTitle.recommendation::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40%;          /* controls how much of text is covered */
+    background:#ffdec1 !important;
+    z-index: -1;
+}

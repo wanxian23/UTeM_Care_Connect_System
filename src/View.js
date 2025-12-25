@@ -63,40 +63,59 @@ function Body1() {
 
         const formData = new FormData(e.target);
 
-        const response = await fetch("http://localhost:8080/care_connect_system/backend/api/login.php", {
-            method: "POST",
-            body: formData
-        });
+        try {
+            const response = await fetch("http://localhost:8080/care_connect_system/backend/api/login.php", {
+                method: "POST",
+                body: formData
+            });
 
-        const result = await response.json();
-
-        if(result.success){
-            // Store token and user info
-            localStorage.setItem("token", result.token);
-            localStorage.setItem("userType", result.type);
-            localStorage.setItem("userId", result.userId);
-            
-            if (result.type == "staff") {
-                setNavigateTo("/DashboardPa");
-            } else {
-                setNavigateTo("/Dashboard");
+            // If server returns invalid JSON or HTTP 500
+            if (!response.ok) {
+                throw new Error("Server error");
             }
 
+            const result = await response.json();
+
+            if (result.success) {
+                // Store token and user info
+                localStorage.setItem("token", result.token);
+                localStorage.setItem("userType", result.type);
+                localStorage.setItem("userId", result.userId);
+
+                if (result.type === "staff") {
+                    setNavigateTo("/DashboardPa");
+                } else {
+                    setNavigateTo("/Dashboard");
+                }
+
+                setMessagebox({
+                    show: true,
+                    title: "Login Successful",
+                    message: "Welcome back! Redirecting...",
+                    buttonValue: "OK"
+                });
+
+            } else {
+                // Login failed (wrong password, etc.)
+                setMessagebox({
+                    show: true,
+                    title: "Login Failed",
+                    message: result.message,
+                    buttonValue: "Try Again"
+                });
+            }
+
+        } catch (error) {
+            // 🔥 If database/server is OFFLINE or unreachable
             setMessagebox({
                 show: true,
-                title: "Login Successful",
-                message: "Welcome back! Redirecting...",
+                title: "Connection Error",
+                message: "Unable to reach the server. Please check your internet or try again later.",
                 buttonValue: "OK"
-            });
-        } else {
-            setMessagebox({
-                show: true,
-                title: "Login Failed",
-                message: result.message,
-                buttonValue: "Try Again"
             });
         }
     };
+
 
 
     // For GSAP
@@ -174,8 +193,8 @@ function Body1() {
                         <h2>UTeM Account Login</h2>
                         <form onSubmit={handleLogin}>
                             <div>
-                                <label>Email</label><br></br>
-                                <input type="text" name="email" placeholder="Enter Your University Email" required autoFocus="autofocus"></input>
+                                <label>Matric Num/ Email</label><br></br>
+                                <input type="text" name="email" placeholder="Enter Your University Email or Matric Number" required autoFocus="autofocus"></input>
                             </div>
                             <div>
                                 <label>Password</label><br></br>

@@ -5,97 +5,89 @@ header("Access-Control-Allow-Headers: Authorization, Content-Type");
 require "../database.php";
 require "authStudent.php";
 
-// Run the auth function to fetch student data
+// Authenticate student
 $user = validateToken($conn);
 $userId = $user['studentId'];
 
-// Get data of recorded
-// $stmtMoodData = $conn->prepare("SELECT * FROM moodTracking WHERE studentId = ?");
-// $stmtMoodData->bind_param("i", $userId);
-// $stmtMoodData->execute();
-// $resultMoodData = $stmtMoodData->get_result();
-// $moodData = $resultMoodData->fetch_all(MYSQLI_ASSOC);
-
-
-// Get data of averageStress
-// I havent use this record yet
-$stmtStressAvg = $conn->prepare("
-    SELECT AVG(stressLevel) AS avgStress
+// Get all mood tracking records for this student
+$stmtMoodData = $conn->prepare("
+    SELECT *
     FROM moodTracking
     WHERE studentId = ?
-    AND DATE(datetimeRecord) = CURDATE()
-");
-$stmtStressAvg->bind_param("i", $userId);
-$stmtStressAvg->execute();
-$resultStressAvg = $stmtStressAvg->get_result();
-$stressData = $resultStressAvg->fetch_assoc();
-
-$avgStress = $stressData['avgStress']; // this is the average
-
-
-// Get data of averageScale
-$stmtMoodData = $conn->prepare("
-    SELECT 
-        mt.moodTypeId,
-        mt.datetimeRecord,
-        m.scale
-    FROM moodTracking mt
-    JOIN mood m ON mt.moodTypeId = m.moodTypeId
-    WHERE mt.studentId = ?
-    ORDER BY mt.datetimeRecord ASC
 ");
 $stmtMoodData->bind_param("i", $userId);
 $stmtMoodData->execute();
-
 $resultMoodData = $stmtMoodData->get_result();
+$moodData = $resultMoodData->fetch_all(MYSQLI_ASSOC);
 
-$dailyMoodScales = []; // "2025-01-21" => [7, 6]
+// Get all stress records for this student from the stress table
+$stmtStressData = $conn->prepare("
+    SELECT stressLevel, datetimeRecord
+    FROM stress
+    WHERE studentId = ?
+");
+$stmtStressData->bind_param("i", $userId);
+$stmtStressData->execute();
+$resultStressData = $stmtStressData->get_result();
+$stressData = $resultStressData->fetch_all(MYSQLI_ASSOC);
 
-// Group all scales by date
-while ($row = $resultMoodData->fetch_assoc()) {
+// Initialize calendar data
+$calendarMood = [];
+$calendarStress = []; // Store stress per day from stress table
+
+// Process mood data
+foreach ($moodData as $row) {
+    // Format date for calendar cell
     $date = (new DateTime($row['datetimeRecord']))->format('Y-m-d');
 
-    if (!isset($dailyMoodScales[$date])) {
-        $dailyMoodScales[$date] = [];
+    // Initialize array if not exists
+    if (!isset($calendarMood[$date])) {
+        $calendarMood[$date] = [];
     }
 
-    $dailyMoodScales[$date][] = $row['scale'];
-}
+    $moodTypeId = $row['moodTypeId'];
 
-$dailyMoodAverage = [];  // "2025-01-21" => 7 (rounded)
-$finalDailyMood = [];    // final mood result for each day
-
-// For each date → Calculate average scale and fetch mood info
-foreach ($dailyMoodScales as $date => $scales) {
-
-    // Step 1: Average scale
-    $avg = array_sum($scales) / count($scales);
-    $finalScale = round($avg);
-
-    // Step 2: Get mood info based on scale
-    $stmtMoodInfo = $conn->prepare("
+    // Get mood details
+    $stmtGetParticularMood = $conn->prepare("
         SELECT moodStatus, moodStoreLocation
         FROM mood
-        WHERE scale = ?
+        WHERE moodTypeId = ?
     ");
-    $stmtMoodInfo->bind_param("i", $finalScale);
-    $stmtMoodInfo->execute();
+    $stmtGetParticularMood->bind_param("i", $moodTypeId);
+    $stmtGetParticularMood->execute();
+    $resultGetParticularMood = $stmtGetParticularMood->get_result();
+    $particularMoodData = $resultGetParticularMood->fetch_assoc();
 
-    $resultMoodInfo = $stmtMoodInfo->get_result();
-    $moodInfo = $resultMoodInfo->fetch_assoc();
-
-    // Step 3: Store final mood data for this date
-    $finalDailyMood[$date] = [
-        "moodStatus" => $moodInfo['moodStatus'],
-        "moodStoreLocation" => $moodInfo['moodStoreLocation'],
-        "totalRecords" => count($scales) // total records for this day
+    // Store mood under the correct date
+    $calendarMood[$date][] = [
+        "moodStatus" => $particularMoodData['moodStatus'],
+        "moodStoreLocation" => $particularMoodData['moodStoreLocation']
     ];
-
 }
 
-// Get Monthly data of recorded
-$moodCount = [];
+// Process stress data (one record per day)
+foreach ($stressData as $row) {
+    // Format date for calendar cell
+    $date = (new DateTime($row['datetimeRecord']))->format('Y-m-d');
+    
+    // Store stress level for this date (only one per day)
+    $calendarStress[$date] = (float)$row['stressLevel'];
+}
 
+// Get today's average stress level (from stress table)
+$stmtTodayStress = $conn->prepare("
+    SELECT stressLevel
+    FROM stress
+    WHERE studentId = ?
+    AND DATE(datetimeRecord) = CURDATE()
+");
+$stmtTodayStress->bind_param("i", $userId);
+$stmtTodayStress->execute();
+$resultTodayStress = $stmtTodayStress->get_result();
+$todayStressRow = $resultTodayStress->fetch_assoc();
+$avgStress = $todayStressRow ? (float)$todayStressRow['stressLevel'] : null;
+
+// Get Monthly mood data
 $stmtMoodDataMonthly = $conn->prepare("
     SELECT *
     FROM moodTracking
@@ -119,7 +111,7 @@ foreach ($moodDataMonthly as $monthlyRow) {
     }
 }
 
-// Get total record per day
+// Get total mood records for today
 $stmtCount = $conn->prepare("
     SELECT COUNT(*) AS totalRecords
     FROM moodTracking
@@ -132,12 +124,12 @@ $resultCount = $stmtCount->get_result();
 $rowCount = $resultCount->fetch_assoc();
 $totalRecords = $rowCount ? $rowCount['totalRecords'] : 0;
 
-
-
 // Output JSON
 echo json_encode([
     "success" => true,
-    "dailyMood" => $finalDailyMood,
+    "dailyMood" => $calendarMood,
+    "avgStressLevel" => $calendarStress, // Now contains one stress value per day
+    "todayAvgStress" => $avgStress, // Today's stress level
     "totalRecord" => $totalRecords,
     "monthlyMoodCount" => $moodCount
 ]);

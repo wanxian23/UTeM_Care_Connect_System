@@ -2,16 +2,16 @@
 
     require "database.php";
 
-    // $no = "";
-    // $name = "";
-    // $email = "@student.edu.my";
-    // $contact = "0162195483";
-    // $faculty = "";
+    $no = "D032310322";
+    $name = "CHONG PUI YI";
+    $email = "chongpuiyi@student.utem.edu.my";
+    $contact = "0124568542";
+    $faculty = "FTMK";
 
     // $office = "1st FLOOR K03";
     // $role = "PENASIHAT AKADEMIK";
-    // $password = '1234';
-    // $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $password = '1234';
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // $stmtInsert = $conn->prepare("INSERT INTO staff (staffNo, staffName, staffEmail, staffContact, staffFaculty, staffOffice, staffRole, staffPassword) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     // $stmtInsert->bind_param("ssssssss", $no, $name, $email, $contact, $faculty, $office, $role, $hashedPassword);
@@ -25,14 +25,14 @@
     // }
     // $stmtInsert->close();
 
-    // $course = "";
-    // $yearOfStudy = 2;
-    // $section = "SECTION 1";
-    // $group = "GROUP 1";
-    // $staffId = 5;
+    $course = "DIPLOMA IN COMPUTER SCIENCE";
+    $yearOfStudy = 3;
+    $section = "SECTION 2";
+    $group = "GROUP 2";
+    $staffId = 5;
 
-    // $stmtInsert = $conn->prepare("INSERT INTO student (matricNo, studentName, studentEmail, studentContact, studentFaculty, studentYearOfStudy, studentSection, studentGrp, studentPassword, staffId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    // $stmtInsert->bind_param("sssssissss", $no, $name, $email, $contact, $faculty, $yearOfStudy, $section, $group, $hashedPassword, $staffId);
+    // $stmtInsert = $conn->prepare("INSERT INTO student (matricNo, studentName, studentEmail, studentContact, studentFaculty, studentYearOfStudy, studentSection, studentGrp, studentPassword, staffId, studentCourse) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    // $stmtInsert->bind_param("sssssisssss", $no, $name, $email, $contact, $faculty, $yearOfStudy, $section, $group, $hashedPassword, $staffId, $course);
 
     // if ($stmtInsert->execute()) {
     //     echo "Student Account Created Successfully!";
@@ -41,6 +41,6 @@
     //     echo "Fail to Create Account! Please Try Again...";
     //     // echo "<meta http-equiv='refresh' content='3; URL=../signup.html'>";
     // }
-    // $stmtInsert->close();
+    $stmtInsert->close();
 
 ?>

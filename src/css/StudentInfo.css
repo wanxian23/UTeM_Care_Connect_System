@@ -58,6 +58,11 @@ main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section
     padding: 10px 20px;
 }
 
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.personalInfoWrapper aside div svg {
+    width: 40px;
+    height: 30px;
+}
+
 main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.personalInfoWrapper aside p a {
     text-decoration: none;
     color: #446b92;
@@ -66,7 +71,46 @@ main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section
     gap: 10px;
 }
 
-main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.personalInfoWrapper aside p a svg {
+/* Today Mood Summary */
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.moodSummarySectionWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    /* border: 1px solid; */
+}
+
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.moodSummarySectionWrapper aside div.avgMoodWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border: 1px solid; */
+}
+
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.moodSummarySectionWrapper aside div.avgMoodWrapper div {
+    flex: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.moodSummarySectionWrapper aside div.avgMoodWrapper div p.moodChangeLabel {
+    width: 60px;
+    font-size: 2.1vh;
+    /* border: 1px solid; */
+}
+
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.moodSummarySectionWrapper aside div.avgMoodWrapper div:nth-of-type(3) p {
+    width: 80px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border: 1px solid; */
+    /* border-radius: 50%; */
+}
+
+main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.personalInfoWrapper aside div.avgMoodWrapper p a svg {
     width: 4%;
 }
 
@@ -103,8 +147,8 @@ main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileCo
 }
 
 main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileContentWrapper aside label {
-    padding: 5px 20px;
-    background-color: #d1ddff;
+    padding: 5px 10px;
+    /* background-color: #d1ddff; */
     border-radius: 20px;
 }
 
@@ -114,11 +158,11 @@ main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileCo
 }
 
 main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileContentWrapper aside img {
-    width: 55%;
+    width: 50%;
 }
 
 main.studentInfoContentMain div.separateWrapper div.profileWrapper:last-child div.profileContentWrapper aside img {
-    width: 35%;
+    width: 80%;
 }
 
 main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileContentWrapper aside div.stressorWrapper {
@@ -178,4 +222,25 @@ main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileCo
     width: 100%;
     align-items: center;
     cursor: pointer;
+}
+
+
+.sectionTitle {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    z-index: 1;
+    padding: 0 10px;
+}
+
+/* Background bar */
+.sectionTitle::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40%;          /* controls how much of text is covered */
+    background: #d7ddf4 !important;  /* your background color */
+    z-index: -1;
 }

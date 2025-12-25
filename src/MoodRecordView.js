@@ -6,8 +6,10 @@ import {SubHeader} from "./MoodRecord";
 import { Link } from "react-router-dom";
 
 import "./css/MoodRecordView.css";
-import MessageBox from "./Modal";
-import ConfirmationModal from "./ConfirmationModal";
+
+// Cannot import both inside {} cuz {} is only for external function
+// For default function then outside {}
+import MessageBox, { ConfirmationModal } from "./Modal";
 
 function MoodRecordEntries() {
 
@@ -274,14 +276,14 @@ function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, dis
                     </div>
                     <div className="moodRecordEachInfoWrapper">
                         <section>
-                            <h3>Today Mood</h3>
+                            <h3 className="sectionTitle">Today Mood</h3>
                             <div className="moodResultWrapper">
                                 <img src={data.moodStoreLocation}></img>
                                 <h3>{data.moodStatus}</h3>
                             </div>
                         </section>
                         <section>
-                            <h3>Stress Level</h3>
+                            <h3 className="sectionTitle">Stress Level</h3>
                             <div className="moodResultWrapper">
                                 <div className="stressIcon"
                                      style={{
@@ -293,7 +295,7 @@ function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, dis
                     </div>
                     <div className="moodRecordEachInfoWrapper">
                         <section>
-                            <h3>Reason That Cause Stress</h3>
+                            <h3 className="sectionTitle">Reason That Cause Stress</h3>
                              <div className="moodResultWrapper">
                             {data.entriesData.map((entry, index) => (
                                 <div key={index} className="entriesIconWrapper">
@@ -306,7 +308,7 @@ function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, dis
                     </div>
                     <div className="moodRecordEachInfoWrapper">
                         <section>
-                            <h3>Note About Today</h3>
+                            <h3 className="sectionTitle">Note About Today</h3>
                             <div className="moodResultWrapper">
                                 <p dangerouslySetInnerHTML={{ __html: data.note }} />
                             </div>

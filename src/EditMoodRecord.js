@@ -207,15 +207,15 @@ function StressLevelRecord({moodData}) {
     // ✅ Set initial value from moodData
     useEffect(() => {
         console.log("StressLevel moodData:", moodData); // Debug
-        if (moodData && moodData.stressLevel !== undefined) {
-            console.log("Setting stress to:", moodData.stressLevel); // Debug
-            const stressValue = parseInt(moodData.stressLevel);
+        if (moodData && moodData !== undefined) {
+            console.log("Setting stress to:", moodData); // Debug
+            const stressValue = parseInt(moodData);
             setValue(stressValue);
             updateStressLabel(stressValue);
             // Wait a tick for refs to be available
             setTimeout(() => updatePosition(stressValue), 0);
         }
-    }, [moodData?.stressLevel]); // ✅ More specific dependency
+    }, [moodData]); // ✅ More specific dependency
 
     // Update position when value changes
     useEffect(() => {
@@ -769,14 +769,15 @@ function RecordMoodNote() {
                 // ✔ Check if moodRecordData has the date
                 if (moodRecordData?.moodRecord?.datetimeRecord) {
 
-                    const recordDate = new Date(moodRecordData.moodRecord.datetimeRecord)
-                        .toISOString()
-                        .split("T")[0]; // format: YYYY-MM-DD
+                    // Get date after recorded
+                    const recordDate = moodRecordData.moodRecord.datetimeRecord.split(" ")[0];
 
                     const today = new Date().toISOString().split("T")[0];
 
                     if (recordDate === today && from == "Today") {
                         window.location.href = "/MoodRecordView";
+                    } else if (from == "Specific") {
+                        window.location.href = `/MoodRecordViewSpecific/${moodId}`;
                     } else {
                         window.location.href = `/CalendarMoodRecordView/${recordDate}`;
                     }
@@ -801,7 +802,7 @@ function RecordMoodNote() {
                 return;
             }
     
-            fetch(`http://localhost:8080/care_connect_system/backend/api/getEditMoodRecord.php?moodId=${moodId}`, {
+            fetch(`http://localhost:8080/care_connect_system/backend/api/getEditMoodRecord.php?moodId=${moodId}&date=${from}`, {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -829,7 +830,7 @@ function RecordMoodNote() {
     
             const formData = new FormData(e.target);
 
-            const response = await fetch(`http://localhost:8080/care_connect_system/backend/api/editMoodRecord.php?moodId=${moodId}`, {
+            const response = await fetch(`http://localhost:8080/care_connect_system/backend/api/editMoodRecord.php?moodId=${moodId}&date=${from}`, {
                 method: "POST",
                 body: formData,
                 headers: {
@@ -873,7 +874,7 @@ function RecordMoodNote() {
         <>
             <form id="formFirst" onSubmit={handleMoodRecord}>
                 <MoodChoose moodData={moodRecordData?.moodRecord}/>
-                <StressLevelRecord moodData={moodRecordData?.moodRecord}/>
+                <StressLevelRecord moodData={moodRecordData?.stressLevel}/>
                 <EntriesAdd moodData={moodRecordData}/>
                 <NoteAdd moodData={moodRecordData?.moodRecord}/>
                 <div id="buttonMoodRecordWrapper">

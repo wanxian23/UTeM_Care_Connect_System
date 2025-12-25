@@ -5,109 +5,97 @@ import { NavLink } from "react-router-dom";
 
 import "./css/StudentInfo.css";
 import {HeaderPa, Footer} from "./HeaderFooter";
+import {TrendGraph, StressTrendGraph} from "./Statistic";
 
 function StudentInfo() {
 
     useEffect(() => {
-        document.title = "Student Info";
+        document.title = "Statistic Student";
     }, []);
-
-    const [studentInfoData, setStudentInfoData] = useState(null);
-    const [allData, setAllData] = useState(null);
-    const [moodRecords, setMoodRecords] = useState([]);
 
     const { id } = useParams();
 
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [stressLevel, setStressLevel] = useState("");
-    const [stressColor, setStressColor] = useState("");
-    
-    useEffect(() => {
-        const token = localStorage.getItem("token");
+    const [statisticData, setStatisticData] = useState({});
+    const [weekOffset, setWeekOffset] = useState(0);
+    const [monthOffset, setMonthOffset] = useState(0);
 
+    useEffect(() => {
+        console.log("useEffect triggered - fetching data...");
+        const token = localStorage.getItem("token");
+        console.log("Token exists:", !!token);
+        
         if(!token){
+            console.log("No token found, redirecting to login");
             window.location.href = "/";
             return;
         }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getStudentInfo.php?studentId=${id}`, {
+        const url = `http://localhost:8080/care_connect_system/backend/api/getStatisticPa.php?studentId=${id}&weekOffset=${weekOffset}&monthOffset=${monthOffset}`;
+        console.log("Fetching from:", url);
+
+        fetch(url, {
             method: "GET",
-            headers: {
-                "Authorization": "Bearer " + token
-            }
+            headers: { "Authorization": "Bearer " + token }
         })
-        .then(res => res.json())
+        .then(res => {
+            console.log("Response received, status:", res.status);
+            return res.json();
+        })
         .then(data => {
-            console.log("PROFILE RESPONSE:", data);
+            console.log("Statistic Response:", data);
             
             if(data.success){
-                setAllData(data || null);
-                setStudentInfoData(data.studentData || null);
-                setMoodRecords(data.studentMoodData || []);
-
-                if (data.studentMoodData && data.studentMoodData.length > 0) {
-                    calculateStress(data.studentMoodData[0].stressLevel);
-                } else {
-                    setStressLevel("No Record");
-                    setStressColor("#ccc");
-                }
+                setStatisticData(data);
+                console.log("Data set successfully");
             } else {
+                console.log("Response not successful, clearing storage");
                 localStorage.clear();
                 window.location.href = "/";
             }
         })
-        .catch(err => console.error(err));
-    }, [id]);
-
-    const calculateStress = (value) => {
-        let level = "", color = "";
-        if (value <= 20) { color = "#BFE5C8"; level = "Very Low Stress"; }
-        else if (value <= 40) { color = "#d9f2dfff"; level = "Low Stress"; }
-        else if (value <= 60) { color = "#e4b995ff"; level = "Moderate Stress"; }
-        else if (value <= 80) { color = "#e9b6b6ff"; level = "High Stress"; }
-        else { color = "#ee7878ff"; level = "Very High Stress"; }
-
-        setStressLevel(level);
-        setStressColor(color);
-    }
-
-    const goNext = () => {
-        if(currentIndex < moodRecords.length - 1){
-            const newIndex = currentIndex + 1;
-            setCurrentIndex(newIndex);
-            calculateStress(moodRecords[newIndex].stressLevel);
-        }
-    }
-
-    const goPrev = () => {
-        if(currentIndex > 0){
-            const newIndex = currentIndex - 1;
-            setCurrentIndex(newIndex);
-            calculateStress(moodRecords[newIndex].stressLevel);
-        }
-    }
-
-    const currentRecord = moodRecords[currentIndex] || null;
-
-    const totalRecords = moodRecords.length;
+        .catch(err => {
+            console.error("Fetch error:", err);
+        });
+    }, [weekOffset, monthOffset]);
 
     return(
         <>
             <HeaderPa />
             <SubHeader studentId={id} />
-            <StudentInfoContent 
-                studentData={studentInfoData}
-                allData={allData}
-                currentRecord={currentRecord}  // Pass current record
-                stressLevel={stressLevel} 
-                stressColor={stressColor}
-                onNext={goNext}
-                onPrev={goPrev}
-                currentIndex={currentIndex}
-                totalRecords={moodRecords.length}
-                disablePrev={currentIndex === 0 || totalRecords === 0}
-                disableNext={currentIndex >= totalRecords - 1 || totalRecords === 0}
-            />  
+            <main className="statisticBodyWrapper">
+                    <TrendGraph 
+                    trendData={statisticData.weeklyTrend} 
+                    type="weekly"
+                    offset={weekOffset}
+                    setOffset={setWeekOffset}
+                    weekInfo={statisticData.weekInfo}
+                    summary={statisticData.weeklySummary}
+                />
+                <TrendGraph 
+                    trendData={statisticData.monthlyTrend} 
+                    type="monthly"
+                    offset={monthOffset}
+                    setOffset={setMonthOffset}
+                    monthInfo={statisticData.monthInfo}
+                    summary={statisticData.monthlySummary}
+                />
+                <StressTrendGraph 
+                    stressData={statisticData.weeklyStressTrend} 
+                    type="weekly"
+                    offset={weekOffset}
+                    setOffset={setWeekOffset}
+                    weekInfo={statisticData.weekInfo}
+                    stressSummary={statisticData.weeklyStressSummary}
+                />
+                <StressTrendGraph 
+                    stressData={statisticData.monthlyStressTrend} 
+                    type="monthly"
+                    offset={monthOffset}
+                    setOffset={setMonthOffset}
+                    monthInfo={statisticData.monthInfo}
+                    stressSummary={statisticData.monthlyStressSummary}
+                />
+            </main>
             <Footer />
         </>
     );
@@ -139,6 +127,7 @@ function SubHeader({studentId}) {
         </>
     );
 }
+
 
 function StudentInfoContent({ 
     studentData, 
@@ -397,6 +386,46 @@ function StudentInfoContent({
                                 }
                             </section>
                         </div>
+                    </div>
+                </div>
+
+                <div className="profileWrapper">
+                    <h2>Overall Mood Insights</h2>
+                    <div className="profileContentWrapper">
+                        <section className="personalInfoWrapper">
+                            <aside>
+                                <label>Latest Mood</label>
+                                <p>{studentData.studentName}</p>
+                            </aside>
+                            <aside>
+                                <label>Average Stress Level</label>
+                                <p>{studentData.studentEmail}</p>
+                            </aside>
+                            <aside>
+                                <label>Contact:</label>
+                                <a href={`https://wa.me/${studentData.studentContact}`} target="_blank">{studentData.studentContact}</a>
+                            </aside>
+                            <aside>
+                                <label>Course:</label>
+                                <p>{studentData.studentCourse}</p>
+                            </aside>
+                            <aside>
+                                <label>Faculty:</label>
+                                <p>{studentData.studentFaculty}</p>
+                            </aside>
+                            <aside>
+                                <label>Section & Group:</label>
+                                <p>{studentData.studentSection} {studentData.studentGrp}</p>
+                            </aside>
+                            <aside>
+                                <label>Year Of Study:</label>
+                                <p>{studentData.studentYearOfStudy}</p>
+                            </aside>
+                            <aside>
+                                <label>Member Since:</label>
+                                <p>{dateOnly}</p>
+                            </aside>
+                        </section>
                     </div>
                 </div>
             </main>

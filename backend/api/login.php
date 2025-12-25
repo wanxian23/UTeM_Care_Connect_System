@@ -15,6 +15,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 require "../database.php";
 
 $email = $_POST["email"];
+$numberForm = "%".$email."%";
 $password = $_POST["password"];
 
 $type = "";     // <--- you still have type variable
@@ -23,8 +24,8 @@ $user = null;   // store user data
 /* -------------------------------------------
    1️⃣ CHECK STAFF TABLE (PA)
 ------------------------------------------- */
-$stmt = $conn->prepare("SELECT * FROM staff WHERE staffEmail=? AND staffRole = 'PENASIHAT AKADEMIK' LIMIT 1");
-$stmt->bind_param("s", $email);
+$stmt = $conn->prepare("SELECT * FROM staff WHERE (staffEmail=? OR staffNo LIKE ?) AND staffRole = 'PENASIHAT AKADEMIK' LIMIT 1");
+$stmt->bind_param("ss", $email, $numberForm);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -37,8 +38,7 @@ if ($result->num_rows > 0) {
    1️⃣ CHECK STAFF TABLE (COUNTSELLOR)
 ------------------------------------------- */
 if ($type === "") {
-    $stmt = $conn->prepare("SELECT * FROM staff WHERE staffEmail=? AND staffRole = 'COUNSELLING UNIT' LIMIT 1");
-    $stmt->bind_param("s", $email);
+    $stmt->bind_param("ss", $email, $numberForm);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -52,8 +52,8 @@ if ($type === "") {
    2️⃣ IF NOT STAFF → CHECK STUDENT TABLE
 ------------------------------------------- */
 if ($type === "") {
-    $stmt = $conn->prepare("SELECT * FROM student WHERE studentEmail=? LIMIT 1");
-    $stmt->bind_param("s", $email);
+    $stmt = $conn->prepare("SELECT * FROM student WHERE (studentEmail=? OR matricNo LIKE ?) LIMIT 1");
+    $stmt->bind_param("ss", $email, $numberForm);
     $stmt->execute();
     $result = $stmt->get_result();
 

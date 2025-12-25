@@ -52,7 +52,7 @@ main#mainCalendarFirst .customCalendar {
     box-shadow: 1px 1px 10px #567fbd;
     border-radius: 30px;
     background-color: #ffffff;
-    width: 80%;
+    width: 85%;
     font-size: 3.3vh;
     font-family: "Itim", sans-serif;
 }
@@ -121,10 +121,10 @@ main#mainCalendarFirst .customCalendar .react-calendar__tile {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 180px;
+    height: 200px;
     /* border-radius: 20px; */
     border: 1px solid #d8e8ff;
-    gap: 15px;
+    /* gap: 10px; */
     transition: 0.2s ease;
 }
 
@@ -165,20 +165,55 @@ main#mainCalendarFirst .customCalendar .react-calendar__month-view__days__day--n
 main#mainCalendarFirst .customCalendar div.titleContent {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    /* gap: 10px; */
+    /* border: 1px solid; */
+    width: 100%;
+}
+
+main#mainCalendarFirst .customCalendar div.titleContent:nth-of-type(1) {
+    margin: 10px 0;
+}
+
+main#mainCalendarFirst .customCalendar div.titleContent svg {
+    width: 50px;
+    height: 25px;
 }
 
 main#mainCalendarFirst .customCalendar div.titleContent img {
     width: 50px;
+    height: 50px;
 }
 
 main#mainCalendarFirst .customCalendar div.titleContent h4 {
     padding: 5px 10px;
-    background-color: rgb(255, 235, 220);
+    /* background-color: rgb(255, 235, 220); */
     border-radius: 20px;
     color: black;
 }
 
-main#mainCalendarFirst .customCalendar div.titleContent:nth-of-type(2) h4 {
-    background-color: rgb(194, 247, 215);
+main#mainCalendarFirst .customCalendar div.titleContent h4 label {
+    font-weight: lighter;
+}
+
+
+
+.sectionTitle {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    z-index: 1;
+    padding: 0 10px;
+}
+
+/* Background bar */
+.sectionTitle::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40%;          /* controls how much of text is covered */
+    background: #d7ddf4 !important;  /* your background color */
+    z-index: -1;
 }

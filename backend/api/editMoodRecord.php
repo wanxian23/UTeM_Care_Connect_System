@@ -26,6 +26,48 @@ $token = $user['loginToken'];
 
 $studentId = $user['studentId'];
 $moodId = $_GET['moodId'];
+$date = $_GET['date'];
+
+if ($date == "Today") {
+    $stmtRecordMood = $conn->prepare("
+        UPDATE stress
+        SET stressLevel = ?
+        WHERE studentId = ? AND
+        DATE(datetimeRecord) = CURDATE()
+    ");
+    $stmtRecordMood->bind_param("ii", $stress, $studentId);
+    $stmtRecordMood->execute();
+} else {
+
+    // Get stress level
+    $stmtStress = $conn->prepare("
+        SELECT * FROM stress
+        WHERE studentId = ?
+        AND DATE(datetimeRecord) = ?
+    ");
+    $stmtStress->bind_param("is", $studentId, $date);
+    $stmtStress->execute();
+    $resultStress = $stmtStress->get_result();
+    $stressData = $resultStress->fetch_assoc();
+
+    if ($resultStress->num_rows > 0) {
+        $stmtRecordStress = $conn->prepare("
+            UPDATE stress
+            SET stressLevel = ?
+            WHERE studentId = ? AND
+            date(datetimeRecord) = ?
+        ");
+        $stmtRecordStress->bind_param("iis", $stress, $studentId, $date);
+        $stmtRecordStress->execute();
+    } else {
+         $stmtRecordStress = $conn->prepare("
+            INSERT INTO stress(stressLevel, studentId, datetimeRecord)
+            VALUES (?, ?, ?)
+        ");
+        $stmtRecordStress->bind_param("iis", $stress, $studentId, $date);
+        $stmtRecordStress->execute();
+    }
+}
 
 // Get data of recorded mood
 $stmtCheckMoodData = $conn->prepare("

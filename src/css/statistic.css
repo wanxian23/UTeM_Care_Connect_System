@@ -1,0 +1,279 @@
+button {
+    font-size: 2.6vh !important;
+}
+
+/* Control Subheader */
+main.statisticBodyWrapper nav.statisticNav {
+    display: flex;
+    justify-content: space-around;
+    /* background-color: #ddfff0; */
+    background-color: #dde4ff;
+    padding: 5px;
+    /* background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff); */
+    width: 60%;
+    margin: 0 auto;
+    border-radius: 60px;
+    /* border: 1px solid; */
+}
+
+main.statisticBodyWrapper nav.statisticNav div {
+    width: 50%;
+}
+
+main.statisticBodyWrapper nav.statisticNav button {
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    padding: 15px 0;
+    color: #555555;
+    border-radius: 30px;
+    transition: 0.2s ease; 
+    font-weight: lighter;
+}
+
+main.statisticBodyWrapper nav.statisticNav button.activeBtn {
+    background-color: #C9D4FF;
+    font-weight: bold;
+}
+
+/* Body Main */
+main.statisticBodyWrapper {
+    padding: 50px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+    /* border: 1px solid; */
+    background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
+}
+
+main.trendBodyWrapper {
+    /* background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff); */
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    padding-bottom: 100px;
+    border-bottom: 3px solid #f7ead5;
+}
+
+main.trendBodyWrapper:last-child {
+    border-bottom: none;
+}
+
+main.trendBodyWrapper article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+}
+
+main.trendBodyWrapper article.trendWrapper div.monthTrendWrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    align-items: center;
+}
+
+main.trendBodyWrapper article.trendWrapper div.monthTrendWrapper div {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 50px;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    padding: 20px 30px;
+    border-radius: 20px;
+    /* border: 2px solid #c3f6ff; */
+    background-color: #e8f5ff;
+    flex: 10%;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section:first-child {
+    gap: 0;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section:first-child div {
+    gap: 10px;    
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section div img {
+    width: 80px;
+    height: 80px;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section div div {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section div.outerWrapper {
+    flex-direction: row;
+    gap: 20px;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section:last-child div.outerWrapper div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border: 1px solid; */
+    border-radius: 20px;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section:last-child div.outerWrapper div h3:last-child {
+    background-color: #c2d0fe;
+    border-radius: 10px;
+    padding: 10px 5px;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section.moodTrendSection:nth-of-type(2) div h3:first-child {
+    background-color: red;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section.moodTrendSection:nth-of-type(2) div.legendOuterWrapper {
+    /* border: 1px solid; */
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 20px;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section.moodTrendSection:nth-of-type(2) div.legendOuterWrapper div.legendInnerWrapper {
+    /* border: 1px solid; */
+    border-radius: 10px;
+    padding: 8px 10px;
+    flex: auto;
+    /* align-items: start; */
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section.moodTrendSection:nth-of-type(2) div.legendOuterWrapper div.legendInnerWrapper div {
+    display: flex;
+    flex-direction: row;
+    /* border: 1px solid; */
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section.moodTrendSection:nth-of-type(3) div.outerWrapper h3 {
+    text-align: center;
+}
+
+.sectionTitle {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    z-index: 1;
+    padding: 0 10px;
+}
+
+/* Background bar */
+.sectionTitle::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40%;          /* controls how much of text is covered */
+    background: #c2d0fe;  /* your background color */
+    z-index: -1;
+}
+
+h2.sectionTitle::after {
+    background: #d2e9e2 !important;
+    height: 40%;
+}
+
+/* Stress Level Trend */
+main.trendBodyWrapper article.trendWrapper div.monthTrendWrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    align-items: center;
+}
+
+main.trendBodyWrapper article.trendWrapper div.monthTrendWrapper div {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 50px;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section.moodStressSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    padding: 20px 30px;
+    border-radius: 20px;
+    /* border: 2px solid #c3f6ff; */
+    background-color: #e8f5ff;
+    flex: 10%;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section.moodStressSection div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section.moodStressSection:first-child div,
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section.moodStressSection:nth-of-type(2) div div {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section.moodStressSection div.outerWrapper {
+    flex-direction: row;
+    gap: 20px;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section.moodStressSection.moodStressSection div h3.avgStress {
+    width: 80px;
+    height: 80px;
+    background-color: #c2d0fe;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main.trendBodyWrapper article.summaryMoodTrend div.sectionMoodWrapper section.moodStressSection.moodStressSection div h3.stressStatus {
+    padding: 5px 20px;
+    background-color: #c2d0fe;
+    border-radius: 10px;
+}

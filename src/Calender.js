@@ -130,7 +130,7 @@ function CalendarDesign({ data }) {
     }
 
     const dailyDates = Object.keys(data.dailyMood);
-
+    
     return (
         <main id="mainCalendarFirst">
             <Calendar
@@ -154,22 +154,44 @@ function CalendarDesign({ data }) {
 
                     if (!dailyDates.includes(dateString)) return null;
 
-                    const moodInfo = data.dailyMood[dateString];
+                    const moodList = data.dailyMood[dateString];
+                    const avgStress = data.avgStressLevel[dateString]; // ← use this
 
                     return (
                         <>
                             <div className="titleContent">
-                                <img 
-                                    src={moodInfo.moodStoreLocation} 
-                                    alt={moodInfo.moodStatus}
-                                />
-                                <h4>{moodInfo.moodStatus}</h4>
+                                {moodList.map((mood, i) => (
+                                    <React.Fragment key={i}>
+                                    <img
+                                        src={mood.moodStoreLocation}
+                                        alt={mood.moodStatus}
+                                    />
+                                    {/* Add arrow if not the last mood */}
+                                    {i < moodList.length - 1 && (
+                                        <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        className="bi bi-arrow-right"
+                                        viewBox="0 0 16 16"
+                                        >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"
+                                        />
+                                        </svg>
+                                    )}
+                                    </React.Fragment>
+                                ))}
                             </div>
                             <div className="titleContent">
-                                <h4>Mood Record: {moodInfo.totalRecords}</h4>
+                                <h4>Avg Stress: <label>{avgStress ? avgStress + "%" : "N/A"}</label></h4> {/* ← correct */}
+                            </div>
+                            <div className="titleContent">
+                                <h4>Mood Record: <label>{moodList.length}</label></h4>
                             </div>
                         </>
                     );
+
                 }}
             />
         </main>
@@ -251,7 +273,7 @@ function MoodCount({data}) {
                 <article className='emojiWrapper'>
                     {items.map((emoji, index) => (
                         <div key={emoji.id}>
-                            <h3>{emoji.label}</h3>
+                            <h3 className="sectionTitle">{emoji.label}</h3>
                             <img 
                                 src={emoji.img}
                                 alt={emoji.label}

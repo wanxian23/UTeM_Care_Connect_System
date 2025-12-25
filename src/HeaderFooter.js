@@ -119,6 +119,8 @@ export function Header() {
         .then(data => {
             console.log("Notification status updated:", data);
 
+            console.log("noti id: ", notiData.notificationId);
+
             // Update local state immediately to reflect change
             setNotificationData(prev => {
                 return {
@@ -135,6 +137,13 @@ export function Header() {
         .catch(err => console.error(err));
     }
 
+    const goToNotification = () => {
+        navigate("/Notification");
+    }
+
+    const hasUnread = notificationData?.notificationData?.some(
+        noti => noti.notiStatus === "UNREAD"
+    );
 
     return(
         <>
@@ -157,48 +166,63 @@ export function Header() {
                 </aside>
                 <section id='profileWrapper'>
                     <div className="notificationWrapper">
-                        <svg onClick={toggleNotification} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
-                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
+                        <svg
+                            onClick={toggleNotification}
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            className={`bi ${hasUnread ? "bi-bell-fill" : "bi-bell"}`}
+                            viewBox="0 0 16 16"
+                        >
+                            {hasUnread ? (
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
+                            ) : (
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
+                            )}
                         </svg>
+
                         <div className="notificationContentWrapper" ref={notificationRef}>
                             <div className="notiTitle">
                                 <h3>Notification</h3>
-                                {/* <h5>
+                                <h5 onClick={goToNotification}>
                                     View All Notification
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
                                     </svg>
-                                </h5> */}
+                                </h5>
                             </div>
                             <div className="notiContent">
                                 {notificationData?.notificationData?.map((notiData, index) => (
-                                    <section 
-                                        key={index} 
-                                        onClick={() => {
-                                            handleNotificationClick(notiData, index);
-                                        }}
-                                        className={notiData.notiStatus}
-                                        style={{
-                                            opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5
-                                        }}
-                                    >
-                                        <h4>{notiData.title}
-                                            <p>
-                                                {/* Get formated date (Exp: 22 DEC 09:22 AM) */}
-                                                {new Date(notiData.notiCreatedDateTime).toLocaleString('en-US', {
-                                                    day: '2-digit',
-                                                    month: 'short',  // "Dec"
-                                                    hour: '2-digit',
-                                                    minute: '2-digit',
-                                                    hour12: true     // 12-hour format with AM/PM
-                                                }).replace(',', ',')
-                                                .toUpperCase()} 
-                                            </p>
-                                        </h4>
-                                        <p>{notiData.description}</p>
-                                    </section>
+                                    notiData.notiStatus === "UNREAD" && (
+                                        <section 
+                                            key={index} 
+                                            onClick={() => {
+                                                handleNotificationClick(notiData, index);
+                                            }}
+                                            className={notiData.notiStatus}
+                                            style={{
+                                                opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5
+                                            }}
+                                        >
+                                            <h4>{notiData.title}
+                                                <p>
+                                                    {/* Get formated date (Exp: 22 DEC 09:22 AM) */}
+                                                    {new Date(notiData.notiCreatedDateTime).toLocaleString('en-US', {
+                                                        day: '2-digit',
+                                                        month: 'short',  // "Dec"
+                                                        hour: '2-digit',
+                                                        minute: '2-digit',
+                                                        hour12: true     // 12-hour format with AM/PM
+                                                    }).replace(',', ',')
+                                                    .toUpperCase()} 
+                                                </p>
+                                            </h4>
+                                            <p>{notiData.description}</p>
+                                        </section>
+                                    )
                                 ))}
-                                <h4 style={{textAlign: "center", fontSize: "2vh"}}>-- Only this month’s notifications are shown --</h4>
+                                <h4 style={{textAlign: "center", fontSize: "2vh"}}>-- Only Unread Notification Will Be Shown --</h4>
                             </div>
                         </div>
                     </div>
@@ -293,13 +317,12 @@ export function HeaderPa() {
         setShowNoti(!showNoti);
     }
 
-    const handleNotificationClick = (notiId, index) => {
-        // Navigate to MoodRecord
-        navigate("/MoodRecord");
+    const handleNotificationClick = (notiData, index) => {
+        navigate(notiData.location);
 
             // Call the API to update the status
         const token = localStorage.getItem("token");
-        fetch(`http://localhost:8080/care_connect_system/backend/api/updateNotificationStatus.php?notificationId=${notiId}`, {
+        fetch(`http://localhost:8080/care_connect_system/backend/api/updateNotificationStatusPa.php?notificationId=${notiData.notificationId}`, {
             method: "GET", // since your PHP expects GET
             headers: {
                 "Authorization": "Bearer " + token
@@ -309,12 +332,14 @@ export function HeaderPa() {
         .then(data => {
             console.log("Notification status updated:", data);
 
+            console.log("noti id: ", notiData.notificationId);
+
             // Update local state immediately to reflect change
             setNotificationData(prev => {
                 return {
                     ...prev,
                     notificationData: prev.notificationData.map(noti => {
-                        if(noti.notificationId === notiId){
+                        if(noti.notificationId === notiData.notificationId){
                             return {...noti, notiStatus: "READ"};
                         }
                         return noti;
@@ -325,6 +350,14 @@ export function HeaderPa() {
         .catch(err => console.error(err));
     }
 
+    const goToNotification = () => {
+        navigate("/NotificationPa");
+    }
+
+    const hasUnread = notificationData?.notificationData?.some(
+        noti => noti.notiStatus === "UNREAD"
+    );
+
     return(
         <>
             <header>
@@ -334,8 +367,8 @@ export function HeaderPa() {
                 </a>
                 <nav>
                     <Link to='/DashboardPa' >Dashboard</Link>
-                    <Link to='/StudentTableData' >Table Data</Link>
-                    <Link to='/StatisticPa' >Statistic</Link>
+                    {/* <Link to='/StudentTableData' >Table Data</Link> */}
+                    <Link to='/StudentTableData' >Statistic</Link>
                     {/* <a href='' id='signup'>Signup</a> */}
                 </nav>
                 <aside>
@@ -345,48 +378,63 @@ export function HeaderPa() {
                 </aside>
                 <section id='profileWrapper' >
                     <div className="notificationWrapper">
-                        <svg onClick={toggleNotification} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
-                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
+                        <svg
+                            onClick={toggleNotification}
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            className={`bi ${hasUnread ? "bi-bell-fill" : "bi-bell"}`}
+                            viewBox="0 0 16 16"
+                        >
+                            {hasUnread ? (
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
+                            ) : (
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
+                            )}
                         </svg>
+
                         <div className="notificationContentWrapper" ref={notificationRef}>
                             <div className="notiTitle">
                                 <h3>Notification</h3>
-                                {/* <h5>
+                                <h5 onClick={goToNotification}>
                                     View All Notification
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
                                     </svg>
-                                </h5> */}
+                                </h5>
                             </div>
                             <div className="notiContent">
                                 {notificationData?.notificationData?.map((notiData, index) => (
-                                    <section 
-                                        key={index} 
-                                        className={notiData.notiStatus}
-                                        onClick={() => {
-                                            handleNotificationClick(notiData.notificationId, index);
-                                        }}
-                                        style={{
-                                            opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5
-                                        }}
-                                    >
-                                        <h4>{notiData.title}
-                                            <p>
-                                                {/* Get formated date (Exp: 22 DEC 09:22 AM) */}
-                                                {new Date(notiData.notiCreatedDateTime).toLocaleString('en-US', {
-                                                    day: '2-digit',
-                                                    month: 'short',  // "Dec"
-                                                    hour: '2-digit',
-                                                    minute: '2-digit',
-                                                    hour12: true     // 12-hour format with AM/PM
-                                                }).replace(',', ',')
-                                                .toUpperCase()} 
-                                            </p>
-                                        </h4>
-                                        <p>{notiData.description}</p>
-                                    </section>
+                                    notiData.notiStatus === "UNREAD" && (
+                                        <section 
+                                            key={index} 
+                                            className={notiData.notiStatus}
+                                            onClick={() => {
+                                                handleNotificationClick(notiData, index);
+                                            }}
+                                            style={{
+                                                opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5
+                                            }}
+                                        >
+                                            <h4>{notiData.title}
+                                                <p>
+                                                    {/* Get formated date (Exp: 22 DEC 09:22 AM) */}
+                                                    {new Date(notiData.notiCreatedDateTime).toLocaleString('en-US', {
+                                                        day: '2-digit',
+                                                        month: 'short',  // "Dec"
+                                                        hour: '2-digit',
+                                                        minute: '2-digit',
+                                                        hour12: true     // 12-hour format with AM/PM
+                                                    }).replace(',', ',')
+                                                    .toUpperCase()} 
+                                                </p>
+                                            </h4>
+                                            <p>{notiData.description}</p>
+                                        </section>
+                                    )
                                 ))}
-                                <h4 style={{textAlign: "center", fontSize: "2vh"}}>-- Only this month’s notifications are shown --</h4>
+                                <h4 style={{textAlign: "center", fontSize: "2vh"}}>-- Only Unread Notification Will Be Shown --</h4>
                             </div>
                         </div>
                     </div>

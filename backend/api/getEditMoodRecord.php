@@ -10,6 +10,30 @@ require "authStudent.php";
 $user = validateToken($conn);
 $studentId = $user['studentId'];
 $moodId = $_GET['moodId'];
+$date = $_GET['date'];
+
+// Get stress level
+if ($date == "Today" || $date == "Specific") {
+    $stmtStress = $conn->prepare("
+        SELECT * FROM stress
+        WHERE studentId = ?
+        AND DATE(datetimeRecord) = CURDATE()
+    ");
+    $stmtStress->bind_param("i", $studentId);
+    $stmtStress->execute();
+    $resultStress = $stmtStress->get_result();
+    $stressData = $resultStress->fetch_assoc();
+} else {
+    $stmtStress = $conn->prepare("
+        SELECT * FROM stress
+        WHERE studentId = ?
+        AND DATE(datetimeRecord) = ?
+    ");
+    $stmtStress->bind_param("is", $studentId, $date);
+    $stmtStress->execute();
+    $resultStress = $stmtStress->get_result();
+    $stressData = $resultStress->fetch_assoc();
+}
 
 // Get data of recorded mood
 $stmtCheckMoodData = $conn->prepare("
@@ -38,6 +62,7 @@ if ($moodData) {
     echo json_encode([
         "success" => true,
         "moodRecord" => $moodData,
+        "stressLevel" => $stressData['stressLevel'],
         "entries" => $entryIds  // Array of entry IDs like [1, 3, 5]
     ]);
 } else {

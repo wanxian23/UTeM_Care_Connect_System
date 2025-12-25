@@ -13,6 +13,7 @@ $token = $user['loginToken'];
 $staffId = $user['staffId'];
 
 // Get student notification data (Show only this month)
+// Show only UNREAD
 $stmtGetNotification = $conn->prepare("
     SELECT *
     FROM notification

@@ -31,15 +31,15 @@ foreach ($getStudentMoodData as $row) {
     $resultCheckMoodRecord = $stmtCheckMoodRecord->get_result();
 
     if ($resultCheckMoodRecord->num_rows == 1) {
-        $stmtRecordMoodReminder = $conn->prepare("INSERT INTO notification(title, description, location, notiType, studentId, purpose)
-                        VALUES(?, ?, '/MoodRecord', ?, ?, 'test')");
+        $stmtRecordMoodReminder = $conn->prepare("INSERT INTO notification(title, description, location, notiType, studentId)
+                        VALUES(?, ?, '/MoodRecord', ?, ?)");
         $stmtRecordMoodReminder->bind_param("sssi", $title, $description2, $type, $studentId);
         $stmtRecordMoodReminder->execute();
 
         echo "<br>Mood Reminder For Afternoon Successfully Created For Student" . $studentId . "!";
     } else if ($resultCheckMoodRecord->num_rows == 0) {
-        $stmtRecordMoodReminder = $conn->prepare("INSERT INTO notification(title, description, location, notiType, studentId, purpose)
-                        VALUES(?, ?, '/MoodRecord', ?, ?, 'test')");
+        $stmtRecordMoodReminder = $conn->prepare("INSERT INTO notification(title, description, location, notiType, studentId)
+                        VALUES(?, ?, '/MoodRecord', ?, ?)");
         $stmtRecordMoodReminder->bind_param("sssi", $title, $description1, $type, $studentId);
         $stmtRecordMoodReminder->execute();
 

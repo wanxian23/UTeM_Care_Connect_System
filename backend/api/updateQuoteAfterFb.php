@@ -26,28 +26,28 @@ require "../database.php";
     $quoteTypes = [];
     
     switch ($priority) {
-        case 1: // Crying
+        case 0: // Crying
             $quoteTypes = ["Calm", "Positive"];
             break;
-        case 2: // Sad
+        case 1: // Sad
             $quoteTypes = ["Calm", "Positive"];
             break;
-        case 3: // Angry
+        case 2: // Angry
             $quoteTypes = ["Calm", "Motivation"];
             break;
-        case 4: // Anxious
+        case 3: // Anxious
             $quoteTypes = ["Calm", "Positive"];
             break;
-        case 5: // Annoying
+        case 4: // Annoying
             $quoteTypes = ["Motivation", "Game"];
             break;
-        case 6: // Neutral
+        case 5: // Neutral
             $quoteTypes = ["Calm", "Positive"];
             break;
-        case 7: // Happy
+        case 6: // Happy
             $quoteTypes = ["Calm", "Positive"];
             break;
-        case 8: // Excited
+        case 7: // Excited
             $quoteTypes = ["Motivation", "Positive"];
             break;
         default:

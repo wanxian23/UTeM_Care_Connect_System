@@ -18,49 +18,91 @@ $userId = $user['studentId'];
 
 
 // Get data of averageStress
-$stmtStressAvg = $conn->prepare("
-    SELECT AVG(stressLevel) AS avgStress
-    FROM moodTracking
+// $stmtStressAvg = $conn->prepare("
+//     SELECT AVG(stressLevel) AS avgStress
+//     FROM moodTracking
+//     WHERE studentId = ?
+//     AND DATE(datetimeRecord) = CURDATE()
+// ");
+// $stmtStressAvg->bind_param("i", $userId);
+// $stmtStressAvg->execute();
+// $resultStressAvg = $stmtStressAvg->get_result();
+// $stressData = $resultStressAvg->fetch_assoc();
+
+// $avgStress = $stressData['avgStress']; // this is the average
+
+
+
+// Get stress level
+$stmtStress = $conn->prepare("
+    SELECT * FROM stress
     WHERE studentId = ?
     AND DATE(datetimeRecord) = CURDATE()
 ");
-$stmtStressAvg->bind_param("i", $userId);
-$stmtStressAvg->execute();
-$resultStressAvg = $stmtStressAvg->get_result();
-$stressData = $resultStressAvg->fetch_assoc();
+$stmtStress->bind_param("i", $userId);
+$stmtStress->execute();
+$resultStress = $stmtStress->get_result();
+$stressData = $resultStress->fetch_assoc();
 
-$avgStress = $stressData['avgStress']; // this is the average
+
 
 // Get data of averageScale
-$stmtMoodAvg = $conn->prepare("
-    SELECT 
-        AVG(m.scale) AS avgMoodScale
-    FROM moodTracking mt
-    JOIN mood m ON mt.moodTypeId = m.moodTypeId
-    WHERE mt.studentId = ?
-    AND DATE(mt.datetimeRecord) = CURDATE()
+// $stmtMoodAvg = $conn->prepare("
+//     SELECT 
+//         AVG(m.scale) AS avgMoodScale
+//     FROM moodTracking mt
+//     JOIN mood m ON mt.moodTypeId = m.moodTypeId
+//     WHERE mt.studentId = ?
+//     AND DATE(mt.datetimeRecord) = CURDATE()
+// ");
+// $stmtMoodAvg->bind_param("i", $userId);
+// $stmtMoodAvg->execute();
+
+// $resultMoodAvg = $stmtMoodAvg->get_result();
+// $dataMood = $resultMoodAvg->fetch_assoc();
+
+// $avgMoodScale = $dataMood['avgMoodScale'];  // decimal (e.g., 5.7)
+
+// $finalMoodScale = round($avgMoodScale);
+
+// $stmtMoodInfo = $conn->prepare("
+//     SELECT *
+//     FROM mood
+//     WHERE scale = ?
+// ");
+// $stmtMoodInfo->bind_param("i", $finalMoodScale);
+// $stmtMoodInfo->execute();
+
+// $resultMoodInfo = $stmtMoodInfo->get_result();
+// $moodInfo = $resultMoodInfo->fetch_assoc();
+
+$moodStatus = [];
+$moodStoreLocation = [];
+$stmtGetAllMoodStatus = $conn->prepare("
+    SELECT * FROM moodTracking 
+    WHERE studentId = ?
+    AND DATE(datetimeRecord) = CURDATE()
 ");
-$stmtMoodAvg->bind_param("i", $userId);
-$stmtMoodAvg->execute();
+$stmtGetAllMoodStatus->bind_param("i", $userId);
+$stmtGetAllMoodStatus->execute();
+$resultGetAllMoodStatus = $stmtGetAllMoodStatus->get_result();
+$getAllMoodStatusData = $resultGetAllMoodStatus->fetch_all(MYSQLI_ASSOC);
 
-$resultMoodAvg = $stmtMoodAvg->get_result();
-$dataMood = $resultMoodAvg->fetch_assoc();
+foreach ($getAllMoodStatusData as $row) {
+    $moodTypeId = $row['moodTypeId'];
 
-$avgMoodScale = $dataMood['avgMoodScale'];  // decimal (e.g., 5.7)
+    $stmtGetMoodDetails = $conn->prepare("
+        SELECT * FROM mood
+        WHERE moodTypeId = ?
+    ");
+    $stmtGetMoodDetails->bind_param("i", $moodTypeId);
+    $stmtGetMoodDetails->execute();
+    $resultGetMoodDetails = $stmtGetMoodDetails->get_result();
+    $moodDetails = $resultGetMoodDetails->fetch_assoc();
 
-$finalMoodScale = round($avgMoodScale);
-
-$stmtMoodInfo = $conn->prepare("
-    SELECT *
-    FROM mood
-    WHERE scale = ?
-");
-$stmtMoodInfo->bind_param("i", $finalMoodScale);
-$stmtMoodInfo->execute();
-
-$resultMoodInfo = $stmtMoodInfo->get_result();
-$moodInfo = $resultMoodInfo->fetch_assoc();
-
+    $moodStatus[] = $moodDetails['moodStatus'];
+    $moodStoreLocation[] = $moodDetails['moodStoreLocation'];
+}
 
 // Variable for moodCount (Weekly)
 $moodCount = [];
@@ -125,8 +167,8 @@ if ($stressData) {
         echo json_encode([
             "success" => true,
             "hasRecord" => true,
-            "moodStatus" => $moodInfo['moodStatus'],
-            "moodStoreLocation" => $moodInfo['moodStoreLocation'],
+            "moodStatus" => $moodStatus ?? null,
+            "moodStoreLocation" => $moodStoreLocation ?? null,
             "stressLevel" => $avgStress,
             "quote" => "Be Happy Everyday!",
             "quoteType" => "Positive",
@@ -144,20 +186,21 @@ if ($stressData) {
     $recommendation = $resultRecommendation->fetch_assoc();
 
     // DAILY RECORD EXISTS
-    if ($stressData && $avgStress !== null) {
+    if ($stressData) {
 
         echo json_encode([
             "success" => true,
             "hasRecord" => true,
 
             // Daily mood info
-            "moodStatus" => $moodInfo['moodStatus'] ?? null,
-            "moodStoreLocation" => $moodInfo['moodStoreLocation'] ?? null,
-            "stressLevel" => $avgStress ?? null,
+            "moodStatus" => $moodStatus ?? null,
+            "moodStoreLocation" => $moodStoreLocation ?? null,
+            "stressLevel" => $stressData['stressLevel'] ?? null,
 
             // Recommendation info
             "quote" => $recommendation ? $recommendation['quote'] : "Be Happy Everyday!",
             "quoteType" => $recommendation ? $recommendation['type'] : "Positive",
+            "quoteLink" => $recommendation['hyperlink'] ??  null,
             "fbUsefulness" => $recommendationChecking['fbUsefulness'] ?? null,
 
             // WEEKLY DATA (ALWAYS RETURNED)

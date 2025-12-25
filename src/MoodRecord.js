@@ -4,7 +4,7 @@ import {Header, Footer} from "./HeaderFooter";
 import { NavLink } from "react-router-dom";
 
 import "./css/MoodRecord.css";
-import MessageBox from "./Modal";
+import MessageBox, {MoodRecommendationModal} from "./Modal";
 
 function MoodRecord() {
 
@@ -32,7 +32,7 @@ export function SubHeader() {
                     isActive ? "subButton selectedSubHeader leftSelected" : "subButton"
                 }
             >
-            Today Mood Record
+            Record Your Mood
             </NavLink>
 
             <NavLink
@@ -41,7 +41,7 @@ export function SubHeader() {
                     isActive ? "subButton selectedSubHeader rightSelected" : "subButton"
                 }
             >
-            Viewing Mood Record
+            Mood Record View
             </NavLink>
             </main>
         </>
@@ -486,7 +486,7 @@ function EntriesAdd() {
     return(
         <>
             <main id="MainThird">
-                <h1>Why Getting Bad Mood ? You Can Choose More Than 1 Option</h1>
+                <h1>Why Getting Bad Mood ? You Can Choose More Than 1 Category</h1>
                 <section id='wholeEntriesWrapper'>
                     <div
                         className={`entriesSelectionArea ${selectedEntries.includes(1) ? "selected" : ""}`}
@@ -1095,6 +1095,7 @@ function NoteAdd() {
 function RecordMoodNote() {
 
         const [moodRecordData, setMoodRecordData] = useState({});
+        const [moodId, setMoodId] = useState(null);
 
         // For form handling and messageBox (Modal)
         const [messagebox, setMessagebox] = useState({
@@ -1104,16 +1105,36 @@ function RecordMoodNote() {
             buttonValue: "",
             redirect: true
         });
+
+        const [recommendationBox, setRecommendationBox] = useState({
+            isOpen: false,
+            mood: "",
+            moodStoreLocation: "",
+            stressColor: "",
+            stressValue: "",
+            stressLevel: "",
+            recommendationType: "",
+            recommendation: "",
+            recommendationLink: ""
+        });
+
     
         // Modal button click handler → put this inside the component
         const handleModalButton = () => {
             const shouldRedirect = messagebox.redirect; // Capture current value first
             setMessagebox({ ...messagebox, show: false }); // hide modal
             if (shouldRedirect) {
-                window.location.href = "/MoodRecord";
+                window.location.href = `/MoodRecordViewSpecific/${moodId}`;
             }
         };
-    
+
+        const closeRecommendationModal = () => {
+            setRecommendationBox(prev => ({
+                ...prev,
+                isOpen: false
+            }));
+        };
+            
         const token = localStorage.getItem("token");
 
         // Use to check data
@@ -1137,6 +1158,7 @@ function RecordMoodNote() {
                      console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
                      
                      if(data.success){
+
                         setMoodRecordData(data);
 
                      } else {
@@ -1165,13 +1187,59 @@ function RecordMoodNote() {
             const result = await response.json();
 
             if(result.success){
-                setMessagebox({
-                    show: true,
-                    title: "Daily Mood Record Successful",
-                    message: result.message,
-                    buttonValue: "OK",
-                    redirect: true
+                // setMessagebox({
+                //     show: true,
+                //     title: "Daily Mood Record Successful",
+                //     message: result.message,
+                //     buttonValue: "OK",
+                //     redirect: true
+                // });
+
+                // Calculate stress level immediately
+                const value = result.stressLevel;
+                let level = "", color = "";
+                if (value <= 20) {
+                    color = "#BFE5C8";
+                    level = "Very Low Stress";
+                } else if (value <= 40) {
+                    color = "#d9f2dfff";
+                    level = "Low Stress";
+                } else if (value <= 60) {
+                    color = "#e4b995ff";
+                    level = "Moderate Stress";
+                } else if (value <= 80) {
+                    color = "#e9b6b6ff";
+                    level = "High Stress";
+                } else {
+                    color = "#ee7878ff";
+                    level = "Very High Stress";
+                }
+
+                const quoteValue = result.quoteType?.toLowerCase();
+                let quoteSentence = "";
+                if (quoteValue == "game") {
+                    quoteSentence = "Game Time";
+                } else if (quoteValue == "positive") {
+                    quoteSentence = "Happy Thoughts";
+                } else if (quoteValue == "calm") {
+                    quoteSentence = "Calm Corner";
+                } else if (quoteValue == "motivation") {
+                    quoteSentence = "Rise & Grind";
+                }
+
+                setRecommendationBox({
+                    isOpen: true,
+                    mood: result.moodDetailsData.moodStatus,
+                    moodStoreLocation: result.moodDetailsData.moodStoreLocation,
+                    stressColor: color,
+                    stressValue: result.stressLevel,
+                    stressLevel: level,
+                    recommendationType: quoteValue,
+                    recommendation: result.quote,
+                    recommendationLink: result.quoteLink
                 });
+
+                setMoodId(result.moodId);
             } else {
                 setMessagebox({
                     show: true,
@@ -1197,8 +1265,8 @@ function RecordMoodNote() {
     return(
         <>
             <form id="formFirst" onSubmit={handleMoodRecord}>
+                {!moodRecordData.stressRecord && <StressLevelRecord />}
                 <MoodChoose />
-                <StressLevelRecord />
                 <EntriesAdd />
                 <NoteAdd />
                 <div id="buttonMoodRecordWrapper">
@@ -1212,6 +1280,19 @@ function RecordMoodNote() {
                 message={messagebox.message}
                 buttonValue={messagebox.buttonValue}
                 onClose={handleModalButton}
+            />
+            <MoodRecommendationModal
+                isOpen={recommendationBox.isOpen}
+                onViewDetails={handleModalButton}
+                onClose={closeRecommendationModal}
+                mood={recommendationBox.mood}
+                moodStoreLocation={recommendationBox.moodStoreLocation}
+                stressColor={recommendationBox.stressColor}
+                stressValue={recommendationBox.stressValue}
+                stressLevel={recommendationBox.stressLevel}
+                recommendationType={recommendationBox.recommendationType}
+                recommendation={recommendationBox.recommendation}
+                recommendationLink={recommendationBox.recommendationLink}
             />
         </>
     );

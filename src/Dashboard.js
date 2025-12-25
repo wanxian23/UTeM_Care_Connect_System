@@ -48,13 +48,13 @@ function Dashboard() {
                      color = "#BFE5C8";
                      level = "Very Low Stress";
                  } else if (value <= 40) {
-                     color = "#BFE5C8";
+                     color = "#d9f2dfff";
                      level = "Low Stress";
                  } else if (value <= 60) {
-                     color = "#ecb385ff";
+                     color = "#e4b995ff";
                      level = "Moderate Stress";
                  } else if (value <= 80) {
-                     color = "#ea9595ff";
+                     color = "#e9b6b6ff";
                      level = "High Stress";
                  } else {
                      color = "#ee7878ff";
@@ -187,22 +187,22 @@ function Body1({data, stressLevel, stressColor, quoteTitle}) {
         }
     };
 
-    if (!data || !data.hasRecord) return (
-        <main id="bodyDashboardFirst">
-            <article id="moodRecordInfoWrapper">
-                <div id="dashboardMoodDateWrapper">
+    if (!data || !data.hasRecord || !data.moodStatus[0]) return (
+        <main className="bodyDashboardFirst">
+            <article className="moodRecordInfoWrapper">
+                <div className="dashboardMoodDateWrapper">
                     <h2>{weekDay}</h2>
                     <h2>{formattedDate}</h2>
                     <h2>{formattedTime}</h2>
                 </div>
-                <div id="dashboardMoodDateWrapper">
+                <div className="dashboardNoRecordWrapper">
                     <section>
                         <h3>You Seem Like Haven't Record Any Feelings Today Yet!</h3>
                         <button onClick={clickToMoodRecord}>Click Here To Record Now!</button>
                     </section>
                 </div>
             </article>   
-            <div id='downWrapper'>
+            <div className='downWrapper'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
                 <   path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/>
                 </svg>&emsp;
@@ -216,17 +216,78 @@ function Body1({data, stressLevel, stressColor, quoteTitle}) {
 
     return(
         <>
-            <main id="bodyDashboardFirst">
-                <article id="moodRecordInfoWrapper">
-                    <div id="dashboardMoodDateWrapper">
+            <main className="bodyDashboardFirst">
+                <article className="moodRecordInfoWrapper">
+                    <div className="dashboardMoodDateWrapper">
                         <h2>{weekDay}</h2>
                         <h2>{formattedDate}</h2>
                         <h2>{formattedTime}</h2>
                     </div>
-                    <div id="dashboardMoodDateWrapper">
+                    <div className="dashboardMoodRecordLeftWrapper">
+                        <h3 className="sectionTitle">Mood Record Reminder</h3>
+                        <section>
+                            {data.moodStatus[1] ?
+                                <h3>Great! You have completed all the mood record today :)</h3>
+                            :
+                                <>
+                                    <h3>You still have 1 mood record left haven't completed.</h3>
+                                    <button onClick={clickToMoodRecord}>Click Here To Record Now!</button>
+                                </>
+                            }
+                        </section>
+                    </div>
+                    <div className="dashboardMoodInfoWrapper">
+                        <section className="first">
+                            <h3 className="sectionTitle">Today Mood Changes</h3>
+                            <div className="moodResultWrapper">
+                                <div>
+                                    <img src={data.moodStoreLocation[0]}></img>
+                                    <h3>{data.moodStatus[0]}</h3>
+                                </div>
+                                <div>
+                                    <p>Mood Changes</p>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    {data.moodStatus[1] ?
+                                        <>
+                                            <img src={data.moodStoreLocation[1]}></img>
+                                            <h3>{data.moodStatus[1]}</h3>
+                                        </>
+                                    :
+                                        <h4>No Record</h4>
+                                    }
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <h3 className="sectionTitle">Avg Stress Level</h3>
+                            <div className="moodResultWrapper">
+                                <div>
+                                    <h2
+                                        style={{
+                                        backgroundColor: `${stressColor}`}}
+                                    >{data.stressLevel}%</h2>
+                                    <h3>{stressLevel}</h3>
+                                </div>
+                            </div> 
+                        </section>
+                    </div>
+                    <div className="dashboardFeedbackWrapper">
                         <h2>
-                            <label>{quoteTitle}</label><br /><br />
-                            {data.quote}
+                            <label className="sectionTitle">{quoteTitle}</label><br />
+                            {data.quoteType === "game" ? 
+                                <a href={data.quoteLink} target="_blank">
+                                    {data.quote}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                                        <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+                                    </svg>
+                                </a>
+                            : 
+                            data.quote}
                         </h2>
                         {data.fbUsefulness ? (
                         <div className="quoteFeedbackWrapper">
@@ -266,27 +327,8 @@ function Body1({data, stressLevel, stressColor, quoteTitle}) {
                             <div></div>
                         )}
                     </div>
-                    <div id="dashboardMoodDateWrapper">
-                        <section className="first">
-                            <h3>Today Mood</h3>
-                            <div className="moodResultWrapper">
-                                <img src={data.moodStoreLocation}></img>
-                                <h3>{data.moodStatus}</h3>
-                            </div>
-                        </section>
-                        <section>
-                            <h3>Stress Level</h3>
-                            <div className="moodResultWrapper">
-                                <div className="stressIcon"
-                                     style={{
-                                        backgroundColor: `${stressColor}`
-                                     }}><h2>{data.stressLevel}%</h2></div>
-                                <h3>{stressLevel}</h3>
-                            </div> 
-                        </section>
-                    </div>
                 </article>
-                <div id='downWrapper'>
+                <div className='downWrapper'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
                     <   path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/>
                     </svg>&emsp;
@@ -381,7 +423,7 @@ function MoodCount({data}) {
                 <article className='emojiWrapper'>
                     {items.map((emoji, index) => (
                         <div key={emoji.id}>
-                            <h3>{emoji.label}</h3>
+                            <h3 className="sectionTitle">{emoji.label}</h3>
                             <img 
                                 src={emoji.img}
                                 alt={emoji.label}

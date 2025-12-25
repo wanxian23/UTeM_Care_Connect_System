@@ -105,19 +105,11 @@ main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInf
 }
 
 main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper section > h3 {
-    padding: 8px 30px;
-    background-color: #cfccea;
+    padding: 5px 10px;
+    background-color: transparent;
+    /* border-bottom: 3px solid #cfccea; */
     text-align: center;
-    border-radius: 20px;
-}
-
-main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper section div.moodResultWrapper:hover {
-    transform: scale(1.05);
-}
-
-main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:nth-last-child(2) section div.moodResultWrapper:hover, 
-main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:last-child section div.moodResultWrapper:hover {
-    transform: scale(1);
+    border-radius: 10px;
 }
 
 main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper section div.moodResultWrapper img {
@@ -138,10 +130,6 @@ main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInf
     transition: 0.2s ease;
     flex-wrap: nowrap;
     padding: 25px 0 0 0;
-}
-
-main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:nth-last-child(2) section div.moodResultWrapper div.entriesIconWrapper:hover {
-    transform: scale(1.05);
 }
 
 main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:nth-last-child(2) section div.moodResultWrapper img {
@@ -169,4 +157,24 @@ main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInf
     line-height: 30px;
     /* text-indent: 50px; */
     /* width: 100%; */
+}
+
+.sectionTitle {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    z-index: 1;
+    padding: 0 10px;
+}
+
+/* Background bar */
+.sectionTitle::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40%;          /* controls how much of text is covered */
+    background: #d7ddf4 !important;  /* your background color */
+    z-index: -1;
 }

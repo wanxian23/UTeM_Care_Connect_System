@@ -14,7 +14,10 @@ $studentId = $user['studentId'];
 $moodId = $_GET['moodId'] ?? null;
 
 if(!$moodId){
-    echo json_encode(["success" => false, "message" => "No moodId provided"]);
+    echo json_encode([
+        "success" => false, 
+        "message" => "No moodId provided"
+    ]);
     exit;
 }
 
@@ -22,9 +25,15 @@ $stmt = $conn->prepare("DELETE FROM moodTracking WHERE studentId = ? AND moodId 
 $stmt->bind_param("ii", $studentId, $moodId);
 
 if($stmt->execute()){
-    echo json_encode(["success" => true, "message" => "Mood deleted successfully!"]);
+    echo json_encode([
+        "success" => true, 
+        "message" => "Mood deleted successfully!"
+    ]);
 } else {
-    echo json_encode(["success" => false, "message" => "Mood delete failed!"]);
+    echo json_encode([
+        "success" => false, 
+        "message" => "Mood delete failed!"
+    ]);
 }
 
 

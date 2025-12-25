@@ -1,137 +1,232 @@
+button {
+    font-size: 4vh;    
+}
 
-main#bodyDashboardFirst {
+main.bodyDashboardFirst {
     /* color: #555555; */
-    padding: 30px 50px;
+    padding: 10px 50px;
     display: flex;
     flex-direction: column;
     justify-content:space-between;
     align-items: center;
-    height: 680px;
+    height: 800px;
     /* background: linear-gradient(to bottom, #FFF8E7, #FFF8E7, #FFF8E7, #ffffff); */
     background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
     gap: 20px;
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper {
+/* Control upper part (Other than mood count) */
+main.bodyDashboardFirst article.moodRecordInfoWrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    width: 80%;
     /* height: 510px; */
     justify-content: center;
     /* border: 1px solid; */
-    gap: 20px;
+    gap: 40px;
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper {
+main.bodyDashboardFirst article.moodRecordInfoWrapper div {
+    width: 100%;
+    /* border: 1px solid; */
     display: flex;
+}
+
+/* Control Date */
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodDateWrapper {
+    flex-direction: row;
     justify-content: space-around;
-    /* border-bottom: 2px solid #c2bfe5; */
+    border-bottom: 2px solid #c2bfe5;
     padding: 20px 0;
-    width: 80%;
     /* background-color: #BFE5C8; */
     border-radius: 20px 20px 0 0;
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper h2 {
-    text-align: center;
-    /* color: #555555; */
-}
-
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper h2 label {
-    padding: 5px 20px;
-    background-color: #f2c89f;
-    border-radius: 20px;
-    /* color: black; */
-}
-
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper:nth-of-type(2) {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-}
-
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper div.quoteFeedbackWrapper {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    align-items: center;
-    font-size: 2.5vh;
-}
-
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper div.quoteFeedbackWrapper button {
-    background: none;
-    padding: 0 10px;
-}
-
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper div.quoteFeedbackWrapper svg {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    opacity: 0.8;
-}
-
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper div.quoteFeedbackWrapper svg:hover {
-    transform: scale(1.05);
-    opacity: 1;
-}
-
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper:last-child section {
-    width: 100%;
-    /* border-top:  2px solid #c2bfe5; */
-}
-
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper:last-child section.first:first-child {
-    border-right: 2px solid #c2bfe5;
-}
-
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper:first-child {
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodInfoWrapper {
+    border-top: 2px solid #c2bfe5;
     border-bottom: 2px solid #c2bfe5;
+    width: 85%;
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper section > h3 {
-    padding: 5px 20px;
-    background-color: #d6d5ff;
-    border-radius: 25px;
+/* Control Mood Record Reminder */
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodRecordLeftWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper section div.moodResultWrapper {
-    /* border: 1px solid; */
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodRecordLeftWrapper h3 {
+    font-size: 3.2vh;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodRecordLeftWrapper h3:last-child {
+    font-size: 2.8vh;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodRecordLeftWrapper section {
+    width: 100%;
     display: flex;
     /* flex-direction: column; */
     align-items: center;
     justify-content: center;
+    gap: 30px;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodRecordLeftWrapper section h3 {
+    font-size: 2.8vh;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodRecordLeftWrapper section button {
+    padding: 10px 30px;
+    border-radius: 15px;
+    /* background: linear-gradient(145deg, #ffb5b5, rgb(255, 206, 174), #faffb5, #abffc8, #bbdfff, #d6d5ff, #f1d6ff); */
+    background: linear-gradient(145deg,#abffc8, #bbdfff, #d6d5ff, #f1d6ff);
+    /* background-color: #b2e7f9; */
+    border: 0px;
+    background-size: 150%;
+    transition: background-position 0.5s ease;
+    /* color: #555555; */
+    font-size: 2.5vh;
+    transition: 0.3s ease;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodRecordLeftWrapper section button:hover {
+    transform: scale(1.05);
+}
+
+/* Control Mood Info */
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodInfoWrapper section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+    padding: 20px 30px 20px 30px;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodInfoWrapper section:first-child {
+    width: 65%;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodInfoWrapper section:last-child {
+    width: 35%;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodInfoWrapper section.first {
+    border-right: 2px solid #c2bfe5;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodInfoWrapper section h3:first-child {
+    /* border-bottom: 3px solid #80bff3; */
+    font-size: 3.2vh;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodInfoWrapper section div.moodResultWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodInfoWrapper section div.moodResultWrapper svg {
+    width: 150px;
+    /* border: 1px solid; */
+    height: 50px;
+    margin-top: 10px;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodInfoWrapper section div.moodResultWrapper div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* border: 1px solid; */
+    width: 60%;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodInfoWrapper section div.moodResultWrapper img
+{
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardMoodInfoWrapper section div.moodResultWrapper h2 {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin: 20px auto;
+}
+
+/* Control feedback part */
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardFeedbackWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardFeedbackWrapper a {
+    text-decoration: none;
+    color: #5e7feb;
     transition: 0.2s ease;
+    line-height: 25px;
+    transition: 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 0.5px;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardFeedbackWrapper a:hover {
+    transform: scale(1.02);
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardFeedbackWrapper h2 {
+    /* border: 1px solid; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 2.8vh;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardFeedbackWrapper h2 label {
+    font-size: 3.2vh;
+    /* border-bottom: 3px solid #80bff3; */
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardFeedbackWrapper div.quoteFeedbackWrapper {
+    /* border: 1px solid; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 0;
     gap: 20px;
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper section div.moodResultWrapper img {
-    height: 140px;
-    width: 140px;
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardFeedbackWrapper div.quoteFeedbackWrapper button {
+    background-color: transparent;
+    border: none;
+    transition: 0.3s ease;
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper section div.moodResultWrapper div.stressIcon {
-    width: 90px;
-    height: 90px;
-    /* border: 1px solid; */
-    border-radius: 50%;
-    margin: 28px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardFeedbackWrapper div.quoteFeedbackWrapper button:hover {
+    transform: scale(1.1);
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper section {
-    padding: 20px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    justify-content: center;
-    align-items: center;
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardFeedbackWrapper div.quoteFeedbackWrapper label {
+    /* font-size: 3vh; */
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper button {
+main.bodyDashboardFirstk article.moodRecordInfoWrapper div.dashboardMoodDateWrapper button {
     padding: 15px 50px;
     border-radius: 15px;
     /* background: linear-gradient(145deg, #ffb5b5, rgb(255, 206, 174), #faffb5, #abffc8, #bbdfff, #d6d5ff, #f1d6ff); */
@@ -145,24 +240,24 @@ main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapp
     transition: 0.3s ease;
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardMoodDateWrapper button:hover {
+main.bodyDashboardFirstk article.moodRecordInfoWrapper div.dashboardMoodDateWrapper button:hover {
     /* box-shadow: 1px 1px 10px rgb(172, 180, 255); */
     transform: scale(1.05);
 }
 
 /*  */
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper img {
+main.bodyDashboardFirstk article.moodRecordInfoWrapper img {
     width: 35%;
     height: 80%;
     transition: 0.3s ease;
 }
 
-/* main#bodyDashboardFirst article#moodRecordInfoWrapper img:hover {
+/* main.bodyDashboardFirstk article.moodRecordInfoWrapper img:hover {
     transform: scale(1.05);
 } */
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardTeacherDialogWrapper {
+main.bodyDashboardFirstk article.moodRecordInfoWrapper div.dashboardTeacherDialogWrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -176,12 +271,12 @@ main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardTeacherDialog
     transition: 0.2s ease;
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardTeacherDialogWrapper:hover {
+main.bodyDashboardFirstk article.moodRecordInfoWrapper div.dashboardTeacherDialogWrapper:hover {
     /* box-shadow: 1px 1px 10px rgb(172, 180, 255); */
     transform: scale(1.01);
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardTeacherDialogWrapper button {
+main.bodyDashboardFirstk article.moodRecordInfoWrapper div.dashboardTeacherDialogWrapper button {
     padding: 15px 50px;
     border-radius: 15px;
     background: linear-gradient(145deg, #ffb5b5, rgb(255, 206, 174), #faffb5, #abffc8, #bbdfff, #d6d5ff, #f1d6ff);
@@ -196,7 +291,7 @@ main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardTeacherDialog
     font-size: 2.6vh;
 }
 
-main#bodyDashboardFirst article#moodRecordInfoWrapper div#dashboardTeacherDialogWrapper button:hover {
+main.bodyDashboardFirstk article.moodRecordInfoWrapper div.dashboardTeacherDialogWrapper button:hover {
     background-position: center;
 }
 
@@ -228,8 +323,8 @@ main.moodCountDashboardWrapper article.emojiWrapper div {
 }
 
 main.moodCountDashboardWrapper article.emojiWrapper div h3 {
-    padding: 10px 20px;
-    background-color: #9cc1ef;
+    padding: 5px 10px;
+    background-color: #f8ddaf;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -237,8 +332,9 @@ main.moodCountDashboardWrapper article.emojiWrapper div h3 {
 }
 
 main.moodCountDashboardWrapper article.emojiWrapper div h3:first-child {
-    border-radius: 20px;
-    background-color: #9fe7c4;
+    border-radius: 5px;
+    background-color: transparent;
+    /* border-bottom: 3px solid #9fe7c4; */
 }
 
 main.moodCountDashboardWrapper img {
@@ -247,6 +343,60 @@ main.moodCountDashboardWrapper img {
     transition: 0.3s;
 }
 
-main.moodCountDashboardWrapper img:hover {
-    transform: scale(1.1, 1.1);
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardNoRecordWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardNoRecordWrapper section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardNoRecordWrapper section button {
+    width: 50%;
+    padding: 15px 0;
+    border-radius: 15px;
+    border: none;
+    background: linear-gradient(145deg,#abffc8, #bbdfff, #d6d5ff, #f1d6ff);
+    transition: 0.3s ease;
+    font-weight: bold;
+    font-size: 2.6vh;
+}
+
+main.bodyDashboardFirst article.moodRecordInfoWrapper div.dashboardNoRecordWrapper section button:hover {
+    transform: scale(1.06);
+}
+
+
+.sectionTitle {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    z-index: 1;
+    padding: 0 10px;
+}
+
+/* Background bar */
+.sectionTitle::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40%;          /* controls how much of text is covered */
+    background: #d7ddf4 !important;  /* your background color */
+    z-index: -1;
+}
+
+div.dashboardMoodRecordLeftWrapper h2.sectionTitle::after {
+     background: #d7ddf4 !important;
+}
+
+.emojiWrapper .sectionTitle::after {
+    background: #d0f8d7 !important;
 }

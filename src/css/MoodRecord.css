@@ -475,8 +475,8 @@ main.MainMoodFourth article.stressRecordDialogBox {
 }
 
 .finishRecorded p {
-    padding: 10px 40px;
-    background-color: #fff0db;
+    padding: 0px 40px;
+    /* background-color: #fff0db; */
     border-radius: 20px;
-    box-shadow: 1px 1px 10px 10px #fff0db;
+    /* box-shadow: 1px 1px 10px 10px #fff0db; */
 }

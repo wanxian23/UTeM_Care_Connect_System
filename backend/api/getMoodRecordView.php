@@ -9,13 +9,35 @@ require "authStudent.php";
 $user = validateToken($conn);
 $userId = $user['studentId'];
 
+$moodId = "";
 // Fetch ALL mood records for today
-$stmtMoodData = $conn->prepare("
-    SELECT * FROM moodTracking 
-    WHERE studentId = ? AND DATE(datetimeRecord) = CURDATE()
-    ORDER BY datetimeRecord ASC
+if (empty($_GET['moodId'])) {
+    $stmtMoodData = $conn->prepare("
+        SELECT * FROM moodTracking 
+        WHERE studentId = ? AND DATE(datetimeRecord) = CURDATE()
+        ORDER BY datetimeRecord ASC
+    ");
+    $stmtMoodData->bind_param("i", $userId);
+} else {
+    $moodId = $_GET['moodId'];
+    $stmtMoodData = $conn->prepare("
+        SELECT * FROM moodTracking 
+        WHERE studentId = ? AND DATE(datetimeRecord) = CURDATE() 
+        AND moodId = ?
+        ORDER BY datetimeRecord ASC
+    ");
+    $stmtMoodData->bind_param("ii", $userId, $moodId);
+}
+
+// Get stress level
+$stmtCheckStress = $conn->prepare("
+    SELECT * FROM stress WHERE studentId = ? AND DATE(datetimeRecord) = CURDATE()
 ");
-$stmtMoodData->bind_param("i", $userId);
+$stmtCheckStress->bind_param("i", $userId);
+$stmtCheckStress->execute();
+$resultCheckStress = $stmtCheckStress->get_result();
+$stressData = $resultCheckStress->fetch_assoc();
+
 $stmtMoodData->execute();
 $resultMoodData = $stmtMoodData->get_result();
 $allMoodRecords = $resultMoodData->fetch_all(MYSQLI_ASSOC);
@@ -59,7 +81,7 @@ if ($resultMoodData->num_rows > 0) {
             "moodStatus" => $moodType['moodStatus'],
             "moodStoreLocation" => $moodType['moodStoreLocation'],
             "moodRecordTime" => $record['datetimeRecord'],
-            "stressLevel" => $record['stressLevel'],
+            "stressLevel" => $stressData['stressLevel'],
             "note" => nl2br(htmlspecialchars($record['note'])),
             "entriesData" => $completeEntriesData
         ];
@@ -79,4 +101,5 @@ if ($resultMoodData->num_rows > 0) {
         "message" => "No mood record for today"
     ]);
 }
+
 ?>

@@ -19,63 +19,118 @@ $stmtGetAllStudent->execute();
 $resultGetAllStudent = $stmtGetAllStudent->get_result();
 $getAllStudentData = $resultGetAllStudent->fetch_all(MYSQLI_ASSOC);
 
-
-$studentMoodData = [];
+$allStudentMoodData = [];
 foreach ($getAllStudentData as $row) {
     $studentId = $row['studentId'];
 
-    // Get latest mood for this student
-    $stmtStudentMood = $conn->prepare("
-        SELECT * 
-        FROM moodTracking 
-        WHERE studentId = ? 
-        ORDER BY datetimeRecord DESC 
-        LIMIT 1
+    // Define 7-day window
+    $startDate = (new DateTime())->modify('-7 days')->format('Y-m-d H:i:s');
+
+    // Get last 7 days mood + stress with category
+    $stmtTrend = $conn->prepare("
+        SELECT m.moodTypeId, mt.moodStatus, mt.category, mt.moodStoreLocation, m.stressLevel, m.datetimeRecord
+        FROM moodTracking m
+        LEFT JOIN mood mt ON m.moodTypeId = mt.moodTypeId
+        WHERE m.studentId = ?
+          AND m.datetimeRecord >= ?
+        ORDER BY m.datetimeRecord ASC
     ");
-    $stmtStudentMood->bind_param("i", $studentId);
-    $stmtStudentMood->execute();
-    $resultStudentMood = $stmtStudentMood->get_result();
-    $studentMoodDataRow = $resultStudentMood->fetch_assoc();
+    $stmtTrend->bind_param("is", $studentId, $startDate);
+    $stmtTrend->execute();
+    $resultTrend = $stmtTrend->get_result();
+    $trendData = $resultTrend->fetch_all(MYSQLI_ASSOC);
 
-    $moodTypeId = $studentMoodDataRow['moodTypeId'] ?? null;
+    // Initialize counters and trends
+    $negativeMoodCount = 0;
+    $highStressCount = 0;
+    $totalRecords = count($trendData);
 
-    // Get Mood Status from mood table
-    $studentMoodStatusData = [];
-    $recordedDate = "No Record";
-    $recordedTime = "No Record";
-    if ($moodTypeId) {
-        $stmtMoodStatus = $conn->prepare("SELECT * FROM mood WHERE moodTypeId = ?");
-        $stmtMoodStatus->bind_param("i", $moodTypeId);
-        $stmtMoodStatus->execute();
-        $resultMoodStatus = $stmtMoodStatus->get_result();
-        $studentMoodStatusData = $resultMoodStatus->fetch_assoc();
+    $moodTrend = "Stable";
+    $stressTrend = "Stable";
+    $prevStress = null;
 
-        $datetime = $studentMoodDataRow['datetimeRecord'] ?? null;
+    foreach ($trendData as $rowTrend) {
+        // Mood analysis using category
+        if ($rowTrend['category'] === "Negative") {
+            $negativeMoodCount++;
+        }
 
+        // Stress analysis
+        if ($rowTrend['stressLevel'] !== null && $rowTrend['stressLevel'] >= 60) {
+            $highStressCount++;
+        }
+
+        // Stress trend
+        if ($prevStress !== null && $rowTrend['stressLevel'] !== null) {
+            if ($rowTrend['stressLevel'] > $prevStress) {
+                $stressTrend = "Increasing";
+            } elseif ($rowTrend['stressLevel'] < $prevStress) {
+                $stressTrend = "Decreasing";
+            }
+        }
+        $prevStress = $rowTrend['stressLevel'];
+    }
+
+    // Mood Pattern
+    $moodPattern = "Stable";
+    if ($negativeMoodCount >= 4) {
+        $moodPattern = "Mostly Negative";
+    } elseif ($negativeMoodCount >= 2) {
+        $moodPattern = "Occasionally Negative";
+    }
+
+    // Stress Pattern
+    $stressPattern = "Low";
+    if ($highStressCount >= 4) {
+        $stressPattern = "High";
+    } elseif ($highStressCount >= 2) {
+        $stressPattern = "Moderate";
+    }
+
+    // Risk indicator
+    $riskIndicator = "Low Risk";
+    if (
+        ($negativeMoodCount >= 3 && $highStressCount >= 3) ||
+        ($stressTrend === "Increasing" && $negativeMoodCount >= 2)
+    ) {
+        $riskIndicator = "High Risk";
+    } elseif (
+        $negativeMoodCount >= 2 || $highStressCount >= 2
+    ) {
+        $riskIndicator = "Need Attention";
+    }
+
+    // Last recorded mood date
+    $lastRecordedDate = "No Record";
+    $lastRecordedTime = "No Record";
+    if ($totalRecords > 0) {
+        $datetime = $trendData[$totalRecords - 1]['datetimeRecord'];
         if ($datetime) {
             $dateObj = new DateTime($datetime);
-            $recordedDate = $dateObj->format('Y-m-d'); // e.g., 2025-12-07
-            $recordedTime = $dateObj->format('H:i');   // e.g., 15:30
+            $lastRecordedDate = $dateObj->format('Y-m-d');
+            $lastRecordedTime = $dateObj->format('H:i');
         }
-    } else {
-        $studentMoodStatusData = [];
     }
 
     $allStudentMoodData[] = [
         'studentId' => $studentId,
         'matricNo' => $row['matricNo'],
         'studentName' => $row['studentName'],
-        'latestMoodStatus' => $studentMoodStatusData['moodStatus'] ?? "No Record",
-        'latestMoodLocation' => $studentMoodStatusData['moodStoreLocation'] ?? "No Record",
-        'latestStressLevel' => $studentMoodDataRow['stressLevel'] ?? "No Record",
-        'lastRecordedDate' => $recordedDate ?? "No Record",
-        'lastRecordedTime' => $recordedTime ?? "No Record"
+
+        'period' => 'Last 7 Days',
+        'moodPattern' => $moodPattern,
+        'stressPattern' => $stressPattern,
+        'trend' => $stressTrend,
+
+        'riskIndicator' => $riskIndicator,
+
+        'lastRecordedDate' => $lastRecordedDate,
+        'lastRecordedTime' => $lastRecordedTime
     ];
 }
 
 echo json_encode([
-    "success" => true, // <-- still true, but entriesData empty
+    "success" => true,
     "studentData" => $allStudentMoodData
 ]);
-
 ?>

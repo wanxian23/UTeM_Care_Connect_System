@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import "./css/StudentTableData.css";
 import {HeaderPa, Footer} from "./HeaderFooter";
@@ -12,46 +13,106 @@ function StudentTableData() {
     }, []);
 
     const [studentTableData, setStudentTableData] = useState(null);
+    const [dassData, setDassData] = useState(null);
 
-     useEffect(() => {
-         const token = localStorage.getItem("token");
- 
-         if(!token){
-             // No token, redirect to login
-             window.location.href = "/";
-             return;
-         }
- 
-         fetch("http://localhost:8080/care_connect_system/backend/api/getStudentTableData.php", {
-             method: "GET",
-             headers: {
-                 "Authorization": "Bearer " + token
-             }
-         })
-         .then(res => res.json())
-         .then(data => {
-             console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
-             
-             if(data.success){
-                 setStudentTableData(data);
- 
-             } else {
-                 // Token invalid → clear storage & redirect
-                 localStorage.clear();
-                 window.location.href = "/";
-             }
-         })
-         .catch(err => console.error(err));
-     }, []);
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if(!token){
+            // No token, redirect to login
+            window.location.href = "/";
+            return;
+        }
+
+        fetch("http://localhost:8080/care_connect_system/backend/api/getStudentTableData.php", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
+            
+            if(data.success){
+                setStudentTableData(data);
+
+            } else {
+                // Token invalid → clear storage & redirect
+                localStorage.clear();
+                window.location.href = "/";
+            }
+        })
+        .catch(err => console.error(err));
+    }, []);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if(!token){
+            // No token, redirect to login
+            window.location.href = "/";
+            return;
+        }
+
+        fetch("http://localhost:8080/care_connect_system/backend/api/getDassData.php", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
+            
+            if(data.success){
+                setDassData(data);
+
+            } else {
+                // Token invalid → clear storage & redirect
+                localStorage.clear();
+                window.location.href = "/";
+            }
+        })
+        .catch(err => console.error(err));
+    }, []);
 
     return(
         <>
             <HeaderPa />
+            {/* <SubHeader /> */}
             {/* If u write only studentInfoData without ?. then here might return null */}
             {/* Cuz here is out of useEffect(), which means here is accessing the data that havent get return back the backend yet */}
             {/* If you add ?. then the data you get is definitely return by backend already */}
-            <StudentInformation studentData={studentTableData?.studentData}/>
+            <StudentInformation studentData={studentTableData?.studentData} dassData={dassData?.studentDassData}/>
             <Footer />
+        </>
+    );
+}
+
+function SubHeader() {
+
+    return(
+        <>
+            <main id="MoodRecordSubHeaderWrapper">
+            <NavLink
+                to="/StudentTableData"
+                className={({ isActive }) =>
+                    isActive ? "subButton selectedSubHeader leftSelected" : "subButton"
+                }
+            >
+            Table Data
+            </NavLink>
+
+            <NavLink
+                to="/StatisticPa"
+                className={({ isActive }) =>
+                    isActive ? "subButton selectedSubHeader rightSelected" : "subButton"
+                }
+            >
+            Graph/ Chart
+            </NavLink>
+            </main>
         </>
     );
 }
@@ -171,7 +232,7 @@ function StudentSearch({selected, activeTab}) { // ✅ Accept selected prop
 }
 
 
-function StudentInformation({studentData}) {
+function StudentInformation({studentData, dassData}) {
 
     const [activeTab, setActiveTab] = useState("studentList");
     const [selected, setSelected] = useState([]); // ✅ Move selected state here
@@ -196,14 +257,6 @@ function StudentInformation({studentData}) {
                             DASS Screening
                         </button>
                     </div>
-                    <div>
-                        <button 
-                            className={activeTab === "alerts" ? "activeBtn" : ""} 
-                            onClick={() => setActiveTab("alerts")}
-                        >
-                            Alerts
-                        </button>
-                    </div>
                 </nav>
 
                 <StudentSearch selected={selected} studentData={studentData || []} activeTab={activeTab} /> {/* ✅ Pass selected */}
@@ -215,47 +268,20 @@ function StudentInformation({studentData}) {
                             setSelected={setSelected} // ✅ Pass down
                         />
                     )}
-                    {activeTab === "dass" && <DassTable />}
-                    {activeTab === "alerts" && <AlertsTable />}
+                    {activeTab === "dass" && (
+                        <DassTable 
+                            dassData={dassData || []} 
+                        />
+                    )}
                 </section>
             </main>
         </>
     );
 }
 
-function DassTable() {
-    return <div>DASS Screening Table Content Here</div>;
-}
-
-function AlertsTable() {
-    return <div>Alerts Table Content Here</div>;
-}
-
-function StudentInfoTable({studentData, selected, setSelected}) {
-
-    // const [selected, setSelected] = useState([]);
-
-    const allSelected = selected.length === (studentData ? studentData.length : 0);
+function DassTable({dassData}) {
 
     const navigate = useNavigate();
-
-    // Toggle all checkboxes
-    const handleSelectAll = () => {
-        if (allSelected) {
-            setSelected([]);
-        } else {
-            setSelected(studentData.map(s => s.studentId));
-        }
-    };
-
-    // Toggle individual checkbox
-    const handleSelectOne = (id) => {
-        if (selected.includes(id)) {
-            setSelected(selected.filter(x => x !== id));
-        } else {
-            setSelected([...selected, id]);
-        }
-    };
 
     // Modal button click handler → put this inside the component
     const handleModalButton = () => {
@@ -275,75 +301,29 @@ function StudentInfoTable({studentData, selected, setSelected}) {
     });
 
     useEffect(() => {
-        console.log("Student ID: ". studentData?.studentId);
+        console.log("Student ID: ". dassData?.studentId);
     });
 
-    const handleSendDass = async (student) => {
-
-        const token = localStorage.getItem("token");
-        
-        // Send DASS notification to each selected student
-        try {
-            fetch(`http://localhost:8080/care_connect_system/backend/api/sendDass.php?studentId=${student.studentId}`, {
-                method: "GET",
-                headers: {
-                    "Authorization": "Bearer " + token
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                     console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
-                     
-                     if(data.success){
-                        setMessagebox({
-                            ...messagebox,
-                            show: true,
-                            title: "DASS Assessment Sent Successfully",
-                            message: `DASS Assessment has been sent successfully to ${student.studentName}.`,
-                            buttonValue: "OK"
-                        });
-                     } else {
-                         setMessagebox({
-                            ...messagebox,
-                            show: true,
-                            title: "DASS Assessment Failed To Sent",
-                            message: `Failed to send DASS Assessment to ${student.studentName}.`,
-                            buttonValue: "OK"
-                        });
-                     }
-                 })
-                 .catch(err => console.error(err));
-        } catch (error) {
-            console.error(error);
-            setMessagebox({
-                show: true,
-                title: "DASS Assessment Failed To Sent",
-                message: `Failed to send DASS Assessment to ${student.studentName} due to error problem`,
-                buttonValue: "OK"
-            });
-        }
-    };
-
-    if (!studentData || studentData.length === 0) {
+    if (!dassData || dassData.length === 0) {
         return (
             <>
-                <table className="noRecordWrapper">
+                <table className="dassNoRecordWrapper">
                     <thead>
                         <tr>
-                            <th>
+                            {/* <th>
                                 <input 
                                     type="checkbox" 
                                     checked={allSelected}
                                     onChange={handleSelectAll}
                                 />
-                            </th>
+                            </th> */}
                             <th>Matric No</th>
                             <th>Student Name</th>
-                            <th>Course</th>
-                            <th>Year</th>
-                            <th>Latest Mood</th>
-                            <th>Latest Stress Level</th>
-                            <th>Last Recorded Date</th>
+                            <th>Depression Level</th>
+                            <th>Anxiety Level</th>
+                            <th>Stress Level</th>
+                            <th>Status</th>
+                            <th>Completed Date</th>
                             <th>Risk Indicator</th>
                             <th>Action</th>
                         </tr>
@@ -360,64 +340,72 @@ function StudentInfoTable({studentData, selected, setSelected}) {
 
     return(
         <>
-            <table className="gotRecordWrapper">
+            <table className="dassGotRecordWrapper">
                 <thead>
                     <tr>
-                        <th>
-                            <input 
-                                type="checkbox" 
-                                checked={allSelected}
-                                onChange={handleSelectAll}
-                            />
-                        </th>
                         <th>Matric No</th>
                         <th>Student Name</th>
-                        <th>Latest Mood</th>
-                        <th>Latest Stress Level</th>
-                        <th>Last Recorded Date</th>
+                        <th>Depression Level</th>
+                        <th>Anxiety Level</th>
+                        <th>Stress Level</th>
+                        <th>Status</th>
+                        <th>Completed Date</th>
                         <th>Risk Indicator</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {studentData.map(student => {
-                        let stressValue = student.latestStressLevel !== "No Record" ? parseInt(student.latestStressLevel) : null;
-                        let moodValue = student.latestMoodStatus;
-                        let stressLevel = "", stressColor = "", riskStatus = "Low Risk", riskColor = "#BFE5C8";
+                    {dassData.map(student => {
+                        let level = [], color = [];
+                        level[0] = student.depressionLevel !== null ? student.depressionLevel : null;
 
-                        if (stressValue !== null) {
-                            if (stressValue <= 20) {
-                                stressLevel = "Very Low Stress";
-                                stressColor = "#BFE5C8";
-                            } else if (stressValue <= 40) {
-                                stressLevel = "Low Stress";
-                                stressColor = "#BFE5C8";
-                            } else if (stressValue <= 60) {
-                                stressLevel = "Moderate Stress";
-                                stressColor = "#ecb385ff";
+                        level[1] = student.anxietyLevel !== null ? student.anxietyLevel : null;
+
+                        level[2] = student.stressLevel !== null ? student.stressLevel : null;
+
+                        let riskStatus = "Low Risk", riskColor = "#BFE5C8";
+                        
+                        let normalCount = 0, mildCount = 0, moderateCount = 0, severeCount = 0, extremeSevereCount = 0;
+                        for (let i = 0; i < 3; i++) {
+                            if (level[i] === "Normal") {
+                                color[i] = "#BFE5C8";
+                                normalCount++;
+                            } else if (level[i] === "Mild") {
+                                color[i] = "#d9f2dfff";
+                                mildCount++;
+                            } else if (level[i] === "Moderate") {
+                                color[i] = "#e4b995ff";
                                 riskStatus = "Need Attention";
                                 riskColor = "#ecb385ff";
-                            } else if (stressValue <= 80) {
-                                stressLevel = "High Stress";
-                                stressColor = "#ea9595ff";
+                                moderateCount++;
+                            } else if (level[i] === "Severe") {
+                                color[i] = "#e9b6b6ff";
                                 riskStatus = "High Risk";
                                 riskColor = "#ff3a3aff";
-                            } else {
-                                stressLevel = "Very High Stress";
-                                stressColor = "#ee7878ff";
+                                severeCount++;
+                            } else if (level[i] === "Extremely Severe") {
+                                color[i] = "#ee7878ff";
                                 riskStatus = "High Risk";
                                 riskColor = "#ff3a3aff";
+                                extremeSevereCount++;
                             }
                         }
 
-                        if (moodValue !== null) {
-                            if (moodValue == "Crying" || moodValue == "Sad" || moodValue == "Anxious") {
-                                riskStatus = "High Risk";
-                                riskColor = "#ff3a3aff";
-                            } else if (moodValue == "Annoying" || moodValue == "Angry") {
-                                riskStatus = "Need Attention";
-                                riskColor = "#ecb385ff";
-                            }
+                        if (extremeSevereCount > 0) {
+                            riskStatus = "Critical";
+                            riskColor = "#ff3a3aff";
+                        } else if (extremeSevereCount === 0 && severeCount > 0) {
+                            riskStatus = "High";
+                            riskColor = "#ff8686ff";
+                        } else if (severeCount === 0 && moderateCount > 0) {
+                            riskStatus = "Medium";
+                            riskColor = "#ecb385ff";
+                        } else if (moderateCount === 0) {
+                            riskStatus = "Low";
+                            riskColor = "#BFE5C8";
+                        } else {
+                            riskStatus = "Low";
+                            riskColor = "#BFE5C8";
                         }
 
                         const goToStudentInfo = (id) => {
@@ -426,31 +414,32 @@ function StudentInfoTable({studentData, selected, setSelected}) {
 
                         return (
                             <tr key={student.studentId}>
-                                <td>
-                                    <input 
-                                        type="checkbox"
-                                        checked={selected.includes(student.studentId)}
-                                        onChange={() => handleSelectOne(student.studentId)}
-                                    />
-                                </td>
                                 <td>{student.matricNo}</td>
                                 <td>{student.studentName}</td>
-                                <td>{student.latestMoodStatus !== "No Record" ? (
+                                <td>{level[0] !== null ? (
                                     <div>
-                                        <img src={student.latestMoodLocation} />
-                                        <label>{student.latestMoodStatus}</label>
-                                    </div>
-                                ) : "No Record"}</td>
-                                <td>{stressValue !== null ? (
-                                    <div>
-                                        <label style={{ backgroundColor: stressColor }}>
-                                            {student.latestStressLevel + "%"}
+                                        <label style={{ backgroundColor: color[0] }}>
+                                            {level[0]}
                                         </label>
-                                        <label>{stressLevel}</label>
                                     </div>
                                 ) : "No Record"}</td>
-                                <td>{student.lastRecordedDate}</td>
-                                <td>{stressValue !== null ? (
+                                <td>{level[1] !== null ? (
+                                    <div>
+                                        <label style={{ backgroundColor: color[1] }}>
+                                            {level[1]}
+                                        </label>
+                                    </div>
+                                ) : "No Record"}</td>
+                                <td>{level[2] !== null ? (
+                                    <div>
+                                        <label style={{ backgroundColor: color[2] }}>
+                                            {level[2]}
+                                        </label>
+                                    </div>
+                                ) : "No Record"}</td>
+                                <td>{student.dassStatus}</td>
+                                <td>{student.completedDate}</td>
+                                <td>{level[0] !== null ? (
                                     <div>
                                         <label style={{ backgroundColor: riskColor }}>
                                             {riskStatus}
@@ -466,12 +455,12 @@ function StudentInfoTable({studentData, selected, setSelected}) {
                                                 <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                                             </svg>
                                         </button>
-                                        <button onClick={() => handleSendDass(student)}>
+                                        {/* <button onClick={() => handleSendDass(student)}>
                                             Send Dass
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                                 <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
                                             </svg>
-                                        </button>
+                                        </button> */}
                                     </div>
                                 </td>
                             </tr>
@@ -479,6 +468,149 @@ function StudentInfoTable({studentData, selected, setSelected}) {
                     })}
                 </tbody>
             </table>
+            <MessageBox 
+                show={messagebox.show}
+                title={messagebox.title}
+                message={messagebox.message}
+                buttonValue={messagebox.buttonValue}
+                onClose={handleModalButton}
+            />
+        </>
+    );
+}
+
+function StudentInfoTable({studentData, selected, setSelected}) {
+    const allSelected = selected.length === (studentData ? studentData.length : 0);
+    const navigate = useNavigate();
+
+    const handleSelectAll = () => {
+        if (allSelected) {
+            setSelected([]);
+        } else {
+            setSelected(studentData.map(s => s.studentId));
+        }
+    };
+
+    const handleSelectOne = (id) => {
+        if (selected.includes(id)) {
+            setSelected(selected.filter(x => x !== id));
+        } else {
+            setSelected([...selected, id]);
+        }
+    };
+
+    const [messagebox, setMessagebox] = useState({
+        show: false,
+        title: "",
+        message: "",
+        buttonValue: "",
+        redirect: true
+    });
+
+    const handleModalButton = () => {
+        const shouldRedirect = messagebox.redirect;
+        setMessagebox({ ...messagebox, show: false });
+        if (shouldRedirect) {
+            window.location.href = "/StudentTableData";
+        }
+    };
+
+    const handleSendDass = async (student) => {
+        const token = localStorage.getItem("token");
+        try {
+            fetch(`http://localhost:8080/care_connect_system/backend/api/sendDass.php?studentId=${student.studentId}`, {
+                method: "GET",
+                headers: { "Authorization": "Bearer " + token }
+            })
+            .then(res => res.json())
+            .then(data => {
+                setMessagebox({
+                    show: true,
+                    title: data.success ? "DASS Assessment Sent Successfully" : "DASS Assessment Failed To Send",
+                    message: data.success
+                        ? `DASS Assessment has been sent successfully to ${student.studentName}.`
+                        : `Failed to send DASS Assessment to ${student.studentName}.`,
+                    buttonValue: "OK"
+                });
+            })
+            .catch(err => console.error(err));
+        } catch (error) {
+            console.error(error);
+            setMessagebox({
+                show: true,
+                title: "DASS Assessment Failed To Send",
+                message: `Failed to send DASS Assessment to ${student.studentName} due to error`,
+                buttonValue: "OK"
+            });
+        }
+    };
+
+    if (!studentData || studentData.length === 0) {
+        return (
+            <table className="noRecordWrapper">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" checked={allSelected} onChange={handleSelectAll} /></th>
+                        <th>Matric No</th>
+                        <th>Student Name</th>
+                        <th>Period</th>
+                        <th>Mood Pattern</th>
+                        <th>Stress Pattern</th>
+                        <th>Trend</th>
+                        <th>Risk</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colSpan={9}>No Record Yet</td></tr>
+                </tbody>
+            </table>
+        );
+    }
+
+    return (
+        <>
+            <table className="gotRecordWrapper">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" checked={allSelected} onChange={handleSelectAll} /></th>
+                        <th>Matric No</th>
+                        <th>Student Name</th>
+                        <th>Period</th>
+                        <th>Mood Pattern</th>
+                        <th>Stress Pattern</th>
+                        <th>Trend</th>
+                        <th>Risk</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {studentData.map(student => {
+                        const goToStudentInfo = (id) => navigate(`/StudentInfo/${id}`);
+                        const riskColor =
+                            student.riskIndicator === "High Risk" ? "#ff3a3a" :
+                            student.riskIndicator === "Need Attention" ? "#ecb385" : "#BFE5C8";
+
+                        return (
+                            <tr key={student.studentId}>
+                                <td><input type="checkbox" checked={selected.includes(student.studentId)} onChange={() => handleSelectOne(student.studentId)} /></td>
+                                <td>{student.matricNo}</td>
+                                <td>{student.studentName}</td>
+                                <td>{student.period}</td>
+                                <td>{student.moodPattern}</td>
+                                <td>{student.stressPattern}</td>
+                                <td>{student.trend}</td>
+                                <td><span style={{ backgroundColor: riskColor, padding: '5px 10px', borderRadius: '5px' }}>{student.riskIndicator}</span></td>
+                                <td>
+                                    <button onClick={() => goToStudentInfo(student.studentId)}>View Info</button>
+                                    <button onClick={() => handleSendDass(student)}>Send Dass</button>
+                                </td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+
             <MessageBox 
                 show={messagebox.show}
                 title={messagebox.title}

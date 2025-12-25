@@ -93,35 +93,63 @@ $stressData = $resultStressAvg->fetch_assoc();
 
 $avgStress = $stressData['avgStress']; // this is the average
 
-// Get data of averageScale
-$stmtMoodAvg = $conn->prepare("
-    SELECT 
-        AVG(m.scale) AS avgMoodScale
-    FROM moodTracking mt
-    JOIN mood m ON mt.moodTypeId = m.moodTypeId
-    WHERE mt.studentId = ?
-    AND DATE(mt.datetimeRecord) = CURDATE()
+// // Get data of averageScale
+// $stmtMoodAvg = $conn->prepare("
+//     SELECT 
+//         AVG(m.scale) AS avgMoodScale
+//     FROM moodTracking mt
+//     JOIN mood m ON mt.moodTypeId = m.moodTypeId
+//     WHERE mt.studentId = ?
+//     AND DATE(mt.datetimeRecord) = CURDATE()
+// ");
+// $stmtMoodAvg->bind_param("i", $studentId);
+// $stmtMoodAvg->execute();
+
+// $resultMoodAvg = $stmtMoodAvg->get_result();
+// $dataMood = $resultMoodAvg->fetch_assoc();
+
+// $avgMoodScale = $dataMood['avgMoodScale'];  // decimal (e.g., 5.7)
+
+// $finalMoodScale = round($avgMoodScale);
+
+// $stmtMoodInfo = $conn->prepare("
+//     SELECT *
+//     FROM mood
+//     WHERE scale = ?
+// ");
+// $stmtMoodInfo->bind_param("i", $finalMoodScale);
+// $stmtMoodInfo->execute();
+
+// $resultMoodInfo = $stmtMoodInfo->get_result();
+// $moodInfo = $resultMoodInfo->fetch_assoc();
+
+$moodStatus = [];
+$moodStoreLocation = [];
+$stmtGetAllMoodStatus = $conn->prepare("
+    SELECT * FROM moodTracking 
+    WHERE studentId = ?
+    AND DATE(datetimeRecord) = CURDATE()
 ");
-$stmtMoodAvg->bind_param("i", $studentId);
-$stmtMoodAvg->execute();
+$stmtGetAllMoodStatus->bind_param("i", $studentId);
+$stmtGetAllMoodStatus->execute();
+$resultGetAllMoodStatus = $stmtGetAllMoodStatus->get_result();
+$getAllMoodStatusData = $resultGetAllMoodStatus->fetch_all(MYSQLI_ASSOC);
 
-$resultMoodAvg = $stmtMoodAvg->get_result();
-$dataMood = $resultMoodAvg->fetch_assoc();
+foreach ($getAllMoodStatusData as $row) {
+    $moodTypeId = $row['moodTypeId'];
 
-$avgMoodScale = $dataMood['avgMoodScale'];  // decimal (e.g., 5.7)
+    $stmtGetMoodDetails = $conn->prepare("
+        SELECT * FROM mood
+        WHERE moodTypeId = ?
+    ");
+    $stmtGetMoodDetails->bind_param("i", $moodTypeId);
+    $stmtGetMoodDetails->execute();
+    $resultGetMoodDetails = $stmtGetMoodDetails->get_result();
+    $moodDetails = $resultGetMoodDetails->fetch_assoc();
 
-$finalMoodScale = round($avgMoodScale);
-
-$stmtMoodInfo = $conn->prepare("
-    SELECT *
-    FROM mood
-    WHERE scale = ?
-");
-$stmtMoodInfo->bind_param("i", $finalMoodScale);
-$stmtMoodInfo->execute();
-
-$resultMoodInfo = $stmtMoodInfo->get_result();
-$moodInfo = $resultMoodInfo->fetch_assoc();
+    $moodStatus[] = $moodDetails['moodStatus'];
+    $moodStoreLocation[] = $moodDetails['moodStoreLocation'];
+}
 
 echo json_encode([
         "success" => true, // <-- still true, but entriesData empty
@@ -129,8 +157,10 @@ echo json_encode([
         "studentMoodData" => $finalRecords,
 
         // Daily mood info (Avg)
-        "avgTodayStudentMoodStatus" => $moodInfo['moodStatus'] ?? null,
-        "avgTodayStudentMoodStoreLocation" => $moodInfo['moodStoreLocation'] ?? null,
+        // "avgTodayStudentMoodStatus" => $moodInfo['moodStatus'] ?? null,
+        // "avgTodayStudentMoodStoreLocation" => $moodInfo['moodStoreLocation'] ?? null,
+        "moodStatus" => $moodStatus ?? null,
+        "moodStoreLocation" => $moodStoreLocation ?? null,
         "avgTodayStudentStressLevel" => $avgStress ?? null,
     ]);
 

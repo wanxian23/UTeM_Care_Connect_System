@@ -148,8 +148,8 @@ header section#profileWrapper div.notificationWrapper div.notificationContentWra
 
 header section#profileWrapper div.notificationWrapper div.notificationContentWrapper div.notiTitle {
     display: flex;
-    /* justify-content: space-between; */
-    justify-content: center;
+    justify-content: space-between;
+    /* justify-content: center; */
     align-items: center;
     padding: 10px 10px 20px 10px;
 }

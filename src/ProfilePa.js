@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import {HeaderPa, Footer} from "./HeaderFooter";
-import MessageBox from "./Modal";
-import ConfirmationModal from "./ConfirmationModal";
+import MessageBox, { ConfirmationModal } from "./Modal";
 
 import "./css/profile.css";
 

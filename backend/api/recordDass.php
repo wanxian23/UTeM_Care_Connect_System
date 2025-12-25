@@ -27,10 +27,43 @@ for ($i = 0; $i < 21; $i++) {
 
 $stmtUpdateDassStatus = $conn->prepare("
     UPDATE dass
-    SET status = 'Completed'
+    SET status = 'Completed',
+    dassCompletedDateTime = NOW()
     WHERE dassId = ?
 ");
 $stmtUpdateDassStatus->bind_param("i", $dassId);
+
+// For notification part
+$stmtGetDassDetails = $conn->prepare("
+    SELECT * 
+    FROM dass
+    WHERE dassId = ?
+");
+$stmtGetDassDetails->bind_param("i", $dassId);
+$stmtGetDassDetails->execute();
+$resultGetDassDetails = $stmtGetDassDetails->get_result();
+$dassDetailsData = $resultGetDassDetails->fetch_assoc();
+
+$studentId = $dassDetailsData['studentId'];
+$stmtGetStudentDetails = $conn->prepare("
+    SELECT * FROM Student
+    WHERE studentId = ?
+");
+$stmtGetStudentDetails->bind_param("i", $studentId);
+$stmtGetStudentDetails->execute();
+$resultGetStudentDetails = $stmtGetStudentDetails->get_result();
+$studentDetailsData = $resultGetStudentDetails->fetch_assoc();
+
+$studentMatric = $studentDetailsData['matricNo'];
+$title = "DASS Assessment Completed By A Student!";
+$description = "DASS Assessment has completed by ".$studentMatric."! Click and check it out.";
+$staffId = $dassDetailsData['staffId'];
+$stmtSendNotiToPa = $conn->prepare("
+    INSERT INTO notification (staffId, title, description, notiType) 
+    VALUES (?, ?, ?, 'DASS');
+");
+$stmtSendNotiToPa->bind_param("iss", $staffId, $title, $description);
+$stmtSendNotiToPa->execute();
 
 if ($stmtUpdateDassStatus->execute()) {
     echo json_encode([
