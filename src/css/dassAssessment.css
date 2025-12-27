@@ -7,6 +7,7 @@ main.dassFormWrapper {
     display: flex;
     justify-content: center;
     font-size: 2.6vh;
+    background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
 }
 
 /* Control title, instruction and description */
@@ -128,4 +129,21 @@ section.completedDass {
     font-size: 3vh;
     border: 2px solid #eee8f1;
     border-radius: 25px;
+}
+
+/* For contact details */
+main.dassFormWrapper div.titleDescriptionWrapper section.contactDetails {
+    font-size: 2.8vh;
+    padding: 50px 35px 20px 35px;
+}
+
+main.dassFormWrapper div.titleDescriptionWrapper section.contactDetails p {
+    text-align: justify;
+    line-height: 25px;
+}
+
+main.dassFormWrapper div.titleDescriptionWrapper section.contactDetails a {
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }

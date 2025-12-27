@@ -9,6 +9,7 @@ $dassId = $_GET['dassId'];
 
 // Run the auth function to fetch student data
 $user = validateToken($conn);
+$studentId = $user['studentId'];
 
 $stmtGetDassQuestions = $conn->prepare("
     SELECT * 
@@ -23,8 +24,9 @@ $stmtGetDass = $conn->prepare("
     SELECT * 
     FROM dass
     WHERE dassId = ? 
+    AND studentId = ?
 ");
-$stmtGetDass->bind_param("i", $dassId);
+$stmtGetDass->bind_param("ii", $dassId, $studentId);
 $stmtGetDass->execute();
 $resultGetDass = $stmtGetDass->get_result();
 $getDassData = $resultGetDass->fetch_assoc();

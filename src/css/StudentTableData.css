@@ -6,7 +6,7 @@ main.StudentInfoMain {
 button,
 input {
     font-family: "Itim", sans-serif;
-    font-size: 2.2vh;
+    font-size: 2.0vh;
 }
 
 /* main.StudentInfoMain button {
@@ -104,14 +104,6 @@ td button {
     gap: 10px;
 }
 
-td:last-child {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
-}
-
 main.StudentInfoMain section.searchbarWrapper div button.inactive:hover {
     background-color: #a3c3ab;
 }
@@ -153,21 +145,21 @@ main.StudentInfoMain table input[type="checkbox"] {
     transform: scale(1.6);
 }
 
-main.StudentInfoMain table.gotRecordWrapper tbody tr:last-child td:first-child {
+main.StudentInfoMain table tbody tr:last-child td:first-child {
     border-radius: 0 0 0 20px;
 }
 
-main.StudentInfoMain table.gotRecordWrapper tbody tr:last-child td:last-child {
+main.StudentInfoMain table tbody tr:last-child td:last-child {
     border-radius: 0 0 20px 0;
 }
 
-main.StudentInfoMain table.gotRecordWrapper th:nth-of-type(3),
+/* main.StudentInfoMain table.gotRecordWrapper th:nth-of-type(3),
 main.StudentInfoMain table.gotRecordWrapper td:nth-of-type(3),
 main.StudentInfoMain table.gotRecordWrapper th:nth-of-type(4),
 main.StudentInfoMain table.gotRecordWrapper td:nth-of-type(4)
 {
     width: 200px;
-}
+} */
 
 main.StudentInfoMain table.gotRecordWrapper th:last-child,
 main.StudentInfoMain table.gotRecordWrapper td:last-child {
@@ -187,7 +179,7 @@ main.StudentInfoMain table td img {
 
 main.StudentInfoMain table td label {
     padding: 5px 10px;
-    border-radius: 20px;
+    border-radius: 8px;
 }
 
 main.StudentInfoMain table.gotRecordWrapper td:nth-of-type(5) div {
@@ -195,26 +187,20 @@ main.StudentInfoMain table.gotRecordWrapper td:nth-of-type(5) div {
     gap: 5px;
 }
 
-main.StudentInfoMain table.gotRecordWrapper td:nth-of-type(5) div label:first-child {
+main.StudentInfoMain table.gotRecordWrapper td label {
     height: 55px;
     width: 55px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-main.StudentInfoMain table td:nth-of-type(5) div label:last-child {
-    border-radius: 20px;
 }
 
 main.StudentInfoMain table td:last-child div {
     gap: 15px;
 }
 
-main.StudentInfoMain table td div button {
-   padding: 5px 10px;
-   background-color: #b9d8c1;
+main.StudentInfoMain table td button {
+    margin: 0 auto;
 }
 
 main.StudentInfoMain table td div button svg {
@@ -223,13 +209,44 @@ main.StudentInfoMain table td div button svg {
 }
 
 main.StudentInfoMain table.dassGotRecordWrapper td div button svg {
-    width: 40%;
-    height: 30px;
+    width: 13%;
+    height: 15px;
 }
 
-main.StudentInfoMain table td div button:hover {
-    background-color: #d1ead7;
+main.StudentInfoMain table td.actionTd {
+    position: relative; /* anchor for the absolute div */
+    overflow: visible;  /* allow content to overflow */
 }
+
+main.StudentInfoMain table td.actionTd div {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+    position: absolute;
+    width: 230px;
+    right: 100%;          /* move to the right of td */
+    transform: translateY(-50%);
+    
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 100;
+}
+
+main.StudentInfoMain table td.actionTd div button {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: #b9d8c1;
+    padding: 5px 0;
+    transition: 0.2s ease;
+}
+
+main.StudentInfoMain table td.actionTd div button:hover {
+    background-color: #def3e3;
+}
+
 
 /* No Record */
 table.noRecordWrapper tbody tr td {

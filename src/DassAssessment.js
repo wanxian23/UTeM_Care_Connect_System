@@ -26,7 +26,7 @@ function DassAssessment() {
 
 function DassForm() {
 
-    const { dassId, staffId, studentId } = useParams();
+    const { dassId } = useParams();
 
     const [dassData, setDassData] = useState({});
 
@@ -44,7 +44,7 @@ function DassForm() {
         const shouldRedirect = messagebox.redirect; // Capture current value first
         setMessagebox({ ...messagebox, show: false }); // hide modal
         if (shouldRedirect) {
-            window.location.href =  `/DassAssessment/${dassId}/${staffId}/${studentId}`;
+            window.location.href =  `/DassAssessment/${dassId}`;
         }
     };
 

@@ -26,6 +26,31 @@ $allStudentDassData = [];
 foreach ($getAllStudentData as $row) {
     $studentId = $row['studentId'];
 
+
+    // Check contact record
+    $contactSent = false;
+    $stmtCheckContact = $conn->prepare("
+        SELECT * 
+        FROM contactNote
+        WHERE studentId = ?
+        ORDER BY contactId DESC
+        LIMIT 1
+    ");
+    $stmtCheckContact->bind_param("i", $studentId);
+    $stmtCheckContact->execute();
+    $resultCheckContact = $stmtCheckContact->get_result();
+    $checkContactData = $resultCheckContact->fetch_assoc();
+    
+    if ($resultCheckContact->num_rows > 0 && empty($checkContactData['note'])) {
+        $contactSent = true;
+    }
+
+    $noteRecord = false;
+    if (!empty($checkContactData['note'])) {
+        $noteRecord = true;
+    }
+
+
     // Get latest DASS for this student
     $stmtStudentDass = $conn->prepare("
         SELECT * 
@@ -148,7 +173,9 @@ foreach ($getAllStudentData as $row) {
         'depressionLevel' => $depressionLevel,
         'anxietyLevel' => $anxietyLevel,
         'stressLevel' => $stressLevel,
-        'completedDate' => $recordedDate
+        'completedDate' => $recordedDate,
+        'contactRecord' => $contactSent,
+        'noteRecord' => $noteRecord
     ];
 }
 

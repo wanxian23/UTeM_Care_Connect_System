@@ -3,6 +3,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Content-Type: application/json");
 
 require "../database.php";
 require "authStudent.php";
@@ -15,7 +16,7 @@ $date = $_GET['date'];
 // Get stress level
 if ($date == "Today" || $date == "Specific") {
     $stmtStress = $conn->prepare("
-        SELECT * FROM stress
+        SELECT stressLevel, datetimeRecord FROM stress
         WHERE studentId = ?
         AND DATE(datetimeRecord) = CURDATE()
     ");
@@ -25,7 +26,7 @@ if ($date == "Today" || $date == "Specific") {
     $stressData = $resultStress->fetch_assoc();
 } else {
     $stmtStress = $conn->prepare("
-        SELECT * FROM stress
+        SELECT stressLevel, datetimeRecord FROM stress
         WHERE studentId = ?
         AND DATE(datetimeRecord) = ?
     ");
@@ -34,6 +35,9 @@ if ($date == "Today" || $date == "Specific") {
     $resultStress = $stmtStress->get_result();
     $stressData = $resultStress->fetch_assoc();
 }
+
+// Handle null stress data - set default or null
+$stressLevel = $stressData ? (float)$stressData['stressLevel'] : null;
 
 // Get data of recorded mood
 $stmtCheckMoodData = $conn->prepare("
@@ -56,13 +60,13 @@ if ($moodData) {
 
     // Extract just the IDs into an array
     $entryIds = array_map(function($entry) {
-        return $entry['entriesTypeId'];
+        return (int)$entry['entriesTypeId']; // Convert to int
     }, $entriesData);
 
     echo json_encode([
         "success" => true,
         "moodRecord" => $moodData,
-        "stressLevel" => $stressData['stressLevel'],
+        "stressLevel" => $stressLevel, // Now safely handles null
         "entries" => $entryIds  // Array of entry IDs like [1, 3, 5]
     ]);
 } else {

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
+import { gsap } from "gsap";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
 import "./css/StudentTableData.css";
 import {HeaderPa, Footer} from "./HeaderFooter";
-import MessageBox from "./Modal";
+import MessageBox, {ConfirmationModal, TextareaModal} from "./Modal";
 
 function StudentTableData() {
 
@@ -283,10 +284,10 @@ function DassTable({dassData}) {
 
     const navigate = useNavigate();
 
-    // Modal button click handler → put this inside the component
+    // Modal button click handler
     const handleModalButton = () => {
-        const shouldRedirect = messagebox.redirect; // Capture current value first
-        setMessagebox({ ...messagebox, show: false }); // hide modal
+        const shouldRedirect = messagebox.redirect;
+        setMessagebox({ ...messagebox, show: false });
         if (shouldRedirect) {
             window.location.href = "/StudentTableData";
         }
@@ -300,9 +301,198 @@ function DassTable({dassData}) {
         redirect: true
     });
 
-    useEffect(() => {
-        console.log("Student ID: ". dassData?.studentId);
+    // ✅ Combined modal state for both contact and note
+    const [textareaModal, setTextareaModal] = useState({
+        isOpen: false,
+        purpose: "", // "contact" or "note"
+        title: "",
+        description: "",
+        message: "",
+        placeholder: "",
+        maxLength: 0,
+        confirmText: "",
+        cancelText: "",
+        noteType: "", // Only used for notes
+        currentStudent: null
     });
+
+    const closeTextareaModal = () => {
+        setTextareaModal({
+            isOpen: false,
+            purpose: "",
+            title: "",
+            description: "",
+            message: "",
+            placeholder: "",
+            maxLength: 0,
+            confirmText: "",
+            cancelText: "",
+            noteType: "",
+            currentStudent: null
+        });
+    };
+
+    // ✅ Separate confirm handler that checks purpose
+    const handleConfirmTextarea = async () => {
+        const token = localStorage.getItem("token");
+        const { currentStudent, message, purpose, noteType } = textareaModal;
+
+        if (!currentStudent) return;
+
+        try {
+            let response;
+            
+            if (purpose === "contact") {
+                // Send contact request
+                response = await fetch(
+                    "http://localhost:8080/care_connect_system/backend/api/contactStudent.php",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + token
+                        },
+                        body: JSON.stringify({
+                            studentId: currentStudent.studentId,
+                            message: message
+                        })
+                    }
+                );
+            } else if (purpose === "note") {
+                // Validate note type is selected
+                if (!noteType) {
+                    setMessagebox({
+                        show: true,
+                        title: "Note Type Required",
+                        message: "Please select a note type before submitting.",
+                        buttonValue: "OK",
+                        redirect: false
+                    });
+                    return;
+                }
+                
+                // Send note request
+                response = await fetch(
+                    "http://localhost:8080/care_connect_system/backend/api/noteRecord.php",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + token
+                        },
+                        body: JSON.stringify({
+                            studentId: currentStudent.studentId,
+                            noteType: noteType,
+                            message: message
+                        })
+                    }
+                );
+            }
+
+            const result = await response.json();
+
+            closeTextareaModal();
+
+            setMessagebox({
+                show: true,
+                title: result.success 
+                    ? (purpose === "contact" ? "Student Contacted Successfully" : "Note Added Successfully")
+                    : (purpose === "contact" ? "Contact Failed" : "Note Failed"),
+                message: result.success
+                    ? (purpose === "contact" 
+                        ? `A meeting notification has been sent to ${currentStudent.studentName}.`
+                        : `Note has been added for ${currentStudent.studentName}.`)
+                    : `Failed to ${purpose === "contact" ? "send notification" : "add note"}.`,
+                buttonValue: "OK"
+            });
+
+        } catch (error) {
+            console.error(error);
+            closeTextareaModal();
+            setMessagebox({
+                show: true,
+                title: purpose === "contact" ? "Contact Failed" : "Note Failed",
+                message: "An error occurred while processing your request.",
+                buttonValue: "OK"
+            });
+        }
+    };
+
+    // ✅ Open contact modal
+    const handleContactBox = (student) => {
+        setTextareaModal({
+            isOpen: true,
+            purpose: "contact",
+            title: "Contact Student",
+            description: "Please review or customize the message before sending to the student.",
+            message: "We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.",
+            placeholder: "Write your message here...",
+            maxLength: 500,
+            confirmText: "Send",
+            cancelText: "Cancel",
+            noteType: "",
+            currentStudent: student
+        });
+    };
+
+    // ✅ Open note modal
+    const handleNoteBox = (student) => {
+        setTextareaModal({
+            isOpen: true,
+            purpose: "note",
+            title: "Student Case Note",
+            description: "This note is for internal reference only and will not be visible to the student.",
+            message: "",
+            placeholder: "Enter meeting summary, observations, or follow-up actions...",
+            maxLength: 100000,
+            confirmText: "Save Note",
+            cancelText: "Cancel",
+            noteType: "",
+            currentStudent: student
+        });
+    };
+
+    // For action box part
+    const actionRefs = useRef([]);
+    const [openIndex, setOpenIndex] = useState(null);
+
+    // Action box toggle
+    const toggleAction = (index) => {
+        const el = actionRefs.current[index];
+        if (!el) return;
+
+        if (openIndex === index) {
+            gsap.to(el, {
+                duration: 0.3,
+                opacity: 0,
+                height: 0,
+                onComplete: () => {
+                    el.style.display = "none";
+                }
+            });
+            setOpenIndex(null);
+        } else {
+            if (openIndex !== null && actionRefs.current[openIndex]) {
+                gsap.to(actionRefs.current[openIndex], {
+                    duration: 0.2,
+                    opacity: 0,
+                    height: 0,
+                    onComplete: () => {
+                        actionRefs.current[openIndex].style.display = "none";
+                    }
+                });
+            }
+
+            el.style.display = "flex";
+            gsap.fromTo(
+                el,
+                { opacity: 0, height: 0 },
+                { duration: 0.3, opacity: 1, height: "auto" }
+            );
+
+            setOpenIndex(index);
+        }
+    };
 
     if (!dassData || dassData.length === 0) {
         return (
@@ -310,13 +500,6 @@ function DassTable({dassData}) {
                 <table className="dassNoRecordWrapper">
                     <thead>
                         <tr>
-                            {/* <th>
-                                <input 
-                                    type="checkbox" 
-                                    checked={allSelected}
-                                    onChange={handleSelectAll}
-                                />
-                            </th> */}
                             <th>Matric No</th>
                             <th>Student Name</th>
                             <th>Depression Level</th>
@@ -355,12 +538,10 @@ function DassTable({dassData}) {
                     </tr>
                 </thead>
                 <tbody>
-                    {dassData.map(student => {
+                    {dassData.map((student, index) => {
                         let level = [], color = [];
                         level[0] = student.depressionLevel !== null ? student.depressionLevel : null;
-
                         level[1] = student.anxietyLevel !== null ? student.anxietyLevel : null;
-
                         level[2] = student.stressLevel !== null ? student.stressLevel : null;
 
                         let riskStatus = "Low Risk", riskColor = "#BFE5C8";
@@ -375,28 +556,28 @@ function DassTable({dassData}) {
                                 mildCount++;
                             } else if (level[i] === "Moderate") {
                                 color[i] = "#e4b995ff";
-                                riskStatus = "Need Attention";
+                                riskStatus = "Moderate";
                                 riskColor = "#ecb385ff";
                                 moderateCount++;
                             } else if (level[i] === "Severe") {
-                                color[i] = "#e9b6b6ff";
-                                riskStatus = "High Risk";
-                                riskColor = "#ff3a3aff";
+                                color[i] = "#ff3a3a";
+                                riskStatus = "High";
+                                riskColor = "#ff3a3a";
                                 severeCount++;
                             } else if (level[i] === "Extremely Severe") {
-                                color[i] = "#ee7878ff";
-                                riskStatus = "High Risk";
-                                riskColor = "#ff3a3aff";
+                                color[i] = "#ff3a3a";
+                                riskStatus = "Critical";
+                                riskColor = "#ff3a3a";
                                 extremeSevereCount++;
                             }
                         }
 
                         if (extremeSevereCount > 0) {
                             riskStatus = "Critical";
-                            riskColor = "#ff3a3aff";
+                            riskColor = "#ff3a3a";
                         } else if (extremeSevereCount === 0 && severeCount > 0) {
                             riskStatus = "High";
-                            riskColor = "#ff8686ff";
+                            riskColor = "#ff8181ff";
                         } else if (severeCount === 0 && moderateCount > 0) {
                             riskStatus = "Medium";
                             riskColor = "#ecb385ff";
@@ -446,21 +627,46 @@ function DassTable({dassData}) {
                                         </label>
                                     </div>
                                 ) : "No Record"}</td>
-                                <td>
-                                    <div>
+                                <td className="actionTd">
+                                    <button onClick={() => toggleAction(index)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-three-dots" viewBox="0 0 16 16">
+                                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                                        </svg>
+                                    </button>
+                                    <div ref={el => (actionRefs.current[index] = el)}>
+                                        <h3>Action Select</h3>
                                         <button onClick={() => goToStudentInfo(student.studentId)}>
                                             View Info
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-info-circle" viewBox="0 0 16 16">
                                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                                 <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                                             </svg>
                                         </button>
-                                        {/* <button onClick={() => handleSendDass(student)}>
-                                            Send Dass
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                                            </svg>
-                                        </button> */}
+                                        {(riskStatus == "High" || riskStatus == "Critical") && 
+                                            <>
+                                               {student.contactRecord ?
+                                                    <>
+                                                        {!student.noteRecord && 
+                                                            <button onClick={() => handleNoteBox(student)}>
+                                                                Add Note
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-journal-plus" viewBox="0 0 16 16">
+                                                                    <path fillRule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
+                                                                    <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+                                                                    <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+                                                                </svg>
+                                                            </button> 
+                                                        }
+                                                    </> 
+                                                :
+                                                    <button onClick={() => handleContactBox(student)}>
+                                                        Contact Student
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                                            <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                                        </svg>
+                                                    </button>   
+                                                }
+                                            </> 
+                                        }
                                     </div>
                                 </td>
                             </tr>
@@ -474,6 +680,32 @@ function DassTable({dassData}) {
                 message={messagebox.message}
                 buttonValue={messagebox.buttonValue}
                 onClose={handleModalButton}
+            />
+            <TextareaModal
+                show={textareaModal.isOpen}
+                purpose={textareaModal.purpose}
+                title={textareaModal.title}
+                description={textareaModal.description}
+                placeholder={textareaModal.placeholder}
+                value={textareaModal.message}
+                onChange={(value) =>
+                    setTextareaModal(prev => ({
+                        ...prev,
+                        message: value
+                    }))
+                }
+                noteType={textareaModal.noteType}
+                onNoteTypeChange={(value) =>
+                    setTextareaModal(prev => ({
+                        ...prev,
+                        noteType: value
+                    }))
+                }
+                maxLength={textareaModal.maxLength}
+                confirmText={textareaModal.confirmText}
+                cancelText={textareaModal.cancelText}
+                onConfirm={handleConfirmTextarea}
+                onCancel={closeTextareaModal}
             />
         </>
     );
@@ -515,33 +747,248 @@ function StudentInfoTable({studentData, selected, setSelected}) {
         }
     };
 
-    const handleSendDass = async (student) => {
+    // ✅ Combined modal state for both contact and note
+    const [textareaModal, setTextareaModal] = useState({
+        isOpen: false,
+        purpose: "", // "contact" or "note"
+        title: "",
+        description: "",
+        message: "",
+        placeholder: "",
+        maxLength: 0,
+        confirmText: "",
+        cancelText: "",
+        noteType: "", // Only used for notes
+        currentStudent: null
+    });
+
+    const closeTextareaModal = () => {
+        setTextareaModal({
+            isOpen: false,
+            purpose: "",
+            title: "",
+            description: "",
+            message: "",
+            placeholder: "",
+            maxLength: 0,
+            confirmText: "",
+            cancelText: "",
+            noteType: "",
+            currentStudent: null
+        });
+    };
+
+    // ✅ Separate confirm handler that checks purpose
+    const handleConfirmTextarea = async () => {
         const token = localStorage.getItem("token");
+        const { currentStudent, message, purpose, noteType } = textareaModal;
+
+        if (!currentStudent) return;
+
         try {
-            fetch(`http://localhost:8080/care_connect_system/backend/api/sendDass.php?studentId=${student.studentId}`, {
-                method: "GET",
-                headers: { "Authorization": "Bearer " + token }
-            })
-            .then(res => res.json())
-            .then(data => {
-                setMessagebox({
-                    show: true,
-                    title: data.success ? "DASS Assessment Sent Successfully" : "DASS Assessment Failed To Send",
-                    message: data.success
-                        ? `DASS Assessment has been sent successfully to ${student.studentName}.`
-                        : `Failed to send DASS Assessment to ${student.studentName}.`,
-                    buttonValue: "OK"
-                });
-            })
-            .catch(err => console.error(err));
-        } catch (error) {
-            console.error(error);
+            let response;
+            
+            if (purpose === "contact") {
+                // Send contact request
+                response = await fetch(
+                    "http://localhost:8080/care_connect_system/backend/api/contactStudent.php",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + token
+                        },
+                        body: JSON.stringify({
+                            studentId: currentStudent.studentId,
+                            message: message
+                        })
+                    }
+                );
+            } else if (purpose === "note") {
+                // Validate note type is selected
+                if (!noteType) {
+                    setMessagebox({
+                        show: true,
+                        title: "Note Type Required",
+                        message: "Please select a note type before submitting.",
+                        buttonValue: "OK",
+                        redirect: false
+                    });
+                    return;
+                }
+                
+                // Send note request
+                response = await fetch(
+                    "http://localhost:8080/care_connect_system/backend/api/noteRecord.php",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + token
+                        },
+                        body: JSON.stringify({
+                            studentId: currentStudent.studentId,
+                            noteType: noteType,
+                            message: message
+                        })
+                    }
+                );
+            }
+
+            const result = await response.json();
+
+            closeTextareaModal();
+
             setMessagebox({
                 show: true,
-                title: "DASS Assessment Failed To Send",
-                message: `Failed to send DASS Assessment to ${student.studentName} due to error`,
+                title: result.success 
+                    ? (purpose === "contact" ? "Student Contacted Successfully" : "Note Added Successfully")
+                    : (purpose === "contact" ? "Contact Failed" : "Note Failed"),
+                message: result.success
+                    ? (purpose === "contact" 
+                        ? `A meeting notification has been sent to ${currentStudent.studentName}.`
+                        : `Note has been added for ${currentStudent.studentName}.`)
+                    : `Failed to ${purpose === "contact" ? "send notification" : "add note"}.`,
                 buttonValue: "OK"
             });
+
+        } catch (error) {
+            console.error(error);
+            closeTextareaModal();
+            setMessagebox({
+                show: true,
+                title: purpose === "contact" ? "Contact Failed" : "Note Failed",
+                message: "An error occurred while processing your request.",
+                buttonValue: "OK"
+            });
+        }
+    };
+
+    // ✅ Open contact modal
+    const handleContactBox = (student) => {
+        setTextareaModal({
+            isOpen: true,
+            purpose: "contact",
+            title: "Contact Student",
+            description: "Please review or customize the message before sending to the student.",
+            message: "We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.",
+            placeholder: "Write your message here...",
+            maxLength: 500,
+            confirmText: "Send",
+            cancelText: "Cancel",
+            noteType: "",
+            currentStudent: student
+        });
+    };
+
+    // ✅ Open note modal
+    const handleNoteBox = (student) => {
+        setTextareaModal({
+            isOpen: true,
+            purpose: "note",
+            title: "Student Case Note",
+            description: "This note is for internal reference only and will not be visible to the student.",
+            message: "",
+            placeholder: "Enter meeting summary, observations, or follow-up actions...",
+            maxLength: 100000,
+            confirmText: "Save Note",
+            cancelText: "Cancel",
+            noteType: "",
+            currentStudent: student
+        });
+    };
+
+    // For form handling and messageBox (Modal)
+    const [confirmationBox, setConfirmationBox] = useState({
+        show: false,
+        title: "",
+        message: "",
+        confirmText: "",
+        cancelText: "",
+        onConfirm: null,
+        onCancel: null
+    });
+
+    const openDassModal = async (student) => {
+        setConfirmationBox({
+            show: true,
+            title: "Send Dass to Student?",
+            message: "This action cannot be undone.",
+            confirmText: "Send",
+            cancelText: "Cancel",
+            onConfirm: async () => {
+                setConfirmationBox(prev => ({ ...prev, show: false }));
+
+                const token = localStorage.getItem("token");
+
+                try {
+                    const response = await fetch(`http://localhost:8080/care_connect_system/backend/api/sendDass.php?studentId=${student.studentId}`, {
+                            method: "GET",
+                            headers: { "Authorization": "Bearer " + token }
+                        }
+                    );
+
+                    const result = await response.json();
+                        setMessagebox({
+                        show: true,
+                        title: result.success ? "DASS Assessment Sent Successfully" : "DASS Assessment Failed To Send",
+                        message: result.success
+                            ? `DASS Assessment has been sent successfully to ${student.studentName}.`
+                            : `Failed to send DASS Assessment to ${student.studentName}.`,
+                        buttonValue: "OK"
+                });
+                } catch (error) {
+                    console.error(error);
+                    setMessagebox({
+                        show: true,
+                        title: "DASS Assessment Failed To Send",
+                        message: `Failed to send DASS Assessment to ${student.studentName} due to error`,
+                        buttonValue: "OK"
+                    });
+                }
+            },
+            onCancel: () =>
+                setConfirmationBox(prev => ({ ...prev, show: false }))
+        });
+    };
+
+    const actionRefs = useRef([]);
+    const [openIndex, setOpenIndex] = useState(null);
+
+    const toggleAction = (index) => {
+        const el = actionRefs.current[index];
+        if (!el) return;
+
+        if (openIndex === index) {
+            gsap.to(el, {
+                duration: 0.3,
+                opacity: 0,
+                height: 0,
+                onComplete: () => {
+                    el.style.display = "none";
+                }
+            });
+            setOpenIndex(null);
+        } else {
+            if (openIndex !== null && actionRefs.current[openIndex]) {
+                gsap.to(actionRefs.current[openIndex], {
+                    duration: 0.2,
+                    opacity: 0,
+                    height: 0,
+                    onComplete: () => {
+                        actionRefs.current[openIndex].style.display = "none";
+                    }
+                });
+            }
+
+            el.style.display = "flex";
+            gsap.fromTo(
+                el,
+                { opacity: 0, height: 0 },
+                { duration: 0.3, opacity: 1, height: "auto" }
+            );
+
+            setOpenIndex(index);
         }
     };
 
@@ -585,7 +1032,7 @@ function StudentInfoTable({studentData, selected, setSelected}) {
                     </tr>
                 </thead>
                 <tbody>
-                    {studentData.map(student => {
+                    {studentData.map((student, index) => {
                         const goToStudentInfo = (id) => navigate(`/StudentInfo/${id}`);
                         const riskColor =
                             student.riskIndicator === "High Risk" ? "#ff3a3a" :
@@ -601,22 +1048,101 @@ function StudentInfoTable({studentData, selected, setSelected}) {
                                 <td>{student.stressPattern}</td>
                                 <td>{student.trend}</td>
                                 <td><span style={{ backgroundColor: riskColor, padding: '5px 10px', borderRadius: '5px' }}>{student.riskIndicator}</span></td>
-                                <td>
-                                    <button onClick={() => goToStudentInfo(student.studentId)}>View Info</button>
-                                    <button onClick={() => handleSendDass(student)}>Send Dass</button>
+                                <td className="actionTd">
+                                    <button onClick={() => toggleAction(index)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-three-dots" viewBox="0 0 16 16">
+                                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                                        </svg>
+                                    </button>
+                                    <div ref={el => (actionRefs.current[index] = el)}>
+                                        <h3>Action Select</h3>
+                                        <button onClick={() => goToStudentInfo(student.studentId)}>
+                                            View Info
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-info-circle" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                                            </svg>
+                                        </button>
+                                        <button onClick={() => openDassModal(student)}>
+                                            Send Dass
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                            </svg>
+                                        </button>
+                                        {student.riskIndicator === "High Risk" && 
+                                            <>
+                                                {student.contactRecord ?
+                                                    <>
+                                                        {!student.noteRecord && 
+                                                            <button onClick={() => handleNoteBox(student)}>
+                                                                Add Note
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-journal-plus" viewBox="0 0 16 16">
+                                                                    <path fillRule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
+                                                                    <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+                                                                    <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+                                                                </svg>
+                                                            </button> 
+                                                        }
+                                                    </>
+                                                :
+                                                    <button onClick={() => handleContactBox(student)}>
+                                                        Contact Student
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                                            <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                                        </svg>
+                                                    </button>   
+                                                }
+                                            </> 
+                                        }
+                                    </div>
                                 </td>
                             </tr>
                         );
                     })}
                 </tbody>
             </table>
-
+            <ConfirmationModal
+                show={confirmationBox.show}
+                title={confirmationBox.title}
+                message={confirmationBox.message}
+                confirmText={confirmationBox.confirmText}
+                cancelText={confirmationBox.cancelText}
+                onConfirm={confirmationBox.onConfirm}
+                onCancel={confirmationBox.onCancel}
+            />
             <MessageBox 
                 show={messagebox.show}
                 title={messagebox.title}
                 message={messagebox.message}
                 buttonValue={messagebox.buttonValue}
                 onClose={handleModalButton}
+            />
+            {/* ✅ Single TextareaModal that adapts based on purpose */}
+            <TextareaModal
+                show={textareaModal.isOpen}
+                purpose={textareaModal.purpose}
+                title={textareaModal.title}
+                description={textareaModal.description}
+                placeholder={textareaModal.placeholder}
+                value={textareaModal.message}
+                onChange={(value) =>
+                    setTextareaModal(prev => ({
+                        ...prev,
+                        message: value
+                    }))
+                }
+                noteType={textareaModal.noteType}
+                onNoteTypeChange={(value) =>
+                    setTextareaModal(prev => ({
+                        ...prev,
+                        noteType: value
+                    }))
+                }
+                maxLength={textareaModal.maxLength}
+                confirmText={textareaModal.confirmText}
+                cancelText={textareaModal.cancelText}
+                onConfirm={handleConfirmTextarea}
+                onCancel={closeTextareaModal}
             />
         </>
     );

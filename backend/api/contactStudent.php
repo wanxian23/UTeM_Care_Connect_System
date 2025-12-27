@@ -7,12 +7,16 @@ require "authPa.php";
 
 $user = validateToken($conn);
 $staffId = $user['staffId'];
-$studentId = $_GET['studentId'];
 
-$title = "Complete Your DASS Assessment";
+// Use to get data from body (JSON.stringify)
+$data = json_decode(file_get_contents("php://input"), true);
+$studentId = $data['studentId'];
+$message = $data['message'];
+
+$title = "Meeting Request from Your PA";
 $todayDate = date("d-m-Y");
-$description = 'The DASS assessment for ' . $todayDate . ' has assigned by your PA. Kindly click here to fill it in.';
-$type = "DASS";
+$description = 'Your PA has scheduled a meeting with you. Check the details inside.';
+$type = "contact";
 $location = "";
 $notificationId = "";
 
@@ -23,19 +27,19 @@ $stmtInsertNotification = $conn->prepare("
 ");
 $stmtInsertNotification->bind_param("isss", $studentId, $title, $description, $type);
 
-$stmtInsertDass = $conn->prepare("
-    INSERT INTO dass (studentId, staffId) 
-    VALUES (?, ?);
+$stmtInsertContact = $conn->prepare("
+    INSERT INTO contactNote (message, studentId, staffId) 
+    VALUES (?, ?, ?);
 ");
-$stmtInsertDass->bind_param("ii", $studentId, $staffId);
+$stmtInsertContact->bind_param("sii", $message, $studentId, $staffId);
 
 if ($stmtInsertNotification->execute()) {
 
     $notificationId = $conn->insert_id;
 
-    if ($stmtInsertDass->execute()) {
-        $dassId = $conn->insert_id;
-        $location = "/DassAssessment/".$dassId;
+    if ($stmtInsertContact->execute()) {
+        $contactId = $conn->insert_id;
+        $location = "/ContactDetails/".$contactId;
 
         $stmtUpdateLocation = $conn->prepare("
             UPDATE notification
@@ -47,26 +51,26 @@ if ($stmtInsertNotification->execute()) {
         if ($stmtUpdateLocation->execute()) {
             echo json_encode([
                 "success" => true,
-                "message" => "DASS notification sent and assessment created successfully"
+                "message" => "Student contact notification sent created successfully"
             ]);
         } else {
             echo json_encode([
                 "success" => false,
-                "message" => "Failed to send DASS notification and create assessment"
+                "message" => "Failed to send student contact notification"
             ]);
         }
  
     } else {
         echo json_encode([
             "success" => false,
-            "message" => "Failed to send DASS notification and create assessment"
+            "message" => "Failed to send contact student notification"
         ]);
     }
 
 } else {
     echo json_encode([
         "success" => false,
-        "message" => "Failed to send DASS notification and create assessment"
+        "message" => "Failed to send contact student notification"
     ]);
 }
 ?>

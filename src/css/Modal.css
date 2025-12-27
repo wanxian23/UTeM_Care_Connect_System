@@ -11,10 +11,11 @@
     z-index: 999;
 }
 
+
 .modal-box {
     background: #fff;
     padding: 25px;
-    width: 450px;
+    width: 480px;
     border-radius: 12px;
     text-align: center;
     animation: popUp 0.25s ease;
@@ -22,6 +23,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: 2.6vh;
+}
+
+div.textarea {
+    width: 650px;
 }
 
 .modal-box h2 {
@@ -67,7 +73,7 @@
 }
 
 .modal-buttons {
-    margin-top: 20px;
+    margin-top: 10px;
     display: flex;
     justify-content: space-around;
     width: 70%;
@@ -83,16 +89,6 @@
   align-items: center;
   justify-content: center;
   z-index: 999;
-}
-
-.modal-box {
-  background: #fff;
-  width: 400px;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  animation: popIn 0.25s ease;
-  display: flex;
 }
 
 @keyframes popIn {
@@ -161,7 +157,7 @@ div.recommendationWrapper {
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    margin: 25px 0;
+    margin: 30px 0;
 }
 
 div.recommendationWrapper a {
@@ -195,6 +191,7 @@ div.recommendationWrapper svg {
   cursor: pointer;
   color: black !important;
   font-weight: bold !important;
+  width: 150px;
 }
 
 .btn.primary {
@@ -234,4 +231,67 @@ div.recommendationWrapper svg {
     height: 40%;          /* controls how much of text is covered */
     background:#ffdec1 !important;
     z-index: -1;
+}
+
+/* For PA contact student box */
+.modal-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 2.4vh;
+}
+
+.textarea-counter {
+    text-align: right;
+    font-size: 12px;
+    color: #777;
+    margin-top: 4px;
+}
+
+p.textareaDescription {
+    margin: 10px 0;
+}
+
+/* PA note box */
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 25px 0 5px 0;
+  width: 90%;
+  justify-content: center;
+}
+
+.modal-label {
+    text-align: left;
+    font-size: 0.9rem;
+    color: #374151;
+    width: 15%;
+}
+
+.modal-select {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #ffffff;
+
+  cursor: pointer;
+}
+
+.modal-select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.modal-select option[value=""] {
+  color: #9ca3af;
 }

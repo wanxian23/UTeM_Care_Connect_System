@@ -810,7 +810,7 @@ function RecordMoodNote() {
             })
             .then(res => res.json())
             .then(data => {
-                console.log("PROFILE RESPONSE:", data);   // ← VERY IMPORTANT
+                console.log("Mood Data Received:", data);   // ← VERY IMPORTANT
                 
                 if(data.success){
                 setMoodRecordData(data);

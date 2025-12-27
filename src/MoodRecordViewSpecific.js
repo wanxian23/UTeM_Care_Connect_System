@@ -192,7 +192,7 @@ function Body1({data, stressLevel, stressColor, currentRecord, moodId}) {
 
                 try {
                     const response = await fetch(
-                        `http://localhost:8080/care_connect_system/backend/api/deleteMoodRecord.php?moodId=${currentRecord?.moodId}`,
+                        `http://localhost:8080/care_connect_system/backend/api/deleteMoodRecord.php?moodId=${currentRecord?.moodId}&date=specific`,
                         {
                             method: "GET", // match PHP
                             headers: { "Authorization": "Bearer " + token }

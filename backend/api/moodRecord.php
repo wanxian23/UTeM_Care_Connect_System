@@ -136,7 +136,7 @@ if ($resultCheckMoodDataMorning->num_rows < 2) {
         "message" => "Daily Mood Recorded Successfully!",
         "moodData" => $latestMoodData,
         "moodDetailsData" => $latestMoodDetailsData,
-        "stressLevel" => $stressData['stressLevel'],
+        "stressLevel" => $stressData['stressLevel'] ?? null,
         "quote" => $recommendation ? $recommendation['quote'] : "Be Happy Everyday!",
         "quoteType" => $recommendation ? $recommendation['type'] : "Positive",
         "quoteLink" => $recommendation['hyperlink'] ??  null

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3301
--- Generation Time: Dec 25, 2025 at 10:27 PM
+-- Generation Time: Dec 27, 2025 at 10:57 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,35 @@ SET time_zone = "+00:00";
 --
 -- Database: `utem_care_connect`
 --
+CREATE DATABASE IF NOT EXISTS `utem_care_connect` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `utem_care_connect`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contactnote`
+--
+
+DROP TABLE IF EXISTS `contactnote`;
+CREATE TABLE IF NOT EXISTS `contactnote` (
+  `contactId` int(11) NOT NULL AUTO_INCREMENT,
+  `message` longtext DEFAULT NULL,
+  `datetimeRecord` datetime DEFAULT current_timestamp(),
+  `studentId` int(11) DEFAULT NULL,
+  `staffId` int(11) DEFAULT NULL,
+  `note` longtext DEFAULT NULL,
+  `noteType` enum('meeting','observation','followup') DEFAULT NULL,
+  PRIMARY KEY (`contactId`),
+  KEY `studentId` (`studentId`),
+  KEY `staffId` (`staffId`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `contactnote`
+--
+
+INSERT INTO `contactnote` (`contactId`, `message`, `datetimeRecord`, `studentId`, `staffId`, `note`, `noteType`) VALUES
+(4, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2025-12-28 05:28:24', 1, 2, 'Seem ok', 'observation');
 
 -- --------------------------------------------------------
 
@@ -38,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `dass` (
   PRIMARY KEY (`dassId`),
   KEY `staffId` (`staffId`),
   KEY `studentId` (`studentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `dass`
@@ -49,7 +78,8 @@ INSERT INTO `dass` (`dassId`, `dassCreatedDateTime`, `status`, `staffId`, `stude
 (4, '2025-12-12 15:03:22', 'Pending', 1, 2, NULL),
 (5, '2025-12-15 13:51:23', 'Completed', 2, 9, '2025-12-15 17:15:40'),
 (7, '2025-12-25 17:31:44', 'Completed', 2, 10, '2025-12-25 17:36:25'),
-(8, '2025-12-25 17:37:42', 'Completed', 2, 1, '2025-12-25 17:38:17');
+(8, '2025-12-25 17:37:42', 'Completed', 2, 1, '2025-12-25 17:38:17'),
+(10, '2025-12-27 23:53:46', 'Pending', 4, 7, NULL);
 
 -- --------------------------------------------------------
 
@@ -262,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `entriesrecord` (
   PRIMARY KEY (`entriesRecordId`),
   KEY `moodId` (`moodId`),
   KEY `entriesTypeId_2` (`entriesTypeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=168 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `entriesrecord`
@@ -278,14 +308,9 @@ INSERT INTO `entriesrecord` (`entriesRecordId`, `moodId`, `entriesTypeId`) VALUE
 (19, 39, 3),
 (21, 41, 1),
 (29, 47, 2),
-(31, 50, 1),
 (33, 53, 1),
 (34, 53, 3),
 (75, 52, 1),
-(84, 62, 1),
-(85, 62, 5),
-(86, 63, 1),
-(87, 63, 5),
 (88, 65, 1),
 (89, 65, 3),
 (90, 66, 1),
@@ -311,7 +336,9 @@ INSERT INTO `entriesrecord` (`entriesRecordId`, `moodId`, `entriesTypeId`) VALUE
 (148, 80, 1),
 (149, 90, 1),
 (151, 93, 4),
-(158, 105, 1);
+(158, 105, 1),
+(164, 62, 1),
+(165, 62, 5);
 
 -- --------------------------------------------------------
 
@@ -386,7 +413,7 @@ CREATE TABLE IF NOT EXISTS `moodtracking` (
   PRIMARY KEY (`moodId`),
   KEY `studentId` (`studentId`),
   KEY `moodTypeId` (`moodTypeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `moodtracking`
@@ -402,12 +429,10 @@ INSERT INTO `moodtracking` (`moodId`, `stressLevel`, `note`, `datetimeRecord`, `
 (40, 28, 'It\'s already midnight 12AM, I\'m just finish watching douyin and decide to continue fighting with my final year project. To be honest, I don\'t know what to write, but since I wanna test this website, so yeah, it\'s time to write something. I think it is good to write down things that happen recently or maybe some life lesson that I learnt these days. \r\n\r\nSo yeah, the first thing I wanna written was, I felt that I\'m like lack of motivation in doing anything. It\'s like I\'m stress and I knew that I gonna rush and finish it as soon as possible. But there are something that stop you from continue moving on. Yeah, you might said that it\'s because of my laziness, but for me, I really like feel empty. \r\n\r\nBut yeah, it has no time for me to relax anymore, even if I have no motivation, but life needs to keep moving on. Just, continue fighting Sis :)', '2025-12-02 00:25:26', 1, 3, 1),
 (41, 70, 'Today was one of those days where everything felt just slightly off, and every small thing somehow managed to get on my nerves.\r\n\r\nNothing huge happened, but it was like the whole day was filled with tiny irritations — the kind that slowly build up and make me want to sigh every five minutes. People talking at the wrong time, things not working the way they should, and my patience just wearing thinner and thinner as the hours went by.\r\n\r\nI wasn’t angry, not really. Just… annoyed.\r\nAnnoyed at interruptions, annoyed at small mistakes, annoyed at things that normally wouldn’t bother me but today felt like too much.\r\n\r\nHonestly, I just want the day to end so I can reset.\r\nHoping tomorrow decides to be kinder, because today definitely wasn’t.', '2025-12-02 20:27:34', 1, 8, 1),
 (47, 20, 'Today tested my patience in ways I didn’t ask for.\r\nFrom the moment I woke up, it felt like the world was set to “irritate mode.”\r\n\r\nLittle things kept piling up — delays, interruptions, people asking things at the worst possible time. Every task seemed harder than it needed to be, and every sound felt louder than usual. I kept trying to stay calm, but honestly, my tolerance was running dangerously low.\r\n\r\nI wasn’t in a bad mood at first, but the day slowly dragged me into one.\r\nIt’s like the universe kept poking me just to see if I’d react.\r\n\r\nI didn’t snap at anyone, but trust me, the internal eye-rolls were constant.\r\n\r\nAnyway… I survived the day, even though it drained me more than it should have.\r\nHopefully tomorrow doesn’t copy today, because I’ve had enough of this annoying energy.', '2025-12-02 21:38:52', 2, 8, 1),
-(50, 0, 'Today was such an unexpectedly exciting day, and honestly, I felt zero stress the whole time. It’s rare for me to have a day where my mood is completely lifted without anything dragging me down, but today was one of those days.\r\n\r\nEverything felt energizing — even small things. I woke up with this light feeling, like something good was going to happen, and that mood just stayed with me. My thoughts were clear, my energy was high, and I couldn’t stop smiling at random moments.\r\n\r\nI got things done easily, without that usual heaviness or pressure. Nothing bothered me, nothing felt too hard, and everything just flowed. I even caught myself feeling excited about things I normally wouldn’t care much about. Maybe it’s the relief from finishing other work earlier, or maybe it’s just one of those good days that decides to show up.\r\n\r\nWhatever the reason, I’m grateful.\r\nIt felt refreshing to live a whole day without any stress hanging over me — just pure excitement, motivation, and good vibes.\r\n\r\nIf only more days could feel like this.', '2025-12-03 16:09:13', 7, 1, 1),
 (52, 10, 'Today has been a bright and uplifting day overall. I felt genuinely happy throughout most of it, and my mood stayed positive despite having a bit of stress lingering in the background. The happiness came naturally — I felt lighter, more energetic, and more motivated than usual. Even small moments felt enjoyable, and I managed to go through the day with a sense of ease and optimism.\r\n\r\nMy stress level today is around 10%, which is relatively low, but still present enough for me to notice. This stress mainly comes from academic-related issues. There are tasks, deadlines, and expectations that occasionally weigh on my mind. Even though the workload isn’t overwhelming right now, the constant reminder of assignments and upcoming responsibilities keeps me slightly tense. It’s the kind of stress that sits quietly at the back of my thoughts — not strong enough to ruin my mood, but enough to make me aware that I need to stay on track.\r\n\r\nDespite that, I’m proud that the stress didn’t take over my day. I managed to balance my emotions well, staying cheerful and productive. Today felt like a reminder that even with small pressures in life, I can still maintain positivity and enjoy the moments around me. I hope the next few days continue in the same direction, with happiness growing and stress staying small and manageable.', '2025-12-08 20:05:49', 2, 1, 1),
 (53, 100, 'Today has been an extremely heavy and overwhelming day. My mood has been deeply emotional, and I found myself breaking down into tears more than once. It feels like everything I’ve been carrying suddenly became too much to hold in, and the weight of it all finally pushed me past my limit. There’s a sense of sadness and exhaustion that I can’t ignore, and my heart feels unusually fragile today.\r\n\r\nMy stress level is at 100%, and it’s painfully clear that both academic pressure and relationship issues are hitting me at the same time. Academically, things feel chaotic — deadlines, expectations, and the fear of falling behind are all swirling in my mind nonstop. No matter how much I try to focus, the stress just keeps piling up, and it feels like I’m losing grip on the balance I used to have.\r\n\r\nOn top of that, the emotional strain from relationship matters makes everything even harder to handle. It’s the kind of hurt that sits deep inside — confusing, draining, and making me question things I normally wouldn’t. The mix of academic worries and relationship tension creates a storm inside me, making it nearly impossible to calm down or think clearly.\r\n\r\nToday feels like one of those days where everything collapses at once, and all I can do is let myself cry it out. Even though it’s overwhelming, I know this feeling won’t last forever. Right now, I’m just giving myself space to feel the pain, to acknowledge the stress, and to accept that it’s okay to not be okay sometimes.', '2025-12-08 21:50:24', 2, 5, 0),
 (61, 20, 'Today felt surprisingly uplifting, and I’m genuinely excited about everything that unfolded. There’s a kind of energy in me that makes the day feel brighter and more motivating than usual. Even though I still have some academic tasks on my mind, the stress level is very manageable—around 20%—and it isn’t weighing me down the way it sometimes does. Instead, it feels like a small reminder that I have responsibilities, but they’re not stopping me from enjoying the moment.\r\n\r\nThe excitement comes from a sense of progress and clarity in my academic journey. Maybe it’s understanding something better, completing something important, or simply feeling more confident about what’s ahead. Whatever it is, that spark really lifted my mood today. I felt more positive, more willing to engage, and more ready to take on what’s coming next.\r\n\r\nEven with academics being the reason behind the little bit of stress I’m carrying, it doesn’t affect the excitement in a negative way. In fact, it almost feels like part of the motivation—like the challenges are pushing me forward rather than slowing me down.\r\n\r\nOverall, today was a good mix of productivity, enthusiasm, and a refreshing emotional boost. I’m hoping I can carry this energy forward and keep using it to move through my academic tasks with confidence and momentum.', '2025-12-09 23:44:33', 1, 1, 0),
-(62, 30, 'Today I’m feeling genuinely happy, and it feels refreshing. Even though life still has its challenges, I can feel a lightness in my mood that makes the day brighter. My stress level is around 30%, which means the pressure is still there, but it isn’t weighing me down too much. I’m still able to smile, stay positive, and enjoy the little things happening around me.\r\n\r\nSome of my stress is coming from academic responsibilities and a bit from financial and lifestyle concerns. Those thoughts do pop up in the background, reminding me of the things I still need to handle and improve. But even with those worries, I’m choosing to stay hopeful and appreciate how far I’ve come. It feels good to know that I can be happy while still dealing with challenges — it shows I’m growing stronger and learning to balance everything better.\r\n\r\nOverall, today feels like a good day. I’m grateful for moments like this where happiness comes naturally, even with stress lingering around. I hope the rest of the day continues to carry this positive energy, and I’ll keep reminding myself that I’m capable of managing whatever comes next.', '2025-12-10 17:21:09', 7, 1, 1),
-(63, 100, 'Today has been overwhelmingly heavy, and I’ve been feeling deeply sad throughout the day. Even small tasks feel heavier than usual, and my thoughts keep circling around the things that are stressing me out. My stress level feels like it’s at 100%, almost like everything is piling up at the same time with no room to breathe. It’s exhausting emotionally, and it’s been affecting my focus, mood, and even my motivation.\r\n\r\nA big part of this sadness comes from academic pressure and the weight of financial and lifestyle concerns. Academically, I feel like I’m constantly trying to catch up, constantly trying to meet expectations that keep increasing. No matter how much effort I put in, it still feels overwhelming. And on top of that, the financial and lifestyle stress keeps adding more to the burden—worrying about money, planning daily expenses, thinking about the future, and trying to manage everything at once. All these things together make the day feel especially tough.\r\n\r\nEven though today is difficult, I’m still here trying to process everything honestly. I know that some days will be heavier than others, and this is one of those days where I just need to acknowledge how I feel. It’s okay to feel sad when life becomes too much. I’m hoping that with time, rest, and support, the pressure will ease and I’ll feel lighter again. For now, I’m allowing myself to feel this sadness, knowing that it doesn’t define me and that better days will come.', '2025-12-10 17:24:50', 7, 4, 1),
+(62, 50, 'Today I’m feeling genuinely happy, and it feels refreshing. Even though life still has its challenges, I can feel a lightness in my mood that makes the day brighter. My stress level is around 30%, which means the pressure is still there, but it isn’t weighing me down too much. I’m still able to smile, stay positive, and enjoy the little things happening around me.\r\n\r\nSome of my stress is coming from academic responsibilities and a bit from financial and lifestyle concerns. Those thoughts do pop up in the background, reminding me of the things I still need to handle and improve. But even with those worries, I’m choosing to stay hopeful and appreciate how far I’ve come. It feels good to know that I can be happy while still dealing with challenges — it shows I’m growing stronger and learning to balance everything better.\r\n\r\nOverall, today feels like a good day. I’m grateful for moments like this where happiness comes naturally, even with stress lingering around. I hope the rest of the day continues to carry this positive energy, and I’ll keep reminding myself that I’m capable of managing whatever comes next.', '2025-12-10 17:21:09', 7, 1, 1),
 (64, 30, 'Today feels like a very steady and balanced day. My mood is neutral — not particularly high or low — just somewhere comfortably in the middle. There isn’t anything overwhelming happening emotionally, and at the same time, nothing exceptionally uplifting either. It’s one of those days where things simply move at a normal pace, and I’m going along with it without much disturbance.\r\n\r\nMy stress level today is around 35%, which is manageable and not too heavy. It’s more like a small background tension rather than something tied to any specific problem. Sometimes this kind of mild stress just appears naturally from daily routines, responsibilities, or a busy mind, even when nothing major is actually wrong.\r\n\r\nInterestingly, there’s no clear reason behind the stress. It’s just there — quiet, soft, and not demanding too much attention. I can still function well, think clearly, and do what I need to do. It feels like one of those days where my mind is calm but slightly alert, keeping an even balance between rest and awareness.\r\n\r\nOverall, it’s a steady, uneventful day emotionally. Nothing dramatic, nothing overwhelming — just neutral. And sometimes, that’s perfectly okay.', '2025-12-10 18:49:12', 1, 3, 0),
 (65, 100, 'Today feels overwhelmingly heavy, and that anger sitting inside me is burning at its peak. With a stress level hitting 100%, it’s clear that everything from academics to social and interpersonal situations is pushing me to my limit. Handling academic pressure alone is already exhausting—deadlines, expectations, and the constant fear of not performing well enough keep stacking up until it feels like I’m suffocating under the weight. But adding social and interpersonal stress into the mix makes everything even more frustrating. Whether it’s misunderstandings, conflicts, or just feeling disconnected from the people around me, it all builds up into this intense emotional storm.\r\n\r\nRight now, it feels like I’m carrying too much at once. Every little thing triggers irritation, and even small problems feel huge because the frustration has nowhere to go. I’m trying to manage everything, but it’s like every time I take one step forward, something else pushes me two steps back. Still, even in moments like this, I know that these emotions won’t last forever. I just need time—time to breathe, time to sort out my thoughts, and time to let the anger cool down. For now, I’m acknowledging how I feel, accepting that it’s valid, and reminding myself that it’s okay to pause and reset when everything becomes too much.', '2025-12-12 13:35:56', 3, 6, 0),
 (66, 64, 'xxx', '2025-12-12 14:31:18', 3, 3, 0),
@@ -445,7 +470,7 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `title` longtext DEFAULT NULL,
   `content` longtext DEFAULT NULL,
   `notiStatus` enum('UNREAD','READ') DEFAULT 'UNREAD',
-  `notiType` enum('mood','dass','general') NOT NULL,
+  `notiType` enum('mood','dass','contact','note','general') NOT NULL,
   `notiCreatedDateTime` datetime DEFAULT current_timestamp(),
   `dassId` int(11) DEFAULT NULL,
   `studentId` int(11) DEFAULT NULL,
@@ -458,7 +483,7 @@ CREATE TABLE IF NOT EXISTS `notification` (
   KEY `staffId` (`staffId`),
   KEY `dassId` (`dassId`),
   KEY `moodId` (`moodId`)
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `notification`
@@ -479,15 +504,17 @@ INSERT INTO `notification` (`notificationId`, `title`, `content`, `notiStatus`, 
 (68, 'Daily Mood Record Time!', NULL, 'UNREAD', 'mood', '2025-12-10 18:50:44', NULL, 5, NULL, NULL, 'Good morning! Take a moment to record your mood and set the tone for today.', '/MoodRecord'),
 (69, 'Daily Mood Record Time!', NULL, 'UNREAD', 'mood', '2025-12-10 18:50:44', NULL, 6, NULL, NULL, 'Good morning! Take a moment to record your mood and set the tone for today.', '/MoodRecord'),
 (70, 'Daily Mood Record Time!', NULL, 'UNREAD', 'mood', '2025-12-10 18:50:44', NULL, 8, NULL, NULL, 'Good morning! Take a moment to record your mood and set the tone for today.', '/MoodRecord'),
-(71, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-12 13:32:22', NULL, 3, NULL, NULL, 'The DASS assessment for 12-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/1/1/3'),
-(74, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-12 15:03:22', NULL, 2, NULL, NULL, 'The DASS assessment for 12-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/4/1/2'),
+(71, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-12 13:32:22', NULL, 3, NULL, NULL, 'The DASS assessment for 12-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/1'),
+(74, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-12 15:03:22', NULL, 2, NULL, NULL, 'The DASS assessment for 12-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/4'),
 (75, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2025-12-14 21:44:26', NULL, NULL, 1, NULL, 'DASS Assessment has completed by D032310403! Click and check it out.', NULL),
-(76, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-15 13:51:23', NULL, 9, NULL, NULL, 'The DASS assessment for 15-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/5/2/9'),
+(76, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-15 13:51:23', NULL, 9, NULL, NULL, 'The DASS assessment for 15-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/5'),
 (77, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2025-12-15 13:53:22', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310126! Click and check it out.', NULL),
-(79, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-25 17:31:43', NULL, 10, NULL, NULL, 'The DASS assessment for 25-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/7/2/10'),
+(79, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-25 17:31:43', NULL, 10, NULL, NULL, 'The DASS assessment for 25-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/7'),
 (80, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2025-12-25 17:36:25', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310322! Click and check it out.', NULL),
-(81, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-25 17:37:42', NULL, 1, NULL, NULL, 'The DASS assessment for 25-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/8/2/1'),
-(82, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2025-12-25 17:38:17', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310439! Click and check it out.', NULL);
+(81, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-25 17:37:42', NULL, 1, NULL, NULL, 'The DASS assessment for 25-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/8'),
+(82, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2025-12-25 17:38:17', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310439! Click and check it out.', NULL),
+(84, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-27 23:53:46', NULL, 7, NULL, NULL, 'The DASS assessment for 27-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/10'),
+(88, 'Meeting Request from Your PA', NULL, 'UNREAD', 'contact', '2025-12-28 05:28:24', NULL, 1, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/4');
 
 -- --------------------------------------------------------
 
@@ -566,7 +593,7 @@ CREATE TABLE IF NOT EXISTS `recommendationdisplay` (
   PRIMARY KEY (`recommendationDisplayId`),
   KEY `studentId` (`studentId`),
   KEY `recommendationdisplay_ibfk_1` (`recommendId`)
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=138 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `recommendationdisplay`
@@ -660,7 +687,18 @@ INSERT INTO `recommendationdisplay` (`recommendId`, `studentId`, `displayCount`,
 (32, 1, 1, 3, 123),
 (37, 1, 1, 3, 124),
 (34, 1, 1, 3, 125),
-(31, 1, 1, 3, 126);
+(31, 1, 1, 3, 126),
+(8, 7, 1, 3, 127),
+(19, 7, 1, 3, 128),
+(12, 7, 1, 3, 129),
+(4, 7, 1, 3, 130),
+(15, 7, 1, 3, 131),
+(11, 7, 1, 3, 132),
+(6, 7, 1, 3, 133),
+(3, 7, 1, 3, 134),
+(3, 7, 1, 3, 135),
+(8, 7, 1, 3, 136),
+(20, 7, 1, 3, 137);
 
 -- --------------------------------------------------------
 
@@ -692,9 +730,9 @@ CREATE TABLE IF NOT EXISTS `staff` (
 
 INSERT INTO `staff` (`staffId`, `staffNo`, `staffName`, `staffEmail`, `staffContact`, `staffFaculty`, `staffProPic`, `staffOffice`, `staffMemberSince`, `staffRole`, `staffPassword`, `loginToken`) VALUES
 (1, 'S032310001', 'TEN LEE KONG', 's032310001@utem.edu.my', '0126785432', 'FTMK', '', 'RIGHT WING 2nd FLOOR B01', '2025-12-18 06:23:27', 'PENASIHAT AKADEMIK', '$2y$10$XzMA6eIBzTBEr.WWrZ/1o.ZWzdReplWEfx3iZzAJxxUzN1V5ig2Pa', '5cafb56defa94c8e2b94e450aee1c6f661c746dde06bb909a76e4b38d3ba80d8'),
-(2, 'S032310002', 'LEE XING RU', 's032310002@utem.edu.my', '0166571254', 'FTMK', '', 'RIGHT WING 1st FLOOR B05', '2025-12-25 09:31:37', 'PENASIHAT AKADEMIK', '$2y$10$ZBaZ85aT2uOpp/F3VAx1gOtxFX9TCZbS4VciehdkCC8XXIlPm0/7a', 'b7c1ad03a32b413a631f3feed78a951a2c6d076deaa7296c7e85e636fdda10d2'),
+(2, 'S032310002', 'LEE XING RU', 's032310002@utem.edu.my', '0166571254', 'FTMK', '', 'RIGHT WING 1st FLOOR B05', '2025-12-27 18:25:41', 'PENASIHAT AKADEMIK', '$2y$10$ZBaZ85aT2uOpp/F3VAx1gOtxFX9TCZbS4VciehdkCC8XXIlPm0/7a', 'e7882cb7df72d802a68a02d635172b177b79127a743689ea5b2b29dbb6502d64'),
 (3, 'S032310003', 'NG JIA SENG', 's032310003@utem.edu.my', '0104571685', 'FTMK', '', 'LEFT WING 1st FLOOR B07', '2025-11-24 14:30:45', 'PENASIHAT AKADEMIK', '$2y$10$atrL3atMEo82Uc32ajT1F.x/DA5ZbCCQ1Zb5t3HsyoGXOun5eOeme', NULL),
-(4, 'S032310004', 'CHIN ZHI ROU', 's032310004@utem.edu.my', '0146241524', 'FTMK', '', 'LEFT WING 3rd FLOOR B02', '2025-12-25 09:28:39', 'PENASIHAT AKADEMIK', '$2y$10$8bkUPoDQco4F1sxIfXV0seeGFVQesDivHDwQn35ynI2IhcHGc7kDC', '95499d33143b9d99283bcafbf0407a383bff57e0bdcc0557144ae2a3357060e3'),
+(4, 'S032310004', 'CHIN ZHI ROU', 's032310004@utem.edu.my', '0146241524', 'FTMK', '', 'LEFT WING 3rd FLOOR B02', '2025-12-27 15:09:00', 'PENASIHAT AKADEMIK', '$2y$10$8bkUPoDQco4F1sxIfXV0seeGFVQesDivHDwQn35ynI2IhcHGc7kDC', 'aad184cc3865fe1f0c974762bdcfc0a1801e72e452f17375e012635466620116'),
 (5, 'S032210001', 'NG KAH MING', 's032210001@utem.edu.my', '0123542165', 'FTKE', '', '1st FLOOR K03', '2025-12-25 09:30:50', 'PENASIHAT AKADEMIK', '$2y$10$NuaQM4E7ftMepgJ4MGvuHu6B9rxBRO8WALrl6YpvZMUvjPe0Lplq.', '996493a25795ed91c7ee886c03b649f169b190f26d1a1307f648e113ed21fdcb');
 
 -- --------------------------------------------------------
@@ -711,7 +749,7 @@ CREATE TABLE IF NOT EXISTS `stress` (
   `studentId` int(11) DEFAULT NULL,
   PRIMARY KEY (`stressId`),
   KEY `studentId` (`studentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `stress`
@@ -727,7 +765,8 @@ INSERT INTO `stress` (`stressId`, `stressLevel`, `datetimeRecord`, `studentId`) 
 (20, 28, '2025-12-02 00:00:00', 1),
 (21, 100, '2025-12-01 00:00:00', 1),
 (22, 20, '2025-12-09 00:00:00', 1),
-(23, 76, '2025-12-26 01:30:18', 1);
+(23, 76, '2025-12-26 01:30:18', 1),
+(31, 50, '2025-12-10 00:00:00', 7);
 
 -- --------------------------------------------------------
 
@@ -761,20 +800,27 @@ CREATE TABLE IF NOT EXISTS `student` (
 --
 
 INSERT INTO `student` (`studentId`, `matricNo`, `studentName`, `studentEmail`, `studentContact`, `studentFaculty`, `studentYearOfStudy`, `studentSection`, `studentGrp`, `studentProPic`, `studentPassword`, `staffId`, `studentCourse`, `studentMemberSince`, `loginToken`) VALUES
-(1, 'D032310439', 'CHONG WAN XIAN CASEY', 'd032310439@student.utem.edu.my', '0122643499', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$9E8c.HpCNyuSUU2OPc7OvuVJ4gkAs0yMoJ5yRqo0h2AglN31VuZem', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '0f875d5da73f1de7190ec106f828f30c0bffd80094d69cd619740eb6dffea7ee'),
-(2, 'D032310456', 'CHIEW CHIN KUAN', 'd032310456@student.utem.edu.my', '0129318660', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$qVJ6AV0SqRc25DSJYjMsTOBS5.U3o2erBPvbh./8yXy6.nGGUJ2da', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '7c2acb285757b7257d95a5293ffd39f4b3257440f3027c29d5f317d45fa05165'),
-(3, 'D032310403', 'A\'SYAH INSYIRAH BINTI MOHD NIZAM', 'd032310403@student.utem.edu.my', '0163249854', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$eQwLVlu2NELlJOVCmhW2F.XwegeDD0Qs03I6bnaAY9Nkey03d0D5q', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '8ffddade6e59b3750268a8680a35dd77d496316d629ca05fb91268db56c2f691'),
+(1, 'D032310439', 'CHONG WAN XIAN CASEY', 'd032310439@student.utem.edu.my', '0122643499', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$9E8c.HpCNyuSUU2OPc7OvuVJ4gkAs0yMoJ5yRqo0h2AglN31VuZem', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', 'aa623e7989d55d5d3ea10e9b5af421c633f5e74be81890e6f03cf6b3d0a39c31'),
+(2, 'D032310456', 'CHIEW CHIN KUAN', 'd032310456@student.utem.edu.my', '0129318660', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$qVJ6AV0SqRc25DSJYjMsTOBS5.U3o2erBPvbh./8yXy6.nGGUJ2da', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '11171234f0467105fe2d461fad6b995f217969a894dc309477237d64739a3103'),
+(3, 'D032310403', 'A\'SYAH INSYIRAH BINTI MOHD NIZAM', 'd032310403@student.utem.edu.my', '0163249854', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$eQwLVlu2NELlJOVCmhW2F.XwegeDD0Qs03I6bnaAY9Nkey03d0D5q', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '860d0b17f1a3a0613fdd7a53acef112df8943ea32b717f3274bbad8442343f09'),
 (4, 'D032310149', 'SIA XIN WAN', 'd032310149@student.utem.edu.my', '01110356547', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$GJ/TBuE.U9JoWDMMyMVkve04D/CHJ382FH4D53ht1XKEKkzPRuAiC', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', NULL),
 (5, 'D032310347', 'TEOH HUI YU', 'd032310347@student.utem.edu.my', '0125428971', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$RSUuBTnnwB0VEaYFacCI8errJuhc4tRmoxrlddWfYt3Ht9IkrA0Ma', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', NULL),
 (6, 'D032310490', 'FELICIA TEE JIA XUAN', 'd032310490@student.utem.edu.my', '0125468751', 'FTMK', 3, 'SECTION 3', 'GROUP 2', '', '$2y$10$RDxGSe2VagOKi4UhR/sgMO/GYLLY2ntI.aFFEPRnS8JZno7MIezHK', 3, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '972fc1873728894d633861a0dabc15176850e4c0af057ff8513db04bdb97aacd'),
-(7, 'D032310460', 'CHAN MEI YEANG', 'd032310460@student.utem.edu.my', '01110265475', 'FTMK', 3, 'SECTION 3', 'GROUP 1', '', '$2y$10$7/YG5UbsmlPY5JHO2r89jOv9wTJVKDwxm.CvTeV.Dh8jzusUV31wS', 4, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '5805986cf6568882959c8568b9c3cab69ddffb809f52a26da63b0561693bd7d3'),
+(7, 'D032310460', 'CHAN MEI YEANG', 'd032310460@student.utem.edu.my', '01110265475', 'FTMK', 3, 'SECTION 3', 'GROUP 1', '', '$2y$10$7/YG5UbsmlPY5JHO2r89jOv9wTJVKDwxm.CvTeV.Dh8jzusUV31wS', 4, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '18c0fb89325a50204c8620390d68a339bd6279c3e1709907e3f81b64c25759ef'),
 (8, 'B112420015', 'LIM KE ROU', 'b1112420015@student.utem.edu.my', '0162195483', 'FTKE', 2, 'SECTION 1', 'GROUP 1', '', '$2y$10$BhO/EVlGjtiJwJBkvGrnFeqNE5BIlgaznlwsZ5SV2EFLWEcE0xtMi', 5, 'BACHELOR IN ELECTRICAL', '2025-11-25 16:03:10', NULL),
 (9, 'D032310126', 'EISYAH MAISARAH BINTI AZHARI', 'eisyahmaisarah@student.utem.edu.my', '0162195489', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$/FzRDss7RcetMi4pkchwA.OjfRpPDAuYALUe0WJwQ3eraBuPVN2/m', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-15 13:39:45', '83d094af2f6b1cc43d537b717925370e7917ff0b55e193eb72e7d31dbcc1cf1e'),
-(10, 'D032310322', 'CHONG PUI YI', 'chongpuiyi@student.utem.edu.my', '0124568542', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$RjhVTN18Ah0HYM8bouPEhefaZr3P9HPtT.5/GMs6/.ZI0FjDdqTXq', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-25 17:17:49', 'c58676c9ef331d862998b459ccd3bf09644055f75d6ebf8208e8da05f6e984c3');
+(10, 'D032310322', 'CHONG PUI YI', 'chongpuiyi@student.utem.edu.my', '0124568542', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$RjhVTN18Ah0HYM8bouPEhefaZr3P9HPtT.5/GMs6/.ZI0FjDdqTXq', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-25 17:17:49', 'f9d21d6579bf86caf7d783a59b47b73d7831bfe84407fe8995ca6ac7eafff66b');
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `contactnote`
+--
+ALTER TABLE `contactnote`
+  ADD CONSTRAINT `contactnote_ibfk_1` FOREIGN KEY (`studentId`) REFERENCES `student` (`studentId`),
+  ADD CONSTRAINT `contactnote_ibfk_2` FOREIGN KEY (`staffId`) REFERENCES `staff` (`staffId`);
 
 --
 -- Constraints for table `dass`

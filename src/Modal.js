@@ -112,4 +112,87 @@ export function MoodRecommendationModal({
   );
 }
 
+export function TextareaModal({
+    show,
+    title,
+    description,
+    placeholder = "Type here...",
+    value,
+    onChange,
+    confirmText = "Submit",
+    cancelText = "Cancel",
+    onConfirm,
+    onCancel,
+    maxLength,
+    purpose,
+    noteType,
+    onNoteTypeChange
+}) {
+    if (!show) return null;
+
+    return (
+        <div className="modal-overlay">
+            <div className="modal-box textarea">
+
+                <h2 className="modal-title sectionTitle">{title}</h2>
+
+                {description && <p className="textareaDescription">{description}</p>}
+
+                {/* ✅ NOTE TYPE (only for note purpose) */}
+                {purpose === "note" && (
+                    <div className="modal-field">
+                        <h4 className="modal-label">Note Type</h4>
+                        <select
+                            name="noteType"
+                            className="modal-select"
+                            value={noteType}
+                            onChange={(e) => onNoteTypeChange(e.target.value)}
+                        >
+                            <option value="">-- Select note type-- </option>
+                            <option value="meeting">Meeting</option>
+                            <option value="followup">Follow-up</option>
+                            <option value="observation">Observation</option>
+                        </select>
+                    </div>
+                )}
+
+                <div className="modal-field">
+                    <h4 className="modal-label">Message</h4>
+                    <textarea
+                        className="modal-textarea"
+                        placeholder={placeholder}
+                        name="message"
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        maxLength={maxLength}
+                        required
+                    />  
+                </div>
+                
+
+                {maxLength && (
+                    <p className="textarea-counter">
+                        {value.length} / {maxLength}
+                    </p>
+                )}
+
+                <div className="modal-buttons">
+                    <button className="modal-cancel" onClick={onCancel}>
+                        {cancelText}
+                    </button>
+
+                    <button
+                        className="modal-confirm"
+                        onClick={onConfirm}
+                        disabled={!value.trim()}
+                    >
+                        {confirmText}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
 export default Modal;

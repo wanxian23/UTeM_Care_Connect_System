@@ -177,7 +177,7 @@ function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, dis
             show: true,
             title: "Delete Mood Record?",
             message: "This action cannot be undone.",
-            confirmText: "Yes, Delete",
+            confirmText: "Delete",
             cancelText: "Cancel",
             onConfirm: async () => {
                 setConfirmationBox(prev => ({ ...prev, show: false }));
@@ -186,7 +186,7 @@ function Body1({data, stressLevel, stressColor, onNext, onPrev, disableNext, dis
 
                 try {
                     const response = await fetch(
-                        `http://localhost:8080/care_connect_system/backend/api/deleteMoodRecord.php?moodId=${currentRecord?.moodId}`,
+                        `http://localhost:8080/care_connect_system/backend/api/deleteMoodRecord.php?moodId=${currentRecord?.moodId}&date=today`,
                         {
                             method: "GET", // match PHP
                             headers: { "Authorization": "Bearer " + token }
