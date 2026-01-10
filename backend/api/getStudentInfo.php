@@ -8,18 +8,31 @@ require "authPa.php";
 // Run the auth function to fetch student data
 $user = validateToken($conn);
 $userId = $user['staffId'];
-$studentId = $_GET['studentId'];
+$studentIdGet = $_GET['studentId'];
+
+$paId = $_GET['paId'] ?? null;
 
 // Get student personal information
-$stmtGetAllStudent = $conn->prepare("
-    SELECT * FROM Student
-    WHERE studentId = ?
-");
-$stmtGetAllStudent->bind_param("i", $studentId);
+if (empty($paId)) {
+    $stmtGetAllStudent = $conn->prepare("
+        SELECT * FROM Student
+        WHERE studentId = ?
+        AND staffId = ?
+    ");
+    $stmtGetAllStudent->bind_param("ii", $studentIdGet, $userId);
+} else {
+    $stmtGetAllStudent = $conn->prepare("
+        SELECT * FROM Student
+        WHERE studentId = ?
+        AND staffId = ?
+    ");
+    $stmtGetAllStudent->bind_param("ii", $studentIdGet, $paId);
+}
 $stmtGetAllStudent->execute();
 $resultGetAllStudent = $stmtGetAllStudent->get_result();
 $getAllStudentData = $resultGetAllStudent->fetch_assoc();
 
+$studentId = $getAllStudentData['studentId'];
 // Get student mood record information
 // Get latest mood for this student
 // Fetch ALL mood records for today
@@ -32,6 +45,17 @@ $stmtMoodData->bind_param("i", $studentId);
 $stmtMoodData->execute();
 $resultMoodData = $stmtMoodData->get_result();
 $allMoodRecords = $resultMoodData->fetch_all(MYSQLI_ASSOC);
+
+// Get stress level
+$stmtStress = $conn->prepare("
+    SELECT * FROM stress
+    WHERE studentId = ?
+    AND DATE(datetimeRecord) = CURDATE()
+");
+$stmtStress->bind_param("i", $studentId);
+$stmtStress->execute();
+$resultStress = $stmtStress->get_result();
+$stressData = $resultStress->fetch_assoc();
 
 $finalRecords = [];
 if ($resultMoodData->num_rows > 0) {
@@ -70,7 +94,7 @@ if ($resultMoodData->num_rows > 0) {
             "moodStatus" => $moodType['moodStatus'],
             "moodStoreLocation" => $moodType['moodStoreLocation'],
             "moodRecordTime" => $record['datetimeRecord'],
-            "stressLevel" => $record['stressLevel'],
+            "stressLevel" => $stressData['stressLevel'],
             "note" => nl2br(htmlspecialchars($record['note'])),
             "entriesData" => $completeEntriesData,
             "notePrivacy" => (int)$record['notePrivacy']
@@ -80,18 +104,19 @@ if ($resultMoodData->num_rows > 0) {
 }
 
 // Get data of averageStress
-$stmtStressAvg = $conn->prepare("
-    SELECT AVG(stressLevel) AS avgStress
-    FROM moodTracking
-    WHERE studentId = ?
-    AND DATE(datetimeRecord) = CURDATE()
-");
-$stmtStressAvg->bind_param("i", $studentId);
-$stmtStressAvg->execute();
-$resultStressAvg = $stmtStressAvg->get_result();
-$stressData = $resultStressAvg->fetch_assoc();
+// $stmtStressAvg = $conn->prepare("
+//     SELECT AVG(stressLevel) AS avgStress
+//     FROM moodTracking
+//     WHERE studentId = ?
+//     AND DATE(datetimeRecord) = CURDATE()
+// ");
+// $stmtStressAvg->bind_param("i", $studentId);
+// $stmtStressAvg->execute();
+// $resultStressAvg = $stmtStressAvg->get_result();
+// $stressData = $resultStressAvg->fetch_assoc();
 
-$avgStress = $stressData['avgStress']; // this is the average
+// $avgStress = $stressData['avgStress']; // this is the average
+
 
 // // Get data of averageScale
 // $stmtMoodAvg = $conn->prepare("
@@ -161,7 +186,7 @@ echo json_encode([
         // "avgTodayStudentMoodStoreLocation" => $moodInfo['moodStoreLocation'] ?? null,
         "moodStatus" => $moodStatus ?? null,
         "moodStoreLocation" => $moodStoreLocation ?? null,
-        "avgTodayStudentStressLevel" => $avgStress ?? null,
+        "todayStressLevel" => $stressData['stressLevel'] ?? null,
     ]);
 
 ?>

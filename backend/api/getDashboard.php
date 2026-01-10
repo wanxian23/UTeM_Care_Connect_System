@@ -9,84 +9,130 @@ require "authStudent.php";
 $user = validateToken($conn);
 $userId = $user['studentId'];
 
-// // Get data of recorded
-// $stmtMoodData = $conn->prepare("SELECT * FROM moodTracking WHERE studentId = ? AND DATE(datetimeRecord) = CURDATE() ORDER BY moodId DESC");
-// $stmtMoodData->bind_param("i", $userId);
-// $stmtMoodData->execute();
-// $resultMoodData = $stmtMoodData->get_result();
-// $moodData = $resultMoodData->fetch_assoc();
+// ============= DATE TESTING CONFIG =============
+define('ENABLE_DATE_TESTING', false);
+// Format: YYYY-MM-DD
+define('TEST_DATE', '2026-01-10');
+define('TEST_TIME', '02:00:00');
 
+$todayDate = ENABLE_DATE_TESTING
+    ? TEST_DATE
+    : date('Y-m-d'); // Asia/Kuala_Lumpur already set
 
-// Get data of averageStress
-// $stmtStressAvg = $conn->prepare("
-//     SELECT AVG(stressLevel) AS avgStress
-//     FROM moodTracking
-//     WHERE studentId = ?
-//     AND DATE(datetimeRecord) = CURDATE()
-// ");
-// $stmtStressAvg->bind_param("i", $userId);
-// $stmtStressAvg->execute();
-// $resultStressAvg = $stmtStressAvg->get_result();
-// $stressData = $resultStressAvg->fetch_assoc();
-
-// $avgStress = $stressData['avgStress']; // this is the average
-
-
+// ============= ACTUAL CONFIG =============
+// Define time windows for mood recording
+define('MORNING_START', '06:00:00');  // 6:00 AM
+define('MORNING_END', '11:59:59');    // 11:59 AM
+define('AFTERNOON_START', '12:00:00'); // 12:00 PM
+define('AFTERNOON_END', '23:59:59');   // 11:59 PM
 
 // Get stress level
 $stmtStress = $conn->prepare("
     SELECT * FROM stress
     WHERE studentId = ?
-    AND DATE(datetimeRecord) = CURDATE()
+    AND DATE(datetimeRecord) = ?
 ");
-$stmtStress->bind_param("i", $userId);
+$stmtStress->bind_param("is", $userId, $todayDate);
 $stmtStress->execute();
 $resultStress = $stmtStress->get_result();
 $stressData = $resultStress->fetch_assoc();
 
-
-
-// Get data of averageScale
-// $stmtMoodAvg = $conn->prepare("
-//     SELECT 
-//         AVG(m.scale) AS avgMoodScale
-//     FROM moodTracking mt
-//     JOIN mood m ON mt.moodTypeId = m.moodTypeId
-//     WHERE mt.studentId = ?
-//     AND DATE(mt.datetimeRecord) = CURDATE()
-// ");
-// $stmtMoodAvg->bind_param("i", $userId);
-// $stmtMoodAvg->execute();
-
-// $resultMoodAvg = $stmtMoodAvg->get_result();
-// $dataMood = $resultMoodAvg->fetch_assoc();
-
-// $avgMoodScale = $dataMood['avgMoodScale'];  // decimal (e.g., 5.7)
-
-// $finalMoodScale = round($avgMoodScale);
-
-// $stmtMoodInfo = $conn->prepare("
-//     SELECT *
-//     FROM mood
-//     WHERE scale = ?
-// ");
-// $stmtMoodInfo->bind_param("i", $finalMoodScale);
-// $stmtMoodInfo->execute();
-
-// $resultMoodInfo = $stmtMoodInfo->get_result();
-// $moodInfo = $resultMoodInfo->fetch_assoc();
-
 $moodStatus = [];
 $moodStoreLocation = [];
+$moodRecordTime = [];
 $stmtGetAllMoodStatus = $conn->prepare("
     SELECT * FROM moodTracking 
     WHERE studentId = ?
-    AND DATE(datetimeRecord) = CURDATE()
+    AND DATE(datetimeRecord) = ?
 ");
-$stmtGetAllMoodStatus->bind_param("i", $userId);
+$stmtGetAllMoodStatus->bind_param("is", $userId, $todayDate);
 $stmtGetAllMoodStatus->execute();
 $resultGetAllMoodStatus = $stmtGetAllMoodStatus->get_result();
 $getAllMoodStatusData = $resultGetAllMoodStatus->fetch_all(MYSQLI_ASSOC);
+$totalRows = ENABLE_DATE_TESTING
+    ? 1 : $resultGetAllMoodStatus->num_rows;
+
+$currentTime = ENABLE_DATE_TESTING
+    ? TEST_TIME : date("H:i:s");
+$canRecord = [];
+if ($totalRows === 0) {
+    if ($currentTime >= MORNING_START && $currentTime <= MORNING_END) {
+        $canRecord = [
+            'recordCount' => $totalRows,
+            'isMorning' => true,
+            'isAfternoon' => false,
+            'canRecord' => true,
+            'buttonShow' => true,
+            'message' => "You seem like haven't record for any mood today yet!"
+        ];
+    } elseif ($currentTime >= AFTERNOON_START && $currentTime <= AFTERNOON_END) {
+        $canRecord = [
+            'recordCount' => $totalRows,
+            'isMorning' => false,
+            'isAfternoon' => true,
+            'canRecord' => true,
+            'buttonShow' => true,
+            'message' => "You seem like haven't record for any mood today yet!"
+        ];
+    }  else {
+        $canRecord = [
+            'recordCount' => $totalRows,
+            'isMorning' => true,
+            'isAfternoon' => false,
+            'canRecord' => false,
+            'buttonShow' => false,
+            'message' => "Please wait until 6AM to record your second mood and stress status!"
+        ];
+    }
+} else if ($totalRows == 1) {
+
+    $periodRecord = ENABLE_DATE_TESTING
+        ? TEST_TIME : "";
+    foreach ($getAllMoodStatusData as $row) {
+        $periodRecord = date('H:i:s', strtotime($row['datetimeRecord']));
+    }
+    
+    if ($currentTime >= MORNING_START && $currentTime <= MORNING_END) {
+        $canRecord = [
+            'recordCount' => $totalRows,
+            'isMorning' => true,
+            'isAfternoon' => false,
+            'canRecord' => false,
+            'buttonShow' => false,
+            'message' => "Please wait until 12PM to record your second mood and stress status!"
+        ];
+    } elseif ($currentTime >= AFTERNOON_START && $currentTime <= AFTERNOON_END) {
+        if ($periodRecord >= AFTERNOON_START && $periodRecord <= AFTERNOON_END) {
+            $canRecord = [
+                'recordCount' => $totalRows,
+                'isMorning' => false,
+                'isAfternoon' => false,
+                'canRecord' => false,
+                'buttonShow' => false,
+                'message' => "Great! You have completed mood record for afternoon."
+            ];
+        } else {
+            $canRecord = [
+                'recordCount' => $totalRows,
+                'isMorning' => false,
+                'isAfternoon' => true,
+                'canRecord' => true,
+                'buttonShow' => true,
+                'message' => "You still have 1 mood record left haven't completed."
+            ];
+        }
+        
+    }  
+} else {
+    $canRecord = [
+        'recordCount' => $totalRows,
+        'isMorning' => false,
+        'isAfternoon' => false,
+        'canRecord' => false,
+        'buttonShow' => false,
+        'message' => "Great! You have completed all the mood record today :)"
+    ];
+}
 
 foreach ($getAllMoodStatusData as $row) {
     $moodTypeId = $row['moodTypeId'];
@@ -102,6 +148,22 @@ foreach ($getAllMoodStatusData as $row) {
 
     $moodStatus[] = $moodDetails['moodStatus'];
     $moodStoreLocation[] = $moodDetails['moodStoreLocation'];
+    
+    $datetime = $row['datetimeRecord'];
+    $timeOnly = date('H:i:s', strtotime($datetime));
+
+    $period = null;
+
+    if ($timeOnly >= MORNING_START && $timeOnly <= MORNING_END) {
+        $period = "morning";
+    } elseif ($timeOnly >= AFTERNOON_START && $timeOnly <= AFTERNOON_END) {
+        $period = "afternoon";
+    }
+
+    $moodRecordTime[] = [
+        "datetime" => $datetime,
+        "period" => $period
+    ];
 }
 
 // Variable for moodCount (Weekly)
@@ -132,22 +194,6 @@ foreach ($moodDataWeekly as $weeklyRow) {
 }
 
 if ($stressData) {
-
-    // // Get data of recorded entries
-    // $moodId = $moodData['moodId'];
-    // $stmtEntriesData = $conn->prepare("SELECT * FROM entriesRecord WHERE moodId = ?");
-    // $stmtEntriesData->bind_param("i", $moodId);
-    // $stmtEntriesData->execute();
-    // $resultEntriesData = $stmtEntriesData->get_result();
-    // $entriesData = $resultEntriesData->fetch_all(MYSQLI_ASSOC);
-
-    // Get data of mood
-    // $moodTypeId = $moodData['moodTypeId'];
-    // $stmtMoodType = $conn->prepare("SELECT * FROM mood WHERE moodTypeId = ?");
-    // $stmtMoodType->bind_param("i", $moodTypeId);
-    // $stmtMoodType->execute();
-    // $resultMoodType = $stmtMoodType->get_result();
-    // $moodType = $resultMoodType->fetch_assoc();
 
     // Get data of recommendation
     $stmtRecommendationChecking = $conn->prepare("
@@ -194,8 +240,12 @@ if ($stressData) {
 
             // Daily mood info
             "moodStatus" => $moodStatus ?? null,
+            "moodRecordTime" => $moodRecordTime ?? null,
             "moodStoreLocation" => $moodStoreLocation ?? null,
-            "stressLevel" => $stressData['stressLevel'] ?? null,
+            "stressLevel" => $stressData['stressLevel'] ?? "N/A",
+            // "stressLevel" => $stressData['stressLevel'] != 0 ? $stressData['stressLevel'] : "N/A",
+            "moodRecordCount" => $totalRows ?? 0,
+            "recordAvailability" => $canRecord ?? null,
 
             // Recommendation info
             "quote" => $recommendation ? $recommendation['quote'] : "Be Happy Everyday!",
@@ -217,9 +267,12 @@ if ($stressData) {
 
         // Daily default values
         "moodStatus" => null,
+        "moodRecordTime" => null,
         "moodStoreLocation" => null,
-        "stressLevel" => null,
+        "stressLevel" => "N/A",
+        "moodRecordCount" => 0,
         "message" => "No mood record for today",
+        "recordAvailability" => $canRecord ?? null,
 
         // WEEKLY DATA STILL RETURNED
         "weeklyMoodCount" => $moodCount
@@ -233,6 +286,7 @@ if ($stressData) {
         "hasRecord" => false,  // Add this flag
         "entriesData" => [],
         "message" => "No mood record for today",
+        "recordAvailability" => $canRecord ?? null,
         "weeklyMoodCount" => $moodCount
     ]);
 }

@@ -3,6 +3,7 @@ main#mainProfileFirst {
     display: flex;
     flex-direction: column;
     gap: 70px;
+    background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
 }
 
 main#mainProfileFirst div.profileWrapper {

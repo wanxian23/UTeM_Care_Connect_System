@@ -58,45 +58,89 @@ function StudentInfo() {
         });
     }, [weekOffset, monthOffset]);
 
+    const [activeTab, setActiveTab] = useState("moodTrend");
+
     return(
         <>
             <HeaderPa />
-            <SubHeader studentId={id} />
-            <main className="statisticBodyWrapper">
-                    <TrendGraph 
-                    trendData={statisticData.weeklyTrend} 
-                    type="weekly"
-                    offset={weekOffset}
-                    setOffset={setWeekOffset}
-                    weekInfo={statisticData.weekInfo}
-                    summary={statisticData.weeklySummary}
-                />
-                <TrendGraph 
-                    trendData={statisticData.monthlyTrend} 
-                    type="monthly"
-                    offset={monthOffset}
-                    setOffset={setMonthOffset}
-                    monthInfo={statisticData.monthInfo}
-                    summary={statisticData.monthlySummary}
-                />
-                <StressTrendGraph 
-                    stressData={statisticData.weeklyStressTrend} 
-                    type="weekly"
-                    offset={weekOffset}
-                    setOffset={setWeekOffset}
-                    weekInfo={statisticData.weekInfo}
-                    stressSummary={statisticData.weeklyStressSummary}
-                />
-                <StressTrendGraph 
-                    stressData={statisticData.monthlyStressTrend} 
-                    type="monthly"
-                    offset={monthOffset}
-                    setOffset={setMonthOffset}
-                    monthInfo={statisticData.monthInfo}
-                    stressSummary={statisticData.monthlyStressSummary}
-                />
+            <main className="studentInfoContentMain">
+                <SubHeader studentId={id} />
+                <section className="studentInfoContentWrapper">
+                    <nav className="statisticNav">
+                        <div>
+                            <button 
+                                className={activeTab === "moodTrend" ? "activeBtn" : ""} 
+                                onClick={() => setActiveTab("moodTrend")}
+                            >
+                                Mood Trend View
+                            </button>
+                        </div>
+                        <div>
+                            <button 
+                                className={activeTab === "stressTrend" ? "activeBtn" : ""} 
+                                onClick={() => setActiveTab("stressTrend")}
+                            >
+                                Stress Trend View
+                            </button>
+                        </div>
+                    </nav>
+                    <main className="statisticBodyWrapper">
+                        {activeTab === "moodTrend" && (
+                            <>
+                                <TrendGraph 
+                                    trendData={statisticData.weeklyTrend} 
+                                    type="weekly"
+                                    offset={weekOffset}
+                                    setOffset={setWeekOffset}
+                                    weekInfo={statisticData.weekInfo}
+                                    summary={statisticData.weeklySummary}
+                                    moodComparison={statisticData.weeklyMoodComparison} // NEW
+                                    comparisonInfo={statisticData.comparisonInfo?.weeklyComparison} // NEW
+                                />
+                                <div className="gap"></div>
+                                <TrendGraph 
+                                    trendData={statisticData.monthlyTrend} 
+                                    type="monthly"
+                                    offset={monthOffset}
+                                    setOffset={setMonthOffset}
+                                    monthInfo={statisticData.monthInfo}
+                                    summary={statisticData.monthlySummary}
+                                    moodComparison={statisticData.monthlyMoodComparison} // NEW
+                                    comparisonInfo={statisticData.comparisonInfo?.monthlyComparison} // NEW
+                                />
+                                <div></div>
+                            </>
+                        )}
+                        {activeTab === "stressTrend" && (
+                            <>
+                                <StressTrendGraph 
+                                    stressData={statisticData.weeklyStressTrend} 
+                                    type="weekly"
+                                    offset={weekOffset}
+                                    setOffset={setWeekOffset}
+                                    weekInfo={statisticData.weekInfo}
+                                    stressSummary={statisticData.weeklyStressSummary}
+                                    stressComparison={statisticData.weeklyStressComparison} // NEW
+                                    comparisonInfo={statisticData.comparisonInfo?.weeklyComparison} // NEW
+                                />
+                                <div className="gap"></div>
+                                <StressTrendGraph 
+                                    stressData={statisticData.monthlyStressTrend} 
+                                    type="monthly"
+                                    offset={monthOffset}
+                                    setOffset={setMonthOffset}
+                                    monthInfo={statisticData.monthInfo}
+                                    stressSummary={statisticData.monthlyStressSummary}
+                                    stressComparison={statisticData.monthlyStressComparison} // NEW
+                                    comparisonInfo={statisticData.comparisonInfo?.monthlyComparison} // NEW
+                                />
+                                <div></div>
+                            </>
+                        )}
+                    </main>
+                </section>
             </main>
-            <Footer />
+            {/* <Footer /> */}
         </>
     );
 }
@@ -105,7 +149,7 @@ function SubHeader({studentId}) {
 
     return(
         <>
-            <main id="MoodRecordSubHeaderWrapper">
+            {/* <main id="MoodRecordSubHeaderWrapper">
             <NavLink
                 to={"/StudentInfo/"+studentId}
                 className={({ isActive }) =>
@@ -123,11 +167,37 @@ function SubHeader({studentId}) {
             >
             Statistic
             </NavLink>
-            </main>
+            </main> */}
+            <aside className="studentInfoAsideWrapper">
+                <NavLink
+                    to={"/StudentInfo/"+studentId}
+                    className={({ isActive }) =>
+                        isActive ? "subButton selectedSubHeader studentInfo" : "subButton"
+                    }
+                >
+                Student Information
+                </NavLink>
+
+                <NavLink
+                    to={"/StudentInfoStatistic/"+studentId}
+                    className={({ isActive }) =>
+                        isActive ? "subButton selectedSubHeader trendView" : "subButton"
+                    }
+                >
+                Trend View
+                </NavLink>
+                <NavLink
+                    to={"/StudentContactHistory/"+studentId}
+                    className={({ isActive }) =>
+                        isActive ? "subButton selectedSubHeader contactHistory" : "subButton"
+                    }
+                >
+                Contact History
+                </NavLink>
+            </aside>
         </>
     );
 }
-
 
 function StudentInfoContent({ 
     studentData, 

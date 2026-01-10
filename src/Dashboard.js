@@ -56,6 +56,9 @@ function Dashboard() {
                  } else if (value <= 80) {
                      color = "#e9b6b6ff";
                      level = "High Stress";
+                 } else if (value == "N/A") {
+                    color = "#d2d2d2ff";
+                    level = "Haven't Completed";
                  } else {
                      color = "#ee7878ff";
                      level = "Very High Stress";
@@ -187,6 +190,43 @@ function Body1({data, stressLevel, stressColor, quoteTitle}) {
         }
     };
 
+    // ===== TIME WINDOWS (24-hour format) =====
+    const MORNING_START = "06:00";
+    const MORNING_END   = "11:59";
+
+    const AFTERNOON_START = "12:00";
+    const AFTERNOON_END   = "23:59";
+
+    const toTodayTime = (time) => {
+        const [h, m] = time.split(":");
+        const d = new Date();
+        d.setHours(h, m, 0, 0);
+        return d;
+    };
+    
+    const now = new Date();
+
+    const morningStart = toTodayTime(MORNING_START);
+    const morningEnd   = toTodayTime(MORNING_END);
+
+    const afternoonStart = toTodayTime(AFTERNOON_START);
+    const afternoonEnd   = toTodayTime(AFTERNOON_END);
+
+    const isMorning = now >= morningStart && now <= morningEnd;
+    const isAfternoon = now >= afternoonStart && now <= afternoonEnd;
+
+    let period = null;
+
+    if (isMorning) period = "morning";
+    else if (isAfternoon) period = "afternoon";
+
+    // const getCurrentTime = () => {
+    //     const now = new Date();
+    //     return now.toTimeString().slice(0, 8);
+    // };
+
+    // const currentTime = getCurrentTime();
+            
     if (!data || !data.hasRecord || !data.moodStatus[0]) return (
         <main className="bodyDashboardFirst">
             <article className="moodRecordInfoWrapper">
@@ -197,8 +237,29 @@ function Body1({data, stressLevel, stressColor, quoteTitle}) {
                 </div>
                 <div className="dashboardNoRecordWrapper">
                     <section>
-                        <h3>You Seem Like Haven't Record Any Feelings Today Yet!</h3>
-                        <button onClick={clickToMoodRecord}>Click Here To Record Now!</button>
+                        {data?.recordAvailability.recordCount == 0 ?
+                            <>
+                                <h3>{data?.recordAvailability.message}</h3>
+                                {data?.recordAvailability.buttonShow && 
+                                    <button onClick={clickToMoodRecord}>Click Here To Record Now!</button>
+                                }
+                            </>
+                        :   data?.recordAvailability.recordCount == 1 ?
+                            <>
+                                <h3>{data?.recordAvailability.message}</h3>
+                                {data?.recordAvailability.buttonShow && 
+                                    <button onClick={clickToMoodRecord}>Click Here To Record Now!</button>
+                                }
+                            </>
+                        
+                        :
+                             <>
+                                <h3>{data?.recordAvailability.message}</h3>
+                                {data?.recordAvailability.buttonShow && 
+                                    <button onClick={clickToMoodRecord}>Click Here To Record Now!</button>
+                                }
+                            </>
+                        }
                     </section>
                 </div>
             </article>   
@@ -226,23 +287,62 @@ function Body1({data, stressLevel, stressColor, quoteTitle}) {
                     <div className="dashboardMoodRecordLeftWrapper">
                         <h3 className="sectionTitle">Mood Record Reminder</h3>
                         <section>
-                            {data.moodStatus[1] ?
-                                <h3>Great! You have completed all the mood record today :)</h3>
+                            {data?.recordAvailability.recordCount == 0 ?
+                                <>
+                                    <h3>{data?.recordAvailability.message}</h3>
+                                    {data?.recordAvailability.buttonShow && 
+                                        <button onClick={clickToMoodRecord}>Click Here To Record Now!</button>
+                                    }
+                                </>
+                            :   data?.recordAvailability.recordCount == 1 ?
+                                <>
+                                    <h3>{data?.recordAvailability.message}</h3>
+                                    {data?.recordAvailability.buttonShow && 
+                                        <button onClick={clickToMoodRecord}>Click Here To Record Now!</button>
+                                    }
+                                </>
+                            
                             :
                                 <>
-                                    <h3>You still have 1 mood record left haven't completed.</h3>
-                                    <button onClick={clickToMoodRecord}>Click Here To Record Now!</button>
+                                    <h3>{data?.recordAvailability.message}</h3>
+                                    {data?.recordAvailability.buttonShow && 
+                                        <button onClick={clickToMoodRecord}>Click Here To Record Now!</button>
+                                    }
                                 </>
                             }
                         </section>
                     </div>
                     <div className="dashboardMoodInfoWrapper">
                         <section className="first">
-                            <h3 className="sectionTitle">Today Mood Changes</h3>
+                            <h3 className="sectionTitle">Mood Changes Today</h3>
                             <div className="moodResultWrapper">
                                 <div>
-                                    <img src={data.moodStoreLocation[0]}></img>
-                                    <h3>{data.moodStatus[0]}</h3>
+                                     <h3 className="sectionTitle period">Morning</h3>
+                                    {data.moodRecordCount == 2 ?
+                                        <>
+                                            <img src={data.moodStoreLocation[0]}></img>
+                                            <h3>{data.moodStatus[0]}</h3>
+                                        </>
+                                    : data.moodRecordCount == 1 ?
+                                        <>
+                                            {data.moodRecordTime[0]?.period === "morning" ?
+                                                <>
+                                                    <img src={data.moodStoreLocation[0]}></img>
+                                                    <h3>{data.moodStatus[0]}</h3>
+                                                </>
+                                            :
+                                                <>
+                                                    <div className="noRecordWrapper">
+                                                        <h4>No Record</h4>
+                                                    </div>
+                                                </>
+                                            }
+                                        </>
+                                    :
+                                        <div className="noRecordWrapper">
+                                            <h4>No Record</h4>
+                                        </div>
+                                    }
                                 </div>
                                 <div>
                                     <p>Mood Changes</p>
@@ -251,19 +351,37 @@ function Body1({data, stressLevel, stressColor, quoteTitle}) {
                                     </svg>
                                 </div>
                                 <div>
-                                    {data.moodStatus[1] ?
+                                    <h3 className="sectionTitle period">Afternoon</h3>
+                                    {data.moodRecordCount == 2 ?
                                         <>
                                             <img src={data.moodStoreLocation[1]}></img>
                                             <h3>{data.moodStatus[1]}</h3>
                                         </>
+                                    : data.moodRecordCount == 1 ?
+                                        <>
+                                            {data.moodRecordTime[0]?.period === "afternoon" ?
+                                                <>
+                                                    <img src={data.moodStoreLocation[0]}></img>
+                                                    <h3>{data.moodStatus[0]}</h3>
+                                                </>
+                                            :
+                                                <>
+                                                    <div className="noRecordWrapper">
+                                                        <h4>No Record</h4>
+                                                    </div>
+                                                </>
+                                            }
+                                        </>
                                     :
-                                        <h4>No Record</h4>
+                                        <div className="noRecordWrapper">
+                                            <h4>No Record</h4>
+                                        </div>
                                     }
                                 </div>
                             </div>
                         </section>
                         <section>
-                            <h3 className="sectionTitle">Avg Stress Level</h3>
+                            <h3 className="sectionTitle">Stress Level Today</h3>
                             <div className="moodResultWrapper">
                                 <div>
                                     <h2
@@ -402,33 +520,19 @@ function MoodCount({data}) {
         }
     ];
 
-    // Check if data exists
-    // if (!data) {
-    //     return(
-    //         <>
-    //             <main className="moodCountDashboardWrapper">
-    //                 <h1>Weekly Mood Count</h1>
-    //                 <article className='emojiWrapper'>
-    //                     Loading...
-    //                 </article>
-    //             </main>
-    //         </>
-    //     );
-    // }
-
     return(
         <>
             <main className="moodCountDashboardWrapper">
-                <h1>Weekly Mood Count</h1>
+                <h1>Weekly Mood Summary</h1>
                 <article className='emojiWrapper'>
                     {items.map((emoji, index) => (
                         <div key={emoji.id}>
-                            <h3 className="sectionTitle">{emoji.label}</h3>
+                            <h3>{data?.weeklyMoodCount[index] || 0}</h3>
                             <img 
                                 src={emoji.img}
                                 alt={emoji.label}
                             />
-                            <h3>{data?.weeklyMoodCount[index] || 0}</h3>
+                            <h3 className="sectionTitle">{emoji.label}</h3>
                         </div>
                     ))}
                 </article>

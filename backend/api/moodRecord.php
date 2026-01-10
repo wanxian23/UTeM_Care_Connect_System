@@ -15,9 +15,14 @@ function runInBackground($url) {
     curl_exec($ch);
 }
 
-$mood = $_POST["mood"];
+define('STRESS_START', '12:00:00');    // 6:00 PM
+define('STRESS_END', '23:59:59');      // 11:59 PM
+$currentTime = date('H:i:s');
+$inStressWindow = ($currentTime >= STRESS_START && $currentTime <= STRESS_END);
+
+$mood = $_POST["mood"] ?? null;
 $stress = $_POST['stress'] ?? null;
-$note = $_POST['note'];
+$note = $_POST['note'] ?? null;
 $notePrivacy = isset($_POST['notePrivacy']) ? 1 : 0;
 $entries = isset($_POST['entries']) ? $_POST['entries'] : [];
 
@@ -26,33 +31,54 @@ $token = $user['loginToken'];
 
 $studentId = $user['studentId'];
 
+if (empty($mood)) {
+    echo json_encode([
+        "success" => false, // <-- still true, but entriesData empty
+        "message" => "Mood and note cannot be empty!"
+    ]);
+    exit;
+}
 
 // Get stress level
-$stmtStress = $conn->prepare("
-    SELECT * FROM stress
-    WHERE studentId = ?
-    AND DATE(datetimeRecord) = CURDATE()
+$stmtCheckStress = $conn->prepare("
+    SELECT * FROM stress WHERE studentId = ? AND DATE(datetimeRecord) = CURDATE()
 ");
-$stmtStress->bind_param("i", $studentId);
-$stmtStress->execute();
-$resultStress = $stmtStress->get_result();
-$stressData = $resultStress->fetch_assoc();
+$stmtCheckStress->bind_param("i", $studentId);
+$stmtCheckStress->execute();
+$resultCheckStress = $stmtCheckStress->get_result();
+$stressData = null;
+$stressRecord = false;
+if ($resultCheckStress->num_rows > 0) {
+    $stressRecord = true;
+}
 
 
 // Check if stress is recorded
-$stmtCheckStress = $conn->prepare("
-    SELECT * FROM stress WHERE studentId = ?
-");
-// $stmtCheckStress->bind_param("i", $studentId);
-// $stmtCheckStress->execute();
-// $resultCheckStress = $stmtCheckStress->get_result();
-// $stressRecord = false;
-if (!empty($stress)) {
-    $stmtRecordMood = $conn->prepare("INSERT INTO stress(stressLevel, studentId)
-                        VALUES(?, ?)");
-    $stmtRecordMood->bind_param("ii", $stress, $studentId);
-    $stmtRecordMood->execute();
+if ($stress !== null) {
+    if (!$inStressWindow) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Stress recording is only available after 12:00 PM."
+        ]);
+        exit;
+    }
+
+    if ($stressRecord) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Stress level already recorded for today."
+        ]);
+        exit;
+    }
+
+    $stmtRecordStress = $conn->prepare("
+        INSERT INTO stress (stressLevel, studentId)
+        VALUES (?, ?)
+    ");
+    $stmtRecordStress->bind_param("ii", $stress, $studentId);
+    $stmtRecordStress->execute();
 }
+
 
 // Get data of recorded
 $stmtCheckMoodDataMorning = $conn->prepare("
@@ -69,9 +95,9 @@ $resultCheckMoodDataMorning = $stmtCheckMoodDataMorning->get_result();
 
 $moodId = "";
 if ($resultCheckMoodDataMorning->num_rows < 2) {
-    $stmtRecordMood = $conn->prepare("INSERT INTO moodTracking(moodTypeId, note, stressLevel, studentId, notePrivacy)
-                        VALUES(?, ?, ?, ?, ?)");
-    $stmtRecordMood->bind_param("isiii", $mood, $note, $stress, $studentId, $notePrivacy);
+    $stmtRecordMood = $conn->prepare("INSERT INTO moodTracking(moodTypeId, note, studentId, notePrivacy)
+                        VALUES(?, ?, ?, ?)");
+    $stmtRecordMood->bind_param("isii", $mood, $note, $studentId, $notePrivacy);
     $stmtRecordMood->execute();
 
     // Get the newly inserted primary key (moodId)
@@ -128,6 +154,10 @@ if ($resultCheckMoodDataMorning->num_rows < 2) {
     $stmtRecommendation->execute();
     $resultRecommendation = $stmtRecommendation->get_result();
     $recommendation = $resultRecommendation->fetch_assoc();
+
+    $stmtCheckStress->execute();
+    $resultCheckStress = $stmtCheckStress->get_result();
+    $stressData = $resultCheckStress->fetch_assoc();
 
     echo json_encode([
         "success" => true, 

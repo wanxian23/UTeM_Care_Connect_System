@@ -38,6 +38,7 @@ if ($result->num_rows > 0) {
    1️⃣ CHECK STAFF TABLE (COUNTSELLOR)
 ------------------------------------------- */
 if ($type === "") {
+    $stmt = $conn->prepare("SELECT * FROM staff WHERE (staffEmail=? OR staffNo LIKE ?) AND staffRole != 'PENASIHAT AKADEMIK' LIMIT 1");
     $stmt->bind_param("ss", $email, $numberForm);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -74,7 +75,7 @@ if (!$user) {
 /* -------------------------------------------
    4️⃣ PASSWORD CHECK
 ------------------------------------------- */
-$storedPassword = ($type === "staff")
+$storedPassword = ($type === "staff" || $type === "counsellor")
     ? $user["staffPassword"]
     : $user["studentPassword"];
 
@@ -109,7 +110,7 @@ echo json_encode([
     "message" => "Login success",
     "token" => $token,
     "type" => $type, // <--- staff or student
-    "userId" => ($type === "staff") ? $user["staffId"] : $user["studentId"]
+    "userId" => ($type === "staff" || $type === "counsellor") ? $user["staffId"] : $user["studentId"]
 ]);
 
 

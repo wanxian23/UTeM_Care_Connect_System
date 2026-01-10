@@ -873,8 +873,8 @@ function RecordMoodNote() {
     return(
         <>
             <form id="formFirst" onSubmit={handleMoodRecord}>
-                <MoodChoose moodData={moodRecordData?.moodRecord}/>
                 <StressLevelRecord moodData={moodRecordData?.stressLevel}/>
+                <MoodChoose moodData={moodRecordData?.moodRecord}/>
                 <EntriesAdd moodData={moodRecordData}/>
                 <NoteAdd moodData={moodRecordData?.moodRecord}/>
                 <div id="buttonMoodRecordWrapper">

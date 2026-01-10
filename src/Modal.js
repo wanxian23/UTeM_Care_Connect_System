@@ -131,7 +131,7 @@ export function TextareaModal({
     if (!show) return null;
 
     return (
-        <div className="modal-overlay">
+        <div className="modal-overlay" style={{zIndex: "1500"}}>
             <div className="modal-box textarea">
 
                 <h2 className="modal-title sectionTitle">{title}</h2>

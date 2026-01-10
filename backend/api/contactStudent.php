@@ -1,4 +1,5 @@
 <?php
+// contactStudent.php
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Authorization, Content-Type");
 
@@ -11,7 +12,15 @@ $staffId = $user['staffId'];
 // Use to get data from body (JSON.stringify)
 $data = json_decode(file_get_contents("php://input"), true);
 $studentId = $data['studentId'];
-$message = $data['message'];
+$message = $data['message'] ?? null;
+
+if (empty($message)) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Contact message cannot be empty."
+    ]);
+    exit;
+}
 
 $title = "Meeting Request from Your PA";
 $todayDate = date("d-m-Y");

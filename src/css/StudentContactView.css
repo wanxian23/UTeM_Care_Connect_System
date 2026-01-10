@@ -1,0 +1,252 @@
+main.studentInfoContentMain {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/* Main Content */
+main.studentInfoContentMain section.studentInfoContentWrapper {
+    flex: 85%;
+    /* border: 1px solid; */
+    padding: 0 0 70px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
+}
+
+/* SubHeader */
+aside.studentInfoAsideWrapper {
+    padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    /* border-right: 1px solid; */
+    flex: 15%;
+    /* background-color: #FFF8E7; */
+    background: linear-gradient(to bottom, #FFF8E7, #FFF8E7, #FFF8E7, #FFF8E7, #ffffff);
+}
+
+aside.studentInfoAsideWrapper .subButton {
+    width: 100%;
+    border: 1px solid;
+    padding: 20px 0;
+    text-align: center;
+    text-decoration: none;
+    color: #555555;
+    border: none;
+    transition: 0.2s ease;
+}
+
+aside.studentInfoAsideWrapper .subButton:hover {
+    background-color: #ffeed0;
+}
+
+aside.studentInfoAsideWrapper .subButton.selectedSubHeader {
+    border-right: 5px solid;
+    font-weight: bold;
+}
+
+/* Control data */
+main.studentInfoContentMain article.contactInfoWrapper {
+    display: flex;
+    margin: 50px auto;
+    flex-direction: column;
+    padding: 30px 80px 50px 80px;
+    width: 80%;
+    /* height: 510px; */
+    align-items: center;
+    justify-content: center;
+    border-radius: 40px;
+    box-shadow: 1px 1px 10px #909090;
+    background-color: #fff;
+    gap: 40px;
+}
+
+main.studentInfoContentMain article.contactInfoWrapper div.contactDateTimeWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    background-color: #dfe5f8;
+    font-size: 2.2vh;
+    padding: 10px 0;
+    border-radius: 8px;
+}
+
+/* Background bar */
+.sectionTitle::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40%;          /* controls how much of text is covered */
+    background: #d7ddf4 !important;  /* your background color */
+    z-index: -1;
+}
+
+.sectionTitle.smallTitle::after {
+    background: #b8e2cf !important;
+}
+
+/* Header */
+div.contactHeader {
+    text-align: center;
+}
+
+/* Contact Details Body */
+.studentInfoBox {
+    /* border: 1px solid; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    width: 95%;
+}
+
+.infoGrid {
+    /* border: 1px solid; */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    /* background-color: #d5e6f4; */
+    padding: 0 20px;
+    border-radius: 10px;
+    flex-wrap: wrap;
+    padding: 15px;
+    border: 1px solid #c1bfe0;
+    gap: 30px;
+    font-size: 2.3vh;
+}
+
+.infoItem:first-child {
+    flex: 100%;
+}
+
+/* This means style all except first child */
+.infoItem:not(:first-child) {
+    flex: 40%;
+}
+
+.infoItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 10%;
+    gap: 10px;
+}
+
+.infoValue {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.contactRecordBox {
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.messageSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: justify;
+    padding-bottom: 40px;
+    border-bottom: 2px solid #c2bfe5;
+}
+
+.noteSection {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    font-size: 2.3vh;
+}
+
+.noteSection .noteType {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 20%;
+    gap: 20px;
+    text-align: justify;
+    /* border: 1px solid; */
+}
+
+.noteSection .note {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 65%;
+    gap: 20px;
+    text-align: justify;
+    /* border: 1px solid; */
+}
+
+.noteContent {
+    font-size: 2.3vh;
+}
+
+div.messageContent,
+div.noNoteMessage {
+    width: 100%;
+    padding: 10px 20px;
+    border: 1px solid #c1bfe0;
+    border-radius: 10px;
+}
+
+.buttonWrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.buttonWrapper button {
+    width: 200px;
+    padding: 10px 30px;
+    border-radius: 15px;
+    /* background: linear-gradient(145deg, #ffb5b5, rgb(255, 206, 174), #faffb5, #abffc8, #bbdfff, #d6d5ff, #f1d6ff); */
+    background: linear-gradient(145deg,#abffc8, #bbdfff, #d6d5ff, #f1d6ff);
+    /* background-color: #b2e7f9; */
+    border: 0px;
+    background-size: 150%;
+    transition: background-position 0.5s ease;
+    /* color: #555555; */
+    font-size: 2.5vh;
+    transition: 0.3s ease;
+}
+
+.buttonWrapper button:hover {
+    transform: scale(1.05);
+}
+
+.contactRecordBox textarea {
+    width: 100%;
+    height: 150px;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 2.5vh;
+    border: none;
+    resize: vertical;
+    min-height: 40px;
+    /* background-color: #eff7ff; */
+    background-color: white;
+    border: 1px solid #d4d9ff;
+    box-shadow: 3px 3px 3px #d4d9ff;
+    line-height: 25px;
+}
+
+.contactRecordBox textarea:focus {
+    outline: none;
+    border: 2px solid #b6beff;
+}
+
+.noteSection textarea {
+    width: 90%;
+    margin-bottom: 20px;
+}

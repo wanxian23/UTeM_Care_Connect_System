@@ -102,6 +102,8 @@ main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInf
 
 main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:nth-last-child(2) section div.moodResultWrapper {
     flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 20px;
 }
 
 main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper section > h3 {
@@ -128,8 +130,8 @@ main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInf
     align-items: center;
     justify-content: center;
     transition: 0.2s ease;
-    flex-wrap: nowrap;
-    padding: 25px 0 0 0;
+    /* border: 1px solid; */
+    flex: 30%;
 }
 
 main.bodyMoodRecordViewFirst article.moodRecordInfoWrapper div.moodRecordEachInfoWrapper:nth-last-child(2) section div.moodResultWrapper img {

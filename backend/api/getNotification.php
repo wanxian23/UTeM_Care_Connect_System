@@ -18,8 +18,6 @@ $stmtGetNotification = $conn->prepare("
     SELECT *
     FROM notification
     WHERE studentId = ?
-    AND MONTH(notiCreatedDateTime) = MONTH(CURRENT_DATE())
-    AND YEAR(notiCreatedDateTime) = YEAR(CURRENT_DATE())
     ORDER BY notificationId DESC
 ");
 $stmtGetNotification->bind_param("i", $studentId);

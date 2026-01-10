@@ -35,7 +35,7 @@ $resultCheckStress = $stmtCheckStress->get_result();
 $stressData = $resultCheckStress->fetch_assoc();
 
 // Get stress level (single record per day)
-$stressLevel = $stressData ? (float)$stressData['stressLevel'] : null;
+$stressLevel = $stressData['stressLevel'] ?? "N/A";
 
 if ($resultMoodData->num_rows > 0) {
 

@@ -184,7 +184,7 @@ function CalendarDesign({ data }) {
                                 ))}
                             </div>
                             <div className="titleContent">
-                                <h4>Avg Stress: <label>{avgStress ? avgStress + "%" : "N/A"}</label></h4> {/* ← correct */}
+                                <h4>Stress Level: <label>{avgStress ? avgStress + "%" : "N/A"}</label></h4> {/* ← correct */}
                             </div>
                             <div className="titleContent">
                                 <h4>Mood Record: <label>{moodList.length}</label></h4>
@@ -268,20 +268,41 @@ function MoodCount({data}) {
 
     return(
         <>
-            <main className="moodCountDashboardWrapper">
-                <h1>Monthly Mood Count</h1>
-                <article className='emojiWrapper'>
-                    {items.map((emoji, index) => (
-                        <div key={emoji.id}>
-                            <h3 className="sectionTitle">{emoji.label}</h3>
-                            <img 
-                                src={emoji.img}
-                                alt={emoji.label}
-                            />
-                            <h3>{data.monthlyMoodCount[index] || 0}</h3>
-                        </div>
-                    ))}
-                </article>
+            <main className="moodCountDashboardWrapper" style={{
+                padding: "0 60px 100px 60px"
+            }}>
+                <div style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "40px",
+                    backgroundColor: "#e9eaffff",
+                    padding: "40px 30px",
+                    borderRadius: "30px",
+                    // boxShadow: "1px 1px 8px #a4a8e6ff"
+                }}>
+                    <h1>Monthly Mood Summary</h1>
+                    <article className='emojiWrapper' style={{
+                        width: "100%",
+                        backgroundColor: "#ffffff",
+                        padding: "40px 0",
+                        borderRadius: "30px",
+                        borderBottom: "5px solid #a4a8e6ff"
+                    }}>
+                        {items.map((emoji, index) => (
+                            <div key={emoji.id}>
+                                <h3>{data.monthlyMoodCount[index] || 0}</h3>
+                                <img 
+                                    src={emoji.img}
+                                    alt={emoji.label}
+                                />
+                                <h3 className="sectionTitle">{emoji.label}</h3>
+                            </div>
+                        ))}
+                    </article>
+                </div>
+                
             </main>
         </>
     );

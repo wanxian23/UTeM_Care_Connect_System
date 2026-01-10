@@ -2,28 +2,19 @@
 
     require "database.php";
 
-    $no = "D032310322";
-    $name = "CHONG PUI YI";
-    $email = "chongpuiyi@student.utem.edu.my";
-    $contact = "0124568542";
-    $faculty = "FTMK";
+    $no = "C032310001";
+    $name = "CHANG YEE QI";
+    $email = "changyeeqi@utem.edu.my";
+    $contact = "0162487513";
+    $faculty = "HEPA";
 
-    // $office = "1st FLOOR K03";
-    // $role = "PENASIHAT AKADEMIK";
+    $office = "Aras 1, Pusat Persatuan Pelajar (PPP)";
+    $role = "PEGAWAI PSIKOLOGI";
     $password = '1234';
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // $stmtInsert = $conn->prepare("INSERT INTO staff (staffNo, staffName, staffEmail, staffContact, staffFaculty, staffOffice, staffRole, staffPassword) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     // $stmtInsert->bind_param("ssssssss", $no, $name, $email, $contact, $faculty, $office, $role, $hashedPassword);
-
-    // if ($stmtInsert->execute()) {
-    //     echo "Staff Account Created Successfully!";
-    //     // echo "<meta http-equiv='refresh' content='3; URL=../login.php'>";
-    // } else {
-    //     echo "Fail to Create Account! Please Try Again...";
-    //     // echo "<meta http-equiv='refresh' content='3; URL=../signup.html'>";
-    // }
-    // $stmtInsert->close();
 
     $course = "DIPLOMA IN COMPUTER SCIENCE";
     $yearOfStudy = 3;

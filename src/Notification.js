@@ -345,144 +345,186 @@ function NotificationBody() {
                             </thead>
                             <tbody>
                                 {activeTab === "all" && (
-                                    notificationData.map((notiData, index) => (
-                                        <React.Fragment key={index}>
-                                            <tr className={notiData.notiStatus} onClick={() => handleNotificationClickReadOnly(notiData, index)}>
-                                                <td>
-                                                    <input 
-                                                        type="checkbox"
-                                                        checked={selected.includes(notiData.notificationId)}
-                                                        onChange={() => handleSelectOne(notiData.notificationId)}
-                                                        onClick={(e) => e.stopPropagation()} 
-                                                    />
-                                                </td>
-                                                <td style={{opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5}}>
-                                                    <h4>{notiData.title}</h4>
-                                                    <p>{notiData.description}</p>
-                                                </td>
-                                                <td style={{opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5}}>{new Date(notiData.notiCreatedDateTime).toLocaleString('en-GB', {
-                                                        day: '2-digit',
-                                                        month: 'short',  // "Dec"
-                                                        year: "numeric",
-                                                    }).replace(',', '')
-                                                    .toUpperCase()}
-                                                    <br></br>
-                                                    {new Date(notiData.notiCreatedDateTime).toLocaleString('en-GB', {
-                                                        hour: '2-digit',
-                                                        minute: '2-digit',
-                                                        hour12: true     // 12-hour format with AM/PM
-                                                    }).replace(',', '')
-                                                    .toUpperCase()}
-                                                </td>
-                                                <td>
-                                                    {notiData.notiStatus === "READ" &&
-                                                        <button
-                                                            onClick={(e) => {
-                                                            e.stopPropagation(); // prevent row click
-                                                            toggleStatus(notiData.notificationId);
-                                                            }}
-                                                        >
-                                                            {notiData.notiStatus === "READ" ? "Mark As Unread" : "Mark As Read"}
-                                                        </button>
-                                                    }
-
-                                                </td>
-                                            </tr>
-                                        </React.Fragment>
-                                    ))
-                                )}
-                                {activeTab === "unread" && (
-                                    notificationData.map((notiData, index) => (
-                                        notiData.notiStatus === "UNREAD" && (
-                                            <React.Fragment key={index}>
-                                                <tr onClick={() => handleNotificationClickReadOnly(notiData, index)}
-                                                    style={{opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5}}
+                                    <>
+                                        {notificationData.length > 0 ? (
+                                            notificationData.map((notiData) => (
+                                                <tr
+                                                    key={notiData.notificationId}
+                                                    className={notiData.notiStatus}
+                                                    onClick={() => handleNotificationClickReadOnly(notiData)}
                                                 >
                                                     <td>
-                                                        <input 
+                                                        <input
                                                             type="checkbox"
                                                             checked={selected.includes(notiData.notificationId)}
                                                             onChange={() => handleSelectOne(notiData.notificationId)}
-                                                            onClick={(e) => e.stopPropagation()} 
+                                                            onClick={(e) => e.stopPropagation()}
                                                         />
                                                     </td>
-                                                    <td>
+
+                                                    <td style={{ opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5 }}>
                                                         <h4>{notiData.title}</h4>
                                                         <p>{notiData.description}</p>
                                                     </td>
-                                                    <td>{new Date(notiData.notiCreatedDateTime).toLocaleString('en-GB', {
-                                                            day: '2-digit',
-                                                            month: 'short',  // "Dec"
-                                                            year: "numeric",
-                                                        }).replace(',', '')
-                                                        .toUpperCase()}
-                                                        <br></br>
-                                                        {new Date(notiData.notiCreatedDateTime).toLocaleString('en-GB', {
-                                                            hour: '2-digit',
-                                                            minute: '2-digit',
-                                                            hour12: true     // 12-hour format with AM/PM
-                                                        }).replace(',', '')
-                                                        .toUpperCase()}
+
+                                                    <td style={{ opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5 }}>
+                                                        {new Date(notiData.notiCreatedDateTime)
+                                                            .toLocaleDateString("en-GB", {
+                                                                day: "2-digit",
+                                                                month: "short",
+                                                                year: "numeric",
+                                                            })
+                                                            .toUpperCase()}
+                                                        <br />
+                                                        {new Date(notiData.notiCreatedDateTime)
+                                                            .toLocaleTimeString("en-GB", {
+                                                                hour: "2-digit",
+                                                                minute: "2-digit",
+                                                                hour12: true,
+                                                            })
+                                                            .toUpperCase()}
                                                     </td>
+
                                                     <td>
+                                                        {notiData.notiStatus === "READ" && (
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    toggleStatus(notiData.notificationId);
+                                                                }}
+                                                            >
+                                                                Mark As Unread
+                                                            </button>
+                                                        )}
                                                     </td>
                                                 </tr>
-                                            </React.Fragment>
-                                        )
-                                    ))
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan={4} style={{borderRadius: "0 0 20px 20px"}}>No Notification</td>
+                                            </tr>
+                                        )}
+                                    </>
+                                )}
+
+                                {activeTab === "unread" && (
+                                    <>
+                                        {notificationData.filter(n => n.notiStatus === "UNREAD").length > 0 ? (
+                                            notificationData
+                                                .filter(n => n.notiStatus === "UNREAD")
+                                                .map((notiData) => (
+                                                    <tr
+                                                        key={notiData.notificationId}
+                                                        onClick={() => handleNotificationClickReadOnly(notiData)}
+                                                        style={{ opacity: 1 }}
+                                                    >
+                                                        <td>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={selected.includes(notiData.notificationId)}
+                                                                onChange={() => handleSelectOne(notiData.notificationId)}
+                                                                onClick={(e) => e.stopPropagation()}
+                                                            />
+                                                        </td>
+
+                                                        <td>
+                                                            <h4>{notiData.title}</h4>
+                                                            <p>{notiData.description}</p>
+                                                        </td>
+
+                                                        <td>
+                                                            {new Date(notiData.notiCreatedDateTime)
+                                                                .toLocaleDateString("en-GB", {
+                                                                    day: "2-digit",
+                                                                    month: "short",
+                                                                    year: "numeric",
+                                                                })
+                                                                .toUpperCase()}
+                                                            <br />
+                                                            {new Date(notiData.notiCreatedDateTime)
+                                                                .toLocaleTimeString("en-GB", {
+                                                                    hour: "2-digit",
+                                                                    minute: "2-digit",
+                                                                    hour12: true,
+                                                                })
+                                                                .toUpperCase()}
+                                                        </td>
+
+                                                        <td></td>
+                                                    </tr>
+                                                ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan={4} style={{borderRadius: "0 0 20px 20px"}}>No notification that's UNREAD</td>
+                                            </tr>
+                                        )}
+                                    </>
                                 )}
                                 {activeTab === "read" && (
-                                    notificationData.map((notiData, index) => (
-                                        notiData.notiStatus === "READ" && (
-                                            <React.Fragment key={index}>
-                                                <tr className={notiData.notiStatus} onClick={() => handleNotificationClickReadOnly(notiData, index)}>
-                                                    <td>
-                                                        <input 
-                                                        type="checkbox"
-                                                        checked={selected.includes(notiData.notificationId)}
-                                                        onChange={() => handleSelectOne(notiData.notificationId)}
-                                                        onClick={(e) => e.stopPropagation()} 
-                                                    />
-                                                    </td>
-                                                    <td style={{opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5}}>
-                                                        <h4>{notiData.title}</h4>
-                                                        <p>{notiData.description}</p>
-                                                    </td>
-                                                    <td style={{opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5}}>{new Date(notiData.notiCreatedDateTime).toLocaleString('en-GB', {
-                                                            day: '2-digit',
-                                                            month: 'short',  // "Dec"
-                                                            year: "numeric",
-                                                        }).replace(',', '')
-                                                        .toUpperCase()}
-                                                        <br></br>
-                                                        {new Date(notiData.notiCreatedDateTime).toLocaleString('en-GB', {
-                                                            hour: '2-digit',
-                                                            minute: '2-digit',
-                                                            hour12: true     // 12-hour format with AM/PM
-                                                        }).replace(',', '')
-                                                        .toUpperCase()}
-                                                    </td>
-                                                    <td>
-                                                        <button
-                                                            onClick={(e) => {
-                                                            e.stopPropagation(); // prevent row click
-                                                            toggleStatus(notiData.notificationId);
-                                                            }}
-                                                        >
-                                                            {notiData.notiStatus === "READ" ? "Mark As Unread" : "Mark As Read"}
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            </React.Fragment>
-                                        )
-                                    ))
-                                )}  
-                                <tr className="lastTr">
-                                    <td className="lastTd" colSpan={4} 
-                                    style={{textAlign: "center", fontSize: "2.8vh"}}>
-                                        -- Only this month’s notifications are shown --
-                                    </td>
-                                </tr>
+                                    <>
+                                        {notificationData.filter(n => n.notiStatus === "READ").length > 0 ? (
+                                            notificationData
+                                                .filter(n => n.notiStatus === "READ")
+                                                .map((notiData) => (
+                                                    <tr
+                                                        key={notiData.notificationId}
+                                                        className={notiData.notiStatus}
+                                                        onClick={() => handleNotificationClickReadOnly(notiData)}
+                                                    >
+                                                        <td>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={selected.includes(notiData.notificationId)}
+                                                                onChange={() => handleSelectOne(notiData.notificationId)}
+                                                                onClick={(e) => e.stopPropagation()}
+                                                            />
+                                                        </td>
+
+                                                        <td style={{opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5}}>
+                                                            <h4>{notiData.title}</h4>
+                                                            <p>{notiData.description}</p>
+                                                        </td>
+
+                                                        <td style={{opacity: notiData.notiStatus === "UNREAD" ? 1 : 0.5}}>
+                                                            {new Date(notiData.notiCreatedDateTime)
+                                                                .toLocaleDateString("en-GB", {
+                                                                    day: "2-digit",
+                                                                    month: "short",
+                                                                    year: "numeric",
+                                                                })
+                                                                .toUpperCase()}
+                                                            <br />
+                                                            {new Date(notiData.notiCreatedDateTime)
+                                                                .toLocaleTimeString("en-GB", {
+                                                                    hour: "2-digit",
+                                                                    minute: "2-digit",
+                                                                    hour12: true,
+                                                                })
+                                                                .toUpperCase()}
+                                                        </td>
+
+                                                        <td>
+                                                            {notiData.notiStatus === "READ" &&
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                    e.stopPropagation(); // prevent row click
+                                                                    toggleStatus(notiData.notificationId);
+                                                                    }}
+                                                                >
+                                                                    {notiData.notiStatus === "READ" ? "Mark As Unread" : "Mark As Read"}
+                                                                </button>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan={4} style={{borderRadius: "0 0 20px 20px"}}>No notification that's READ</td>
+                                            </tr>
+                                        )}
+                                    </>
+                                )}
+ 
                             </tbody>
                         </table>
                 </section>

@@ -60,6 +60,7 @@ function MoodRecordEntries() {
         else if (value <= 40) { color = "#d9f2dfff"; level = "Low Stress"; }
         else if (value <= 60) { color = "#e4b995ff"; level = "Moderate Stress"; }
         else if (value <= 80) { color = "#e9b6b6ff"; level = "High Stress"; }
+        else if (value == "N/A") { color = "#c7c7c7ff"; level = "Haven't Completed"; }
         else { color = "#ee7878ff"; level = "Very High Stress"; }
 
         setStressLevel(level);
@@ -344,13 +345,19 @@ function Body1({data, stressLevel, stressColor, stressValue, onNext, onPrev, dis
                     <div className="moodRecordEachInfoWrapper">
                         <section>
                             <h3 className="sectionTitle">Reason That Cause Stress</h3>
-                             <div className="moodResultWrapper">
-                            {data.entriesData.map((entry, index) => (
-                                <div key={index} className="entriesIconWrapper">
-                                    {/* <img src={entry.entriesStoreLocation} alt={entry.entry} /> */}
-                                    <h3 className="entryLabel">{entry.entriesType}</h3>                                    
-                                </div>
-                            ))}
+                            <div className="moodResultWrapper">
+                            {data.entriesData.length > 0 ?
+                                <>
+                                    {data.entriesData.map((entry, index) => (
+                                        <div key={index} className="entriesIconWrapper">
+                                            {/* <img src={entry.entriesStoreLocation} alt={entry.entry} /> */}
+                                            <h3 className="entryLabel">{entry.entriesType}</h3>                                    
+                                        </div>
+                                    ))}
+                                </>
+                            :
+                                    "No Record"
+                            }
                             </div>
                         </section>
                     </div>

@@ -47,7 +47,7 @@ main#mainCalendarFirst {
     background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
 }
 
-main#mainCalendarFirst .customCalendar {
+.customCalendar {
     border: none;
     box-shadow: 1px 1px 10px #567fbd;
     border-radius: 30px;
@@ -55,6 +55,10 @@ main#mainCalendarFirst .customCalendar {
     width: 85%;
     font-size: 3.3vh;
     font-family: "Itim", sans-serif;
+}
+
+.customCalendar.contact {
+    width: 950px;
 }
 
 /* Whole title/navigation bar */
@@ -117,7 +121,7 @@ main#mainCalendarFirst .customCalendar {
 }
 
 /* Customize each day (Exp, 1, 2, 11, 15) */
-main#mainCalendarFirst .customCalendar .react-calendar__tile {
+.customCalendar .react-calendar__tile {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -128,26 +132,30 @@ main#mainCalendarFirst .customCalendar .react-calendar__tile {
     transition: 0.2s ease;
 }
 
-main#mainCalendarFirst .customCalendar .react-calendar__tile:nth-of-type(29) {
+.customCalendar.contact .react-calendar__tile {
+    height: 150px;
+}
+
+.customCalendar .react-calendar__tile:nth-of-type(29) {
     border-radius: 0 0 0 30px;
 }
 
-main#mainCalendarFirst .customCalendar .react-calendar__tile:last-child {
+.customCalendar .react-calendar__tile:last-child {
     border-radius: 0 0 30px 0;
 }
 
-main#mainCalendarFirst .customCalendar .react-calendar__tile:hover {
+.customCalendar .react-calendar__tile:hover {
     background-color: #f7f1ff;
-    width: 100px;
+    /* width: 100px; */
 }
 
-main#mainCalendarFirst .customCalendar .react-calendar__tile--active,
-main#mainCalendarFirst .customCalendar .react-calendar__tile--active:hover {
+.customCalendar .react-calendar__tile--active,
+.customCalendar .react-calendar__tile--active:hover {
     background-color: #936fcd;
 }
 
-main#mainCalendarFirst .customCalendar .react-calendar__tile--now,
-main#mainCalendarFirst .customCalendar .react-calendar__tile--now:hover
+.customCalendar .react-calendar__tile--now,
+.customCalendar .react-calendar__tile--now:hover
  {
   background-color: #cbb7eb;
   color: black;
@@ -155,14 +163,14 @@ main#mainCalendarFirst .customCalendar .react-calendar__tile--now:hover
 
 /* Customize for extra */
 /* Like the last day of december is wed, but there got thu, fri, sat, and sun for 1,2,3,4 for jan */
-main#mainCalendarFirst .customCalendar .react-calendar__month-view__days__day--neighboringMonth,
-main#mainCalendarFirst .customCalendar .react-calendar__month-view__days__day--neighboringMonth:hover {
+.customCalendar .react-calendar__month-view__days__day--neighboringMonth,
+.customCalendar .react-calendar__month-view__days__day--neighboringMonth:hover {
     background-color: #e6f4ff;
     color: #b2b2b2;
 }
 
 /* Content inside each tile (Inside each day) */
-main#mainCalendarFirst .customCalendar div.titleContent {
+.customCalendar div.titleContent {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -171,28 +179,28 @@ main#mainCalendarFirst .customCalendar div.titleContent {
     width: 100%;
 }
 
-main#mainCalendarFirst .customCalendar div.titleContent:nth-of-type(1) {
+.customCalendar div.titleContent:nth-of-type(1) {
     margin: 10px 0;
 }
 
-main#mainCalendarFirst .customCalendar div.titleContent svg {
+.customCalendar div.titleContent svg {
     width: 50px;
     height: 25px;
 }
 
-main#mainCalendarFirst .customCalendar div.titleContent img {
+.customCalendar div.titleContent img {
     width: 50px;
     height: 50px;
 }
 
-main#mainCalendarFirst .customCalendar div.titleContent h4 {
+.customCalendar div.titleContent h4 {
     padding: 5px 10px;
     /* background-color: rgb(255, 235, 220); */
     border-radius: 20px;
     color: black;
 }
 
-main#mainCalendarFirst .customCalendar div.titleContent h4 label {
+.customCalendar div.titleContent h4 label {
     font-weight: lighter;
 }
 
@@ -216,4 +224,153 @@ main#mainCalendarFirst .customCalendar div.titleContent h4 label {
     height: 40%;          /* controls how much of text is covered */
     background: #d7ddf4 !important;  /* your background color */
     z-index: -1;
+}
+
+
+/* For student contact calendar */
+main.studentInfoContentMain section.studentInfoContentWrapper {
+    flex: 85%;
+    /* border: 1px solid; */
+    padding: 0 0 40px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
+}
+
+section.studentInfoContentWrapper div.studentProfileSection {
+    width: 85%;
+    margin: 50px auto 0 auto;
+    /* background-color: #eff3ff; */
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* border: 1px solid; */
+}
+
+.contactStatus,
+.noteStatus {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 0px;
+    margin: 0;
+    width: 90%;
+}
+
+.noteContent {
+    font-size: 2vh;
+    text-align: justify;
+    line-height: 20px;
+}
+
+.titleContent svg {
+    color: rgb(107, 201, 117);
+}
+
+.statusLabel {
+    font-weight: 600;
+    color: black;
+    font-size: 2.5vh;
+}
+
+.statusValue {
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.statusValue.yes {
+    background: #d4edda;
+    color: #155724;
+}
+
+.statusValue.added {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.statusValue.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Contact Summary Section */
+.contactSummary {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #e7efff;
+}
+
+.contactSummary h3 {
+    margin: 0 0 15px 0;
+    color: #333;
+    font-size: 20px;
+}
+
+.summaryStats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.statBox {
+    flex: 1;
+    min-width: 200px;
+    padding: 15px;
+    background: white;
+    border-radius: 5px;
+    border-left: 4px solid #4A90E2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.statLabel {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.statValue {
+    font-size: 24px;
+    font-weight: 700;
+    color: #4A90E2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .studentInfoContentMain {
+        padding: 10px;
+    }
+
+    .studentInfoAsideWrapper {
+        flex-direction: column;
+    }
+
+    .customCalendar .react-calendar__tile {
+        height: 100px;
+        padding: 10px 3px;
+    }
+
+    .calendarTileContent {
+        font-size: 9px;
+    }
+
+    .statusLabel,
+    .statusValue {
+        font-size: 8px;
+    }
+
+    .summaryStats {
+        flex-direction: column;
+    }
+
+    .statBox {
+        min-width: 100%;
+    }
 }

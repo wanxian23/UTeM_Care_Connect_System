@@ -12,6 +12,7 @@ $dassAnswer = "";
 $dassQuestionId = 0;
 
 $user = validateToken($conn);
+$studentId = $user['studentId'];
 $token = $user['loginToken'];
 
 for ($i = 0; $i < 21; $i++) {
@@ -29,17 +30,19 @@ $stmtUpdateDassStatus = $conn->prepare("
     UPDATE dass
     SET status = 'Completed',
     dassCompletedDateTime = NOW()
-    WHERE dassId = ?
+    WHERE dassId = ? AND
+    studentId = ?
 ");
-$stmtUpdateDassStatus->bind_param("i", $dassId);
+$stmtUpdateDassStatus->bind_param("ii", $dassId, $studentId);
 
 // For notification part
 $stmtGetDassDetails = $conn->prepare("
     SELECT * 
     FROM dass
     WHERE dassId = ?
+    AND studentId = ?
 ");
-$stmtGetDassDetails->bind_param("i", $dassId);
+$stmtGetDassDetails->bind_param("ii", $dassId, $studentId);
 $stmtGetDassDetails->execute();
 $resultGetDassDetails = $stmtGetDassDetails->get_result();
 $dassDetailsData = $resultGetDassDetails->fetch_assoc();

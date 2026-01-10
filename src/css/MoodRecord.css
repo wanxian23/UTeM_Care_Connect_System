@@ -183,6 +183,7 @@ main#MainSecond textarea {
     min-height: 40px;
     /* background-color: #eff7ff; */
     background-color: white;
+    border: 1px solid #d4d9ff;
     box-shadow: 3px 3px 3px #d4d9ff;
     line-height: 25px;
 }
@@ -472,6 +473,7 @@ main.MainMoodFourth article.stressRecordDialogBox {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff);
 }
 
 .finishRecorded p {

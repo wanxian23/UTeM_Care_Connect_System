@@ -1,4 +1,6 @@
 <?php
+// getStatistic.php
+
 // Handle preflight CORS request (OPTIONS)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header("Access-Control-Allow-Origin: http://localhost:3000");
@@ -224,9 +226,9 @@ function calculateMoodSummary($trendData, $moodData, $weekStart, $weekEnd) {
                 $negativeCount++;
             }
             
-            if ($hour >= 6 && $hour < 12) {
+            if ($hour >= 0 && $hour <= 12) {
                 $morningMoods[] = $category;
-            } elseif ($hour >= 12 && $hour < 18) {
+            } elseif ($hour >= 13 && $hour <= 23) {
                 $afternoonMoods[] = $category;
             } else {
                 $eveningMoods[] = $category;
@@ -286,10 +288,23 @@ function getStressLevel($stress) {
     return 'Very High Stress';
 }
 
-// Calculate stress summary statistics using separate stress table data
+// New
+function getStressCategory($stress) {
+    // Based on research: Low (0-39), Moderate (40-60), High (61-100)
+    if ($stress < 40) return 'Low Stress';
+    if ($stress <= 60) return 'Moderate Stress';
+    return 'High Stress';
+}
+
+// Calculate stress summary statistics using categories instead of average
 function calculateStressSummary($stressData, $weekStart, $weekEnd) {
     $allStress = [];
     $stressByDay = [];
+    $stressCategoryCounts = [
+        'Low Stress' => 0,
+        'Moderate Stress' => 0,
+        'High Stress' => 0
+    ];
     
     foreach($stressData as $row) {
         $dateObj = new DateTime($row['datetimeRecord']);
@@ -298,6 +313,10 @@ function calculateStressSummary($stressData, $weekStart, $weekEnd) {
             $dayName = $dateObj->format('D');
             
             $allStress[] = $stress;
+            
+            // Count by category
+            $category = getStressCategory($stress);
+            $stressCategoryCounts[$category]++;
             
             if (!isset($stressByDay[$dayName])) {
                 $stressByDay[$dayName] = [];
@@ -310,8 +329,19 @@ function calculateStressSummary($stressData, $weekStart, $weekEnd) {
         return null;
     }
     
-    $avgStress = round(array_sum($allStress) / count($allStress), 1);
+    $totalCount = count($allStress);
     
+    // Find most frequent stress level category
+    arsort($stressCategoryCounts);
+    $mostFrequentLevel = array_key_first($stressCategoryCounts);
+    $mostFrequentCount = $stressCategoryCounts[$mostFrequentLevel];
+    
+    // Calculate percentages for each category
+    $lowPercent = round(($stressCategoryCounts['Low Stress'] / $totalCount) * 100);
+    $moderatePercent = round(($stressCategoryCounts['Moderate Stress'] / $totalCount) * 100);
+    $highPercent = round(($stressCategoryCounts['High Stress'] / $totalCount) * 100);
+    
+    // Find peak stress day
     $dayAverages = [];
     foreach($stressByDay as $day => $scores) {
         $dayAverages[$day] = array_sum($scores) / count($scores);
@@ -327,25 +357,67 @@ function calculateStressSummary($stressData, $weekStart, $weekEnd) {
         $maxStress = 0;
     }
     
-    $mean = array_sum($allStress) / count($allStress);
-    $variance = array_sum(array_map(function($x) use ($mean) {
-        return pow($x - $mean, 2);
-    }, $allStress)) / count($allStress);
-    $stdDev = sqrt($variance);
+    return [
+        'mostFrequentLevel' => $mostFrequentLevel,
+        'mostFrequentCount' => $mostFrequentCount,
+        'stressBalance' => [
+            'low' => $lowPercent,
+            'moderate' => $moderatePercent,
+            'high' => $highPercent
+        ],
+        'peakStressDays' => $peakDays,
+        'peakStressLevel' => round($maxStress, 1)
+    ];
+}
+
+// Update the stress comparison calculation function
+function calculateStressComparison($current, $previous) {
+    if ($previous === null) {
+        return null;
+    }
     
-    $consistency = 'Stable';
-    if ($stdDev > 20) {
-        $consistency = 'High Fluctuations';
-    } elseif ($stdDev > 10) {
-        $consistency = 'Moderate Fluctuations';
+    // Calculate comparison for each category
+    $lowComparison = [
+        'current' => $current['stressBalance']['low'],
+        'previous' => $previous['stressBalance']['low'],
+        'difference' => $current['stressBalance']['low'] - $previous['stressBalance']['low'],
+        'trend' => $current['stressBalance']['low'] > $previous['stressBalance']['low'] ? 'increasing' : 
+                  ($current['stressBalance']['low'] < $previous['stressBalance']['low'] ? 'decreasing' : 'stable')
+    ];
+    
+    $moderateComparison = [
+        'current' => $current['stressBalance']['moderate'],
+        'previous' => $previous['stressBalance']['moderate'],
+        'difference' => $current['stressBalance']['moderate'] - $previous['stressBalance']['moderate'],
+        'trend' => $current['stressBalance']['moderate'] > $previous['stressBalance']['moderate'] ? 'increasing' : 
+                  ($current['stressBalance']['moderate'] < $previous['stressBalance']['moderate'] ? 'decreasing' : 'stable')
+    ];
+    
+    $highComparison = [
+        'current' => $current['stressBalance']['high'],
+        'previous' => $previous['stressBalance']['high'],
+        'difference' => $current['stressBalance']['high'] - $previous['stressBalance']['high'],
+        'trend' => $current['stressBalance']['high'] > $previous['stressBalance']['high'] ? 'increasing' : 
+                  ($current['stressBalance']['high'] < $previous['stressBalance']['high'] ? 'decreasing' : 'stable')
+    ];
+    
+    // Determine overall trend based on stress score (low - high)
+    $currentScore = $current['stressBalance']['low'] - $current['stressBalance']['high'];
+    $previousScore = $previous['stressBalance']['low'] - $previous['stressBalance']['high'];
+    $scoreDiff = $currentScore - $previousScore;
+    
+    $overallTrend = 'stable';
+    if ($scoreDiff > 5) {
+        $overallTrend = 'improving'; // More low stress, less high stress
+    } elseif ($scoreDiff < -5) {
+        $overallTrend = 'worsening'; // Less low stress, more high stress
     }
     
     return [
-        'avgStress' => $avgStress,
-        'avgStressLevel' => getStressLevel($avgStress),
-        'peakStressDays' => $peakDays,
-        'peakStressLevel' => getStressLevel($maxStress),
-        'stressConsistency' => $consistency
+        'low' => $lowComparison,
+        'moderate' => $moderateComparison,
+        'high' => $highComparison,
+        'overallTrend' => $overallTrend
     ];
 }
 
@@ -359,6 +431,158 @@ $monthEnd = (clone $monthStart)->modify('last day of this month')->setTime(23, 5
 $monthlySummary = calculateMoodSummary($monthlyTrend, $moodData, $monthStart, $monthEnd);
 $monthlyStressSummary = calculateStressSummary($stressData, $monthStart, $monthEnd);
 
+// [Previous headers and setup code remains the same until after calculating current period summaries]
+
+// ============= COMPARISON CALCULATION =============
+
+// Helper function to calculate comparison data
+function calculateComparison($current, $previous, $type = 'percentage') {
+    if ($previous === null || $previous === 0) {
+        return null;
+    }
+    
+    $difference = $current - $previous;
+    
+    if ($type === 'percentage') {
+        $percentChange = round(($difference / $previous) * 100, 1);
+        return [
+            'current' => $current,
+            'previous' => $previous,
+            'difference' => round($difference, 1),
+            'percentChange' => $percentChange,
+            'trend' => $difference > 0 ? 'increasing' : ($difference < 0 ? 'decreasing' : 'stable'),
+            'interpretation' => getInterpretation($percentChange, $difference)
+        ];
+    }
+    
+    // For absolute values (like mood balance percentages)
+    return [
+        'current' => $current,
+        'previous' => $previous,
+        'difference' => round($difference, 1),
+        'trend' => $difference > 0 ? 'increasing' : ($difference < 0 ? 'decreasing' : 'stable')
+    ];
+}
+
+function getInterpretation($percentChange, $difference) {
+    if (abs($percentChange) < 5) {
+        return 'minimal_change';
+    } elseif (abs($percentChange) < 15) {
+        return 'moderate_change';
+    } else {
+        return 'significant_change';
+    }
+}
+
+// ============= PREVIOUS WEEK CALCULATION =============
+$prevWeekStart = (clone $weekStart)->modify('-7 days');
+$prevWeekEnd = (clone $weekEnd)->modify('-7 days');
+
+$prevWeeklySummary = calculateMoodSummary($weeklyTrend, $moodData, $prevWeekStart, $prevWeekEnd);
+$prevWeeklyStressSummary = calculateStressSummary($stressData, $prevWeekStart, $prevWeekEnd);
+
+// Calculate weekly comparisons
+$weeklyMoodComparison = null;
+$weeklyStressComparison = null;
+
+if ($weeklySummary && $prevWeeklySummary) {
+    $weeklyMoodComparison = [
+        'positive' => calculateComparison(
+            $weeklySummary['moodBalance']['positive'],
+            $prevWeeklySummary['moodBalance']['positive'],
+            'absolute'
+        ),
+        'neutral' => calculateComparison(
+            $weeklySummary['moodBalance']['neutral'],
+            $prevWeeklySummary['moodBalance']['neutral'],
+            'absolute'
+        ),
+        'negative' => calculateComparison(
+            $weeklySummary['moodBalance']['negative'],
+            $prevWeeklySummary['moodBalance']['negative'],
+            'absolute'
+        ),
+        'overallTrend' => determineOverallMoodTrend(
+            $weeklySummary['moodBalance'],
+            $prevWeeklySummary['moodBalance']
+        )
+    ];
+}
+
+
+if ($weeklyStressSummary && $prevWeeklyStressSummary) {
+    $weeklyStressComparison = calculateStressComparison(
+        $weeklyStressSummary,
+        $prevWeeklyStressSummary
+    );
+}
+
+// ============= PREVIOUS MONTH CALCULATION =============
+$prevMonthDate = (clone $targetMonthDate)->modify('-1 month');
+$prevMonth = (int)$prevMonthDate->format('m');
+$prevYear = (int)$prevMonthDate->format('Y');
+
+$prevMonthStart = new DateTime("$prevYear-$prevMonth-01 00:00:00");
+$prevMonthEnd = (clone $prevMonthStart)->modify('last day of this month')->setTime(23, 59, 59);
+
+$prevMonthlySummary = calculateMoodSummary($monthlyTrend, $moodData, $prevMonthStart, $prevMonthEnd);
+$prevMonthlyStressSummary = calculateStressSummary($stressData, $prevMonthStart, $prevMonthEnd);
+
+// Calculate monthly comparisons
+$monthlyMoodComparison = null;
+$monthlyStressComparison = null;
+
+if ($monthlySummary && $prevMonthlySummary) {
+    $monthlyMoodComparison = [
+        'positive' => calculateComparison(
+            $monthlySummary['moodBalance']['positive'],
+            $prevMonthlySummary['moodBalance']['positive'],
+            'absolute'
+        ),
+        'neutral' => calculateComparison(
+            $monthlySummary['moodBalance']['neutral'],
+            $prevMonthlySummary['moodBalance']['neutral'],
+            'absolute'
+        ),
+        'negative' => calculateComparison(
+            $monthlySummary['moodBalance']['negative'],
+            $prevMonthlySummary['moodBalance']['negative'],
+            'absolute'
+        ),
+        'overallTrend' => determineOverallMoodTrend(
+            $monthlySummary['moodBalance'],
+            $prevMonthlySummary['moodBalance']
+        )
+    ];
+}
+
+if ($monthlyStressSummary && $prevMonthlyStressSummary) {
+    $monthlyStressComparison = calculateStressComparison(
+        $monthlyStressSummary,
+        $prevMonthlyStressSummary
+    );
+}
+
+// Helper function to determine overall mood trend
+function determineOverallMoodTrend($current, $previous) {
+    $posChange = $current['positive'] - $previous['positive'];
+    $negChange = $current['negative'] - $previous['negative'];
+    
+    // Calculate a "mood score" (positive - negative)
+    $currentScore = $current['positive'] - $current['negative'];
+    $previousScore = $previous['positive'] - $previous['negative'];
+    $scoreDiff = $currentScore - $previousScore;
+    
+    if ($scoreDiff > 5) {
+        return 'improving'; // More positive moods, fewer negative moods
+    } elseif ($scoreDiff < -5) {
+        return 'declining'; // Fewer positive moods, more negative moods
+    } else {
+        return 'stable';
+    }
+}
+
+// ============= FINAL OUTPUT =============
 ob_clean();
 header('Content-Type: application/json');
 
@@ -381,7 +605,25 @@ echo json_encode([
     "weeklySummary" => $weeklySummary,
     "weeklyStressSummary" => $weeklyStressSummary,
     "monthlySummary" => $monthlySummary,
-    "monthlyStressSummary" => $monthlyStressSummary
+    "monthlyStressSummary" => $monthlyStressSummary,
+    
+    // NEW: Comparison data
+    "weeklyMoodComparison" => $weeklyMoodComparison,
+    "weeklyStressComparison" => $weeklyStressComparison,
+    "monthlyMoodComparison" => $monthlyMoodComparison,
+    "monthlyStressComparison" => $monthlyStressComparison,
+    
+    // Reference periods for context
+    "comparisonInfo" => [
+        "weeklyComparison" => [
+            "currentPeriod" => $weekDisplayText,
+            "previousPeriod" => "Previous week (" . $prevWeekStart->format('M d') . " - " . $prevWeekEnd->format('M d, Y') . ")"
+        ],
+        "monthlyComparison" => [
+            "currentPeriod" => $monthDisplayText,
+            "previousPeriod" => $prevMonthDate->format('F Y')
+        ]
+    ]
 ]);
 
 exit;

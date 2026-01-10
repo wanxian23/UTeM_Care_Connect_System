@@ -1,5 +1,49 @@
+header {
+    /* box-shadow: 1px 1px 8px #fde6ba; */
+}
+
 main.studentInfoContentMain {
-    padding: 50px 0 70px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/* SubHeader */
+aside.studentInfoAsideWrapper {
+    padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    /* border-right: 1px solid; */
+    flex: 15%;
+    /* background-color: #FFF8E7; */
+    background: linear-gradient(to bottom, #FFF8E7, #FFF8E7, #FFF8E7, #FFF8E7, #ffffff);
+}
+
+aside.studentInfoAsideWrapper .subButton {
+    width: 100%;
+    border: 1px solid;
+    padding: 20px 0;
+    text-align: center;
+    text-decoration: none;
+    color: #555555;
+    border: none;
+    transition: 0.2s ease;
+}
+
+aside.studentInfoAsideWrapper .subButton:hover {
+    background-color: #ffeed0;
+}
+
+aside.studentInfoAsideWrapper .subButton.selectedSubHeader {
+    border-right: 5px solid;
+    font-weight: bold;
+}
+
+/* Main Content */
+main.studentInfoContentMain section.studentInfoContentWrapper {
+    flex: 85%;
+    /* border: 1px solid; */
+    padding: 0 0 70px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,7 +53,7 @@ main.studentInfoContentMain {
 
 main.studentInfoContentMain div.profileWrapper {
     width: 85%;
-    margin: 0 auto;
+    margin: 50px auto 0 auto;
     /* background-color: #eff3ff; */
     border-radius: 20px;
     display: flex;
@@ -60,7 +104,7 @@ main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section
 
 main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.personalInfoWrapper aside div svg {
     width: 40px;
-    height: 30px;
+    height: 15px;
 }
 
 main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.personalInfoWrapper aside p a {
@@ -102,7 +146,7 @@ main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section
 
 main.studentInfoContentMain div.profileWrapper div.profileContentWrapper section.moodSummarySectionWrapper aside div.avgMoodWrapper div:nth-of-type(3) p {
     width: 80px;
-    height: 50px;
+    /* height: 50px; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -153,12 +197,13 @@ main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileCo
 }
 
 main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileContentWrapper aside p {
-    margin-top: 10px;
     text-align: center;
+    /* border: 1px solid; */
 }
 
 main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileContentWrapper aside img {
     width: 50%;
+    /* border: 1px solid; */
 }
 
 main.studentInfoContentMain div.separateWrapper div.profileWrapper:last-child div.profileContentWrapper aside img {
@@ -224,7 +269,7 @@ main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileCo
     cursor: pointer;
 }
 
-
+ 
 .sectionTitle {
     position: relative;
     display: inline-block;
@@ -243,4 +288,67 @@ main.studentInfoContentMain div.separateWrapper div.profileWrapper div.profileCo
     height: 40%;          /* controls how much of text is covered */
     background: #d7ddf4 !important;  /* your background color */
     z-index: -1;
+}
+
+/* Student Info Statistic Header */
+/* main.statisticHeaderWrapper {
+    padding: 25px 0 0 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 150px;
+    background-color: #FFF8E7;
+}
+
+main.statisticHeaderWrapper button {
+    padding: 10px;
+    width: 200px;
+    border-radius: 20px;
+    border: none;
+    background-color: #c9e7d0;
+    transition: 0.2s ease;
+}
+
+main.statisticHeaderWrapper button:hover {
+    background-color: #dcece0;
+}
+
+main.statisticHeaderWrapper button.activeBtn,
+main.statisticHeaderWrapper button.activeBtn:hover {
+    background-color: #a1c8aa;
+} */
+
+nav.statisticNav {
+    display: flex;
+    justify-content: space-around;
+    /* background-color: #ddfff0; */
+    background-color: #dde4ff;
+    padding: 5px;
+    /* background: linear-gradient(to bottom, #fffdf7, #fffdf7, #fffdf7, #fffdf7, #ffffff); */
+    width: 60%;
+    margin: 30px auto 0 auto;
+    border-radius: 60px;
+    /* border: 1px solid; */
+}
+
+nav.statisticNav div {
+    width: 50%;
+}
+
+nav.statisticNav button {
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    padding: 15px 0;
+    color: #555555;
+    border-radius: 30px;
+    transition: 0.2s ease; 
+    font-weight: lighter;
+}
+
+nav.statisticNav button.activeBtn {
+    background-color: #C9D4FF;
+    font-weight: bold;
 }

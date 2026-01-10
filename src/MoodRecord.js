@@ -280,9 +280,6 @@ function StressLevelRecord() {
                             background: getGradient(value)
                         }}  
                     >
-                        {/* <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-lg" viewBox="0 0 16 16">
-                            <path d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0zM7 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0"/>
-                        </svg> */}
                         <h2>{value}%</h2>
                     </div>
                     {/* Slider */}
@@ -691,390 +688,11 @@ function EntriesAdd() {
                             ))}
                         </div>
                     </div>
-
-                    {/* {items.map((emoji) => (
-                        <label key={emoji.id} className="emoji-option">
-                        <input
-                            type="checkbox"
-                            name="mood"
-                            value={emoji.id}
-                            checked={selected === emoji.id}
-                            onChange={() => setSelected(emoji.id)}
-                            onClick={() => setSelectedText(emoji.message)}
-                        />
-                        <img
-                            src={emoji.img}
-                            alt={emoji.label}
-                            className={selected === emoji.id ? "active" : ""}
-                        />
-                        </label>
-                    ))} */}
                 </section>
-                {/* <article id='dialogBox'>
-                    <p ref={textRef}>{selectedText}</p>
-                </article> */}
             </main>
         </>
     );
 }
-
-// function EntriesAdd() {
-
-//     const [selectedText, setSelectedText] = useState("Click On Either of The Emoji To Express Your Current Feelings!");
-//     const textRef = useRef(null); // Create the reference
-//     const labelRefs = useRef([]);
-
-//     const [selected, setSelected] = useState([]);
-
-//     const academic = [
-//         { id: 1, label: "Assignment", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
-//             img: "/AcademicIcon/assignmentIcon.png"
-//         },
-//         { id: 2, label: "Difficult Subject", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
-//             img: "/AcademicIcon/difficultSubjectIcon.png"
-//         },
-//         { id: 3, label: "Exam", message: "Every big idea starts with a little spark — take your time to think it through.",
-//             img: "/AcademicIcon/examIcon.png"
-//         },
-//         { id: 4, label: "Grade Stress", message: "Let’s gooo! The energy’s real — you’re on fire today!",
-//             img: "/AcademicIcon/gradeCGPAIcon.png"
-//         },
-//         { id: 5, label: "Group Work Stress", message: "Oops… that was awkward! But hey, nobody’s perfect — you’re still awesome!",
-//             img: "/AcademicIcon/groupWorkIcon.png"
-//         },
-//         { id: 6, label: "Lecturer Expectation", message: "Take a breath… you’ve got this. Turn that fire into focus.",
-//             img: "/AcademicIcon/lecturerIcon.png"
-//         },
-//         { id: 7, label: "Presentation", message: "It’s okay to cry — even rain helps flowers grow.",
-//             img: "/AcademicIcon/presentationIcon.png"
-//         },
-//         { id: 8, label: "Time Management", message: "Ugh… some days just test your patience. Breathe — you’re stronger than this.",
-//             img: "/AcademicIcon/timeManagementIcon.png"
-//         }
-//     ];
-
-//     const technical = [
-//         { id: 9, label: "Device Problem", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
-//             img: "/TechnicalIcon/deviceProblemIcon.png"
-//         },
-//         { id: 10, label: "Difficult Subject", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
-//             img: "/TechnicalIcon/onlineLearningIcon.png"
-//         },
-//         { id: 11, label: "Exam", message: "Every big idea starts with a little spark — take your time to think it through.",
-//             img: "/TechnicalIcon/submissionProblemIcon.png"
-//         }
-//     ];
-
-//     const social = [
-//         { id: 12, label: "Friendship Problem", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
-//             img: "/SocialIcon/bullyIcon.png"
-//         },
-//         { id: 13, label: "Difficult Subject", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
-//             img: "/SocialIcon/friendshipIcon.png"
-//         },
-//         { id: 14, label: "Loneliness", message: "Every big idea starts with a little spark — take your time to think it through.",
-//             img: "/SocialIcon/lonelinessIcon.png"
-//         },
-//         { id: 15, label: "Peer Comparison", message: "Every big idea starts with a little spark — take your time to think it through.",
-//             img: "/SocialIcon/peerComparisonIcon.png"
-//         },
-//         { id: 16, label: "Relationship", message: "Every big idea starts with a little spark — take your time to think it through.",
-//             img: "/SocialIcon/relationshipIcon.png"
-//         }
-//     ];
-
-//     const emotional = [
-//         { id: 17, label: "Friendship Problem", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
-//             img: "/EmotionalIcon/burnout_ExhaustedIcon.png"
-//         },
-//         { id: 18, label: "Difficult Subject", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
-//             img: "/EmotionalIcon/lowMotivationIcon.png"
-//         },
-//         { id: 19, label: "Loneliness", message: "Every big idea starts with a little spark — take your time to think it through.",
-//             img: "/EmotionalIcon/poorEatingHabitIcon.png"
-//         },
-//         { id: 20, label: "Peer Comparison", message: "Every big idea starts with a little spark — take your time to think it through.",
-//             img: "/EmotionalIcon/selfDoubtIcon.png"
-//         },
-//         { id: 21, label: "Relationship", message: "Every big idea starts with a little spark — take your time to think it through.",
-//             img: "/EmotionalIcon/sleepProblemIcon.png"
-//         }
-//     ];
-
-//     const financial = [
-//         { id: 22, label: "Financial Problem", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
-//             img: "/financialIcon/financialProblemIcon.png"
-//         },
-//         { id: 23, label: "Accomodation Issue", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
-//             img: "/financialIcon/accomodationIssueIcon.png"
-//         },
-//         { id: 24, label: "Parttime Stress", message: "Every big idea starts with a little spark — take your time to think it through.",
-//             img: "/financialIcon/parttimeWorkStressIcon.png"
-//         },
-//         { id: 25, label: "Transportation Issue", message: "Every big idea starts with a little spark — take your time to think it through.",
-//             img: "/financialIcon/transportationIssueIcon.png"
-//         }
-//     ];
-
-//     const health = [
-//         { id: 26, label: "Financial Problem", message: "Let your smile be the sunshine that brightens someone’s day — including your own!", 
-//             img: "/HealthIcon/lackOfExerciseIcon.png"
-//         },
-//         { id: 27, label: "Accomodation Issue", message: "You’ve got that unstoppable spark — own the moment, rule the vibe!",
-//             img: "/HealthIcon/mentalHealthIcon.png"
-//         },
-//         { id: 28, label: "Parttime Stress", message: "Every big idea starts with a little spark — take your time to think it through.",
-//             img: "/HealthIcon/physicalIllnessIcon.png"
-//         },
-//         { id: 29, label: "Transportation Issue", message: "Every big idea starts with a little spark — take your time to think it through.",
-//             img: "/HealthIcon/unconfortableEnvironmentIcon.png"
-//         }
-//     ];
-
-//     // Animate when text changes (For Emoji Message)
-//     useEffect(() => {
-//         // Hide all labels first
-//         labelRefs.current.forEach((label) => {
-//             if (label) {
-//                 gsap.to(label, { opacity: 0, duration: 0.2 });
-//             }
-//         });
-
-//         // Show only selected labels
-//         selected.forEach((id) => {
-//             const el = labelRefs.current[id];
-//             if (el) {
-//                 gsap.fromTo(
-//                     el,
-//                     { opacity: 0, margin: 0 },
-//                     { 
-//                         opacity: 1, 
-//                         duration: 0.6, 
-//                         ease: "back.out(8)" 
-//                     }
-//                 );
-//             }
-//         });
-//     }, [selected]);
-
-//     const handleSelect = (id) => {
-//         setSelected((prev) =>
-//             prev.includes(id)
-//             ? prev.filter((item) => item !== id) // remove if already selected
-//             : [...prev, id] // add if not selected
-//         );
-//     };
-
-//     return(
-//         <>
-//             <main id="MainThird">
-//                 <h1>Why Getting Bad Mood ? You Can Choose More Than 1 Option</h1>
-//                 <section id='wholeEntriesWrapper'>
-//                     <div>
-//                         <h2>Acedemic</h2>
-//                         <div>
-//                         {academic.map((icon) => (
-//                             <label key={icon.id}>
-//                                 <input
-//                                 type="checkbox"
-//                                 name="entries[]"
-//                                 value={icon.id}
-//                                 checked={selected.includes(icon.id)}
-//                                 onChange={() => handleSelect(icon.id)}
-//                                 onClick={() => setSelectedText(icon.message)}
-//                                 />
-//                                 <div>
-//                                     <span
-//                                         className="iconLabel"
-//                                         ref={(el) => (labelRefs.current[icon.id] = el)}
-//                                     >
-//                                             {icon.label}
-//                                     </span>
-//                                     <img
-//                                         src={icon.img}
-//                                         alt={icon.label}
-//                                         className={selected === icon.id ? "active" : ""}
-//                                     />
-//                                 </div>
-//                             </label>
-//                         ))}
-//                         </div>
-//                     </div>
-//                     <div>
-//                         <h2>Technical/ System-Related</h2>
-//                         <div>
-//                         {technical.map((icon) => (
-//                             <label key={icon.id}>
-//                                 <input
-//                                 type="checkbox"
-//                                 name="entries[]"
-//                                 value={icon.id}
-//                                 checked={selected.includes(icon.id)}
-//                                 onChange={() => handleSelect(icon.id)}
-//                                 onClick={() => setSelectedText(icon.message)}
-//                                 />
-//                                 <div>
-//                                     <span
-//                                         className="iconLabel"
-//                                         ref={(el) => (labelRefs.current[icon.id] = el)}
-//                                     >
-//                                             {icon.label}
-//                                     </span>
-//                                     <img
-//                                         src={icon.img}
-//                                         alt={icon.label}
-//                                         className={selected === icon.id ? "active" : ""}
-//                                     />
-//                                 </div>
-//                             </label>
-//                         ))}
-//                         </div>
-//                     </div>
-//                     <div>
-//                         <h2>Social and Interpersonal</h2>
-//                         <div>
-//                         {social.map((icon) => (
-//                             <label key={icon.id}>
-//                                 <input
-//                                 type="checkbox"
-//                                 name="entries[]"
-//                                 value={icon.id}
-//                                 checked={selected.includes(icon.id)}
-//                                 onChange={() => handleSelect(icon.id)}
-//                                 onClick={() => setSelectedText(icon.message)}
-//                                 />
-//                                 <div>
-//                                     <span
-//                                         className="iconLabel"
-//                                         ref={(el) => (labelRefs.current[icon.id] = el)}
-//                                     >
-//                                             {icon.label}
-//                                     </span>
-//                                     <img
-//                                         src={icon.img}
-//                                         alt={icon.label}
-//                                         className={selected === icon.id ? "active" : ""}
-//                                     />
-//                                 </div>
-//                             </label>
-//                         ))}
-//                         </div>
-//                     </div>
-//                     <div>
-//                         <h2>Emotional and Personal Stressors</h2>
-//                         <div>
-//                         {emotional.map((icon) => (
-//                             <label key={icon.id}>
-//                                 <input
-//                                 type="checkbox"
-//                                 name="entries[]"
-//                                 value={icon.id}
-//                                 checked={selected.includes(icon.id)}
-//                                 onChange={() => handleSelect(icon.id)}
-//                                 onClick={() => setSelectedText(icon.message)}
-//                                 />
-//                                 <div>
-//                                     <span
-//                                         className="iconLabel"
-//                                         ref={(el) => (labelRefs.current[icon.id] = el)}
-//                                     >
-//                                             {icon.label}
-//                                     </span>
-//                                     <img
-//                                         src={icon.img}
-//                                         alt={icon.label}
-//                                         className={selected === icon.id ? "active" : ""}
-//                                     />
-//                                 </div>
-//                             </label>
-//                         ))}
-//                         </div>
-//                     </div>
-//                     <div>
-//                         <h2>Financial and Lifestyle</h2>
-//                         <div>
-//                         {financial.map((icon) => (
-//                             <label key={icon.id}>
-//                                 <input
-//                                 type="checkbox"
-//                                 name="entries[]"
-//                                 value={icon.id}
-//                                 checked={selected.includes(icon.id)}
-//                                 onChange={() => handleSelect(icon.id)}
-//                                 onClick={() => setSelectedText(icon.message)}
-//                                 />
-//                                 <div>
-//                                     <span
-//                                         className="iconLabel"
-//                                         ref={(el) => (labelRefs.current[icon.id] = el)}
-//                                     >
-//                                             {icon.label}
-//                                     </span>
-//                                     <img
-//                                         src={icon.img}
-//                                         alt={icon.label}
-//                                         className={selected === icon.id ? "active" : ""}
-//                                     />
-//                                 </div>
-//                             </label>
-//                         ))}
-//                         </div>
-//                     </div>
-//                     <div>
-//                         <h2>Health and Environment</h2>
-//                         <div>
-//                         {health.map((icon) => (
-//                             <label key={icon.id}>
-//                                 <input
-//                                 type="checkbox"
-//                                 name="entries[]"
-//                                 value={icon.id}
-//                                 checked={selected.includes(icon.id)}
-//                                 onChange={() => handleSelect(icon.id)}
-//                                 onClick={() => setSelectedText(icon.message)}
-//                                 />
-//                                 <div>
-//                                     <span
-//                                         className="iconLabel"
-//                                         ref={(el) => (labelRefs.current[icon.id] = el)}
-//                                     >
-//                                             {icon.label}
-//                                     </span>
-//                                     <img
-//                                         src={icon.img}
-//                                         alt={icon.label}
-//                                         className={selected === icon.id ? "active" : ""}
-//                                     />
-//                                 </div>
-//                             </label>
-//                         ))}
-//                         </div>
-//                     </div>
-//                     {/* {items.map((emoji) => (
-//                         <label key={emoji.id} className="emoji-option">
-//                         <input
-//                             type="checkbox"
-//                             name="mood"
-//                             value={emoji.id}
-//                             checked={selected === emoji.id}
-//                             onChange={() => setSelected(emoji.id)}
-//                             onClick={() => setSelectedText(emoji.message)}
-//                         />
-//                         <img
-//                             src={emoji.img}
-//                             alt={emoji.label}
-//                             className={selected === emoji.id ? "active" : ""}
-//                         />
-//                         </label>
-//                     ))} */}
-//                 </section>
-//                 {/* <article id='dialogBox'>
-//                     <p ref={textRef}>{selectedText}</p>
-//                 </article> */}
-//             </main>
-//         </>
-//     );
-// }
 
 function NoteAdd() {
     return(
@@ -1129,10 +747,7 @@ function RecordMoodNote() {
         };
 
         const closeRecommendationModal = () => {
-            setRecommendationBox(prev => ({
-                ...prev,
-                isOpen: false
-            }));
+            window.location.href = `/MoodRecord`;
         };
             
         const token = localStorage.getItem("token");
@@ -1187,15 +802,7 @@ function RecordMoodNote() {
             const result = await response.json();
 
             if(result.success){
-                // setMessagebox({
-                //     show: true,
-                //     title: "Daily Mood Record Successful",
-                //     message: result.message,
-                //     buttonValue: "OK",
-                //     redirect: true
-                // });
-
-                // Calculate stress level immediately
+                
                 const value = result.stressLevel;
                 let level = "", color = "";
                 if (value <= 20) {
@@ -1236,7 +843,8 @@ function RecordMoodNote() {
                     stressLevel: level,
                     recommendationType: quoteValue,
                     recommendation: result.quote,
-                    recommendationLink: result.quoteLink
+                    recommendationLink: result.quoteLink,
+                    redirect: true
                 });
 
                 setMoodId(result.moodId);
@@ -1252,7 +860,7 @@ function RecordMoodNote() {
 
         };
 
-        if (moodRecordData.finishRecord) {
+        if (!moodRecordData.canRecordMood) {
             return (
                 <div className="finishRecorded">
                     <p>
@@ -1265,7 +873,7 @@ function RecordMoodNote() {
     return(
         <>
             <form id="formFirst" onSubmit={handleMoodRecord}>
-                {!moodRecordData.stressRecord && <StressLevelRecord />}
+                {moodRecordData.canRecordStress && <StressLevelRecord />}
                 <MoodChoose />
                 <EntriesAdd />
                 <NoteAdd />

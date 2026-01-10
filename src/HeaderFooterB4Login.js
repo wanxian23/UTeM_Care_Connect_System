@@ -24,21 +24,21 @@ function HeaderMargin() {
 export function Header() {
     return(
         <>
-            <header>
+            <header style={{justifyContent: "center"}}>
                 <a href='/' id='logo'>
                     <img src={careConnectIcon} alt='Logo'></img>
-                    <label>UTeM CareConnect</label>
+                    <label style={{width: "180px"}}>UTeM CareConnect</label>
                 </a>
-                <nav>
+                {/* <nav>
                     <Link to='/' id='login'>Home</Link>
-                    {/* <Link to='/Login' id='login'>Login</Link> */}
-                    {/* <a href='' id='signup'>Signup</a> */}
-                </nav>
-                <aside>
+                    <Link to='/Login' id='login'>Login</Link> 
+                    <a href='' id='signup'>Signup</a>
+                </nav> */}
+                {/* <aside>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
                     </svg>
-                </aside>
+                </aside> */}
             </header>
 
             <HeaderMargin />

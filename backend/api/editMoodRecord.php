@@ -28,7 +28,7 @@ $studentId = $user['studentId'];
 $moodId = $_GET['moodId'];
 $date = $_GET['date'];
 
-if ($date == "Today") {
+if ($date == "Today" || $date == "Specific") {
     $stmtRecordMood = $conn->prepare("
         UPDATE stress
         SET stressLevel = ?
@@ -84,13 +84,12 @@ $moodData = $resultCheckMoodData->fetch_assoc();
     $stmtRecordMood = $conn->prepare("
         UPDATE moodTracking
         SET moodTypeId = ?,
-        stressLevel = ?, 
         note = ?, 
         notePrivacy = ?
         WHERE studentId = ? AND
         moodId = ?
     ");
-    $stmtRecordMood->bind_param("issiii", $mood, $stress, $note, $notePrivacy, $studentId, $moodId);
+    $stmtRecordMood->bind_param("isiii", $mood, $note, $notePrivacy, $studentId, $moodId);
     $stmtRecordMood->execute();
 
     $stmtDeleteEntries = $conn->prepare("DELETE FROM entriesRecord WHERE moodId = ?");

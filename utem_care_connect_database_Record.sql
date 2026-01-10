@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3301
--- Generation Time: Dec 27, 2025 at 10:57 PM
+-- Generation Time: Jan 10, 2026 at 05:47 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.2.12
 
@@ -28,6 +28,9 @@ USE `utem_care_connect`;
 --
 -- Table structure for table `contactnote`
 --
+-- Creation: Jan 07, 2026 at 08:14 AM
+-- Last update: Jan 09, 2026 at 10:29 AM
+--
 
 DROP TABLE IF EXISTS `contactnote`;
 CREATE TABLE IF NOT EXISTS `contactnote` (
@@ -37,23 +40,38 @@ CREATE TABLE IF NOT EXISTS `contactnote` (
   `studentId` int(11) DEFAULT NULL,
   `staffId` int(11) DEFAULT NULL,
   `note` longtext DEFAULT NULL,
-  `noteType` enum('meeting','observation','followup') DEFAULT NULL,
+  `noteType` enum('Meeting','Observation','Follow Up') DEFAULT NULL,
   PRIMARY KEY (`contactId`),
   KEY `studentId` (`studentId`),
   KEY `staffId` (`staffId`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `contactnote`:
+--   `studentId`
+--       `student` -> `studentId`
+--   `staffId`
+--       `staff` -> `staffId`
+--
 
 --
 -- Dumping data for table `contactnote`
 --
 
 INSERT INTO `contactnote` (`contactId`, `message`, `datetimeRecord`, `studentId`, `staffId`, `note`, `noteType`) VALUES
-(4, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2025-12-28 05:28:24', 1, 2, 'Seem ok', 'observation');
+(4, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2025-12-28 05:28:24', 1, 2, 'Seem ok', 'Observation'),
+(10, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2026-01-01 19:11:10', 1, 2, 'So far ok!!!', 'Meeting'),
+(15, 'Meet me now at office!', '2026-01-08 13:57:47', 9, 2, 'She feels stress.... and ...', 'Meeting'),
+(17, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2026-01-08 18:17:27', 1, 2, 'she feels good and okokokkkoko ok ok ok oko ok \r\n', 'Meeting'),
+(18, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2026-01-09 18:13:41', 2, 1, 'Seem okokokokok', 'Meeting');
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `dass`
+--
+-- Creation: Jan 07, 2026 at 08:14 AM
+-- Last update: Jan 09, 2026 at 02:12 PM
 --
 
 DROP TABLE IF EXISTS `dass`;
@@ -67,7 +85,15 @@ CREATE TABLE IF NOT EXISTS `dass` (
   PRIMARY KEY (`dassId`),
   KEY `staffId` (`staffId`),
   KEY `studentId` (`studentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `dass`:
+--   `staffId`
+--       `staff` -> `staffId`
+--   `studentId`
+--       `student` -> `studentId`
+--
 
 --
 -- Dumping data for table `dass`
@@ -75,16 +101,22 @@ CREATE TABLE IF NOT EXISTS `dass` (
 
 INSERT INTO `dass` (`dassId`, `dassCreatedDateTime`, `status`, `staffId`, `studentId`, `dassCompletedDateTime`) VALUES
 (1, '2025-12-12 13:32:22', 'Completed', 1, 3, '2025-12-12 15:20:05'),
-(4, '2025-12-12 15:03:22', 'Pending', 1, 2, NULL),
+(4, '2025-12-12 15:03:22', 'Completed', 1, 2, '2026-01-06 03:09:33'),
 (5, '2025-12-15 13:51:23', 'Completed', 2, 9, '2025-12-15 17:15:40'),
 (7, '2025-12-25 17:31:44', 'Completed', 2, 10, '2025-12-25 17:36:25'),
 (8, '2025-12-25 17:37:42', 'Completed', 2, 1, '2025-12-25 17:38:17'),
-(10, '2025-12-27 23:53:46', 'Pending', 4, 7, NULL);
+(10, '2025-12-27 23:53:46', 'Pending', 4, 7, NULL),
+(16, '2026-01-08 11:48:59', 'Completed', 1, 2, '2026-01-08 11:51:25'),
+(17, '2026-01-08 13:30:43', 'Completed', 2, 1, '2026-01-08 13:32:40'),
+(18, '2026-01-08 13:53:58', 'Completed', 2, 9, '2026-01-08 13:57:16'),
+(19, '2026-01-09 22:11:58', 'Completed', 5, 8, '2026-01-09 22:12:51');
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `dassquestion`
+--
+-- Creation: Jan 07, 2026 at 08:14 AM
 --
 
 DROP TABLE IF EXISTS `dassquestion`;
@@ -94,6 +126,10 @@ CREATE TABLE IF NOT EXISTS `dassquestion` (
   `type` enum('Depression','Anxiety','Stress') NOT NULL,
   PRIMARY KEY (`dassQuestionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `dassquestion`:
+--
 
 --
 -- Dumping data for table `dassquestion`
@@ -127,6 +163,9 @@ INSERT INTO `dassquestion` (`dassQuestionId`, `question`, `type`) VALUES
 --
 -- Table structure for table `dassrecord`
 --
+-- Creation: Jan 07, 2026 at 08:14 AM
+-- Last update: Jan 09, 2026 at 02:12 PM
+--
 
 DROP TABLE IF EXISTS `dassrecord`;
 CREATE TABLE IF NOT EXISTS `dassrecord` (
@@ -136,6 +175,14 @@ CREATE TABLE IF NOT EXISTS `dassrecord` (
   PRIMARY KEY (`dassId`,`dassQuestionId`),
   KEY `dassQuestionId` (`dassQuestionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `dassrecord`:
+--   `dassId`
+--       `dass` -> `dassId`
+--   `dassQuestionId`
+--       `dassquestion` -> `dassQuestionId`
+--
 
 --
 -- Dumping data for table `dassrecord`
@@ -163,6 +210,27 @@ INSERT INTO `dassrecord` (`dassId`, `dassQuestionId`, `scale`) VALUES
 (1, 19, 0),
 (1, 20, 0),
 (1, 21, 0),
+(4, 1, 3),
+(4, 2, 2),
+(4, 3, 3),
+(4, 4, 2),
+(4, 5, 3),
+(4, 6, 2),
+(4, 7, 3),
+(4, 8, 2),
+(4, 9, 3),
+(4, 10, 2),
+(4, 11, 3),
+(4, 12, 2),
+(4, 13, 3),
+(4, 14, 2),
+(4, 15, 3),
+(4, 16, 2),
+(4, 17, 3),
+(4, 18, 2),
+(4, 19, 3),
+(4, 20, 2),
+(4, 21, 3),
 (5, 1, 2),
 (5, 2, 2),
 (5, 3, 1),
@@ -225,12 +293,98 @@ INSERT INTO `dassrecord` (`dassId`, `dassQuestionId`, `scale`) VALUES
 (8, 18, 3),
 (8, 19, 3),
 (8, 20, 3),
-(8, 21, 2);
+(8, 21, 2),
+(16, 1, 2),
+(16, 2, 0),
+(16, 3, 2),
+(16, 4, 1),
+(16, 5, 0),
+(16, 6, 3),
+(16, 7, 1),
+(16, 8, 1),
+(16, 9, 2),
+(16, 10, 1),
+(16, 11, 2),
+(16, 12, 0),
+(16, 13, 0),
+(16, 14, 2),
+(16, 15, 0),
+(16, 16, 0),
+(16, 17, 0),
+(16, 18, 0),
+(16, 19, 2),
+(16, 20, 0),
+(16, 21, 0),
+(17, 1, 3),
+(17, 2, 2),
+(17, 3, 3),
+(17, 4, 2),
+(17, 5, 3),
+(17, 6, 2),
+(17, 7, 3),
+(17, 8, 2),
+(17, 9, 3),
+(17, 10, 2),
+(17, 11, 3),
+(17, 12, 2),
+(17, 13, 3),
+(17, 14, 2),
+(17, 15, 3),
+(17, 16, 2),
+(17, 17, 3),
+(17, 18, 2),
+(17, 19, 3),
+(17, 20, 2),
+(17, 21, 3),
+(18, 1, 3),
+(18, 2, 2),
+(18, 3, 3),
+(18, 4, 2),
+(18, 5, 3),
+(18, 6, 2),
+(18, 7, 3),
+(18, 8, 2),
+(18, 9, 3),
+(18, 10, 2),
+(18, 11, 3),
+(18, 12, 2),
+(18, 13, 3),
+(18, 14, 2),
+(18, 15, 3),
+(18, 16, 2),
+(18, 17, 3),
+(18, 18, 2),
+(18, 19, 3),
+(18, 20, 2),
+(18, 21, 3),
+(19, 1, 0),
+(19, 2, 0),
+(19, 3, 1),
+(19, 4, 0),
+(19, 5, 0),
+(19, 6, 1),
+(19, 7, 0),
+(19, 8, 0),
+(19, 9, 1),
+(19, 10, 0),
+(19, 11, 1),
+(19, 12, 0),
+(19, 13, 0),
+(19, 14, 1),
+(19, 15, 0),
+(19, 16, 0),
+(19, 17, 1),
+(19, 18, 0),
+(19, 19, 1),
+(19, 20, 0),
+(19, 21, 1);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `entries`
+--
+-- Creation: Jan 07, 2026 at 08:14 AM
 --
 
 DROP TABLE IF EXISTS `entries`;
@@ -242,6 +396,12 @@ CREATE TABLE IF NOT EXISTS `entries` (
   PRIMARY KEY (`entriesId`),
   KEY `entriesTypeId` (`entriesTypeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `entries`:
+--   `entriesTypeId`
+--       `entriestype` -> `entriesTypeId`
+--
 
 --
 -- Dumping data for table `entries`
@@ -283,6 +443,9 @@ INSERT INTO `entries` (`entriesId`, `entries`, `entriesStoreLocation`, `entriesT
 --
 -- Table structure for table `entriesrecord`
 --
+-- Creation: Jan 07, 2026 at 08:14 AM
+-- Last update: Jan 09, 2026 at 02:05 PM
+--
 
 DROP TABLE IF EXISTS `entriesrecord`;
 CREATE TABLE IF NOT EXISTS `entriesrecord` (
@@ -292,7 +455,15 @@ CREATE TABLE IF NOT EXISTS `entriesrecord` (
   PRIMARY KEY (`entriesRecordId`),
   KEY `moodId` (`moodId`),
   KEY `entriesTypeId_2` (`entriesTypeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=168 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=214 DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `entriesrecord`:
+--   `moodId`
+--       `moodtracking` -> `moodId`
+--   `entriesTypeId`
+--       `entriestype` -> `entriesTypeId`
+--
 
 --
 -- Dumping data for table `entriesrecord`
@@ -303,14 +474,11 @@ INSERT INTO `entriesrecord` (`entriesRecordId`, `moodId`, `entriesTypeId`) VALUE
 (7, 3, 1),
 (15, 37, 1),
 (16, 37, 3),
-(17, 38, 1),
 (18, 39, 1),
 (19, 39, 3),
 (21, 41, 1),
-(29, 47, 2),
 (33, 53, 1),
 (34, 53, 3),
-(75, 52, 1),
 (88, 65, 1),
 (89, 65, 3),
 (90, 66, 1),
@@ -323,7 +491,6 @@ INSERT INTO `entriesrecord` (`entriesRecordId`, `moodId`, `entriesTypeId`) VALUE
 (98, 74, 1),
 (99, 75, 2),
 (107, 83, 1),
-(108, 84, 4),
 (116, 92, 5),
 (124, 91, 3),
 (134, 35, 1),
@@ -338,12 +505,31 @@ INSERT INTO `entriesrecord` (`entriesRecordId`, `moodId`, `entriesTypeId`) VALUE
 (151, 93, 4),
 (158, 105, 1),
 (164, 62, 1),
-(165, 62, 5);
+(165, 62, 5),
+(182, 123, 1),
+(183, 123, 2),
+(184, 123, 3),
+(185, 123, 4),
+(190, 126, 1),
+(192, 127, 1),
+(193, 136, 1),
+(194, 136, 2),
+(195, 137, 1),
+(196, 138, 1),
+(200, 142, 1),
+(208, 84, 4),
+(209, 52, 1),
+(210, 47, 2),
+(211, 38, 1),
+(212, 150, 1),
+(213, 151, 1);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `entriestype`
+--
+-- Creation: Jan 07, 2026 at 08:14 AM
 --
 
 DROP TABLE IF EXISTS `entriestype`;
@@ -352,6 +538,10 @@ CREATE TABLE IF NOT EXISTS `entriestype` (
   `entriesType` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`entriesTypeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `entriestype`:
+--
 
 --
 -- Dumping data for table `entriestype`
@@ -370,6 +560,8 @@ INSERT INTO `entriestype` (`entriesTypeId`, `entriesType`) VALUES
 --
 -- Table structure for table `mood`
 --
+-- Creation: Jan 07, 2026 at 08:14 AM
+--
 
 DROP TABLE IF EXISTS `mood`;
 CREATE TABLE IF NOT EXISTS `mood` (
@@ -380,6 +572,10 @@ CREATE TABLE IF NOT EXISTS `mood` (
   `category` enum('Positive','Neutral','Negative') DEFAULT 'Positive',
   PRIMARY KEY (`moodTypeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `mood`:
+--
 
 --
 -- Dumping data for table `mood`
@@ -400,11 +596,13 @@ INSERT INTO `mood` (`moodTypeId`, `moodStatus`, `moodStoreLocation`, `priority`,
 --
 -- Table structure for table `moodtracking`
 --
+-- Creation: Jan 07, 2026 at 04:07 PM
+-- Last update: Jan 09, 2026 at 02:05 PM
+--
 
 DROP TABLE IF EXISTS `moodtracking`;
 CREATE TABLE IF NOT EXISTS `moodtracking` (
   `moodId` int(11) NOT NULL AUTO_INCREMENT,
-  `stressLevel` int(3) DEFAULT NULL,
   `note` longtext DEFAULT NULL,
   `datetimeRecord` datetime DEFAULT current_timestamp(),
   `studentId` int(11) DEFAULT NULL,
@@ -413,55 +611,80 @@ CREATE TABLE IF NOT EXISTS `moodtracking` (
   PRIMARY KEY (`moodId`),
   KEY `studentId` (`studentId`),
   KEY `moodTypeId` (`moodTypeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `moodtracking`:
+--   `studentId`
+--       `student` -> `studentId`
+--   `moodTypeId`
+--       `mood` -> `moodTypeId`
+--
 
 --
 -- Dumping data for table `moodtracking`
 --
 
-INSERT INTO `moodtracking` (`moodId`, `stressLevel`, `note`, `datetimeRecord`, `studentId`, `moodTypeId`, `notePrivacy`) VALUES
-(2, 10, 'Today felt like stepping into a quiet library just as the sun beams through the tall windows. The morning started calm, with soft light painting golden streaks across your desk, but the air was alive with subtle tension—like a page waiting to be turned. Each task you tackled was a little puzzle, some pieces fitting perfectly, others testing your patience.\r\n\r\nBy afternoon, there was a spark of excitement—a tiny victory, a moment of laughter, or an idea that finally clicked. Yet, the world outside reminded you to pause and breathe, with gentle whispers of wind and distant chatter grounding you.\r\n\r\nAs evening approaches, it feels like a cozy blanket settling around your shoulders. Today was a mix of focus and reflection, small wins and gentle lessons, leaving you with a sense of quiet accomplishment and the soft promise of tomorrow.', '2025-11-26 22:43:44', 1, 2, 1),
-(3, 20, 'Today started off as a rather neutral day, neither particularly exciting nor overwhelmingly dull. The morning air felt calm as I got ready, and for a moment, I felt a sense of quiet balance. It was the kind of day where nothing dramatic happened, but at the same time, everything seemed to demand a little attention. My energy was steady, and I approached my tasks with a moderate focus, aware that the day would require careful management to avoid slipping into unnecessary stress.\r\n\r\nBy mid-morning, my thoughts began to drift toward the looming assignments that were due soon. Each task seemed manageable on its own, but seeing them all lined up created a subtle tension. I reminded myself to take things one step at a time, prioritizing the most urgent work first. Even though my stress level was relatively low, around 20%, the presence of these responsibilities lingered in the back of my mind, nudging me to stay organized and on track.\r\n\r\nThe afternoon was consumed by preparation for upcoming exams. I reviewed my notes and tried to mentally rehearse possible questions, but occasionally I found myself distracted by minor worries. The pressure wasn’t overwhelming, but it was enough to keep me alert. I felt a quiet determination to do my best, understanding that consistency matters more than perfection. This gentle push kept me productive without tipping the day into high stress.\r\n\r\nLater in the day, I considered the expectations set by my lecturer. While they were reasonable, they added another layer of responsibility that needed attention. It was not stressful enough to cause anxiety, but it reminded me to maintain a disciplined approach to my work. I took short breaks to relax my mind, appreciating that even neutral days benefit from small moments of self-care.\r\n\r\nAs the evening approached, I reflected on the day. Despite having a few sources of mild stress—assignments, exams, and lecturer expectations—the overall feeling remained calm and manageable. It was a reminder that stress doesn’t always have to be overwhelming; even when tasks accumulate, a neutral and steady approach can help keep things under control. The day closed quietly, leaving me with a sense of accomplishment for handling multiple responsibilities without losing balance.', '2025-11-27 02:00:22', 1, 3, 1),
-(35, 100, '...............................................................', '2025-12-01 17:53:52', 1, 6, 1),
-(37, 0, 'Today was surprisingly exciting, and honestly, I’m really happy about it. My stress level feels like 0%, which is such a great feeling because it’s been a while since I felt this light. From the moment I woke up, I felt a kind of positive energy that just stayed with me throughout the day. I felt more motivated, more alive, and more ready to take things on.\r\n\r\nEven though I’m excited and stress-free today, I still know deep down that some of my stress usually comes from academic pressure and a bit of social stuff too. Academically, I sometimes worry about whether I’m keeping up, whether I’m doing enough, and whether my results will reflect the effort I put in. I always remind myself that I’m trying my best, but the pressure still sticks around sometimes. As for social stress, it’s more subtle — it’s not always obvious, but sometimes I get anxious about how I present myself to others, whether I’m connecting well with people, or whether I’m meeting expectations. It’s not overwhelming, but it’s there in the background.\r\n\r\nBut today? None of that really pulled me down. It felt like my mind finally took a break. I felt free, present, and genuinely excited about everything happening around me. Maybe it’s because I accomplished something meaningful, or maybe it’s just one of those days where everything aligns and feels right.\r\n\r\nI’m glad I had a day like this. I’m grateful for the excitement, the peace, and the sense of confidence I felt. I hope I can carry this feeling forward — even when academic or social stress comes back, at least I know I can still have days like today where everything feels okay.', '2025-12-01 17:56:20', 1, 1, 1),
-(38, 0, 'Happy Everyday OK!', '2025-12-01 21:22:07', 2, 2, 1),
-(39, 0, 'Today is a good day! I\'m always happy all the time :) Have a nice sleep and relax OK! BRO!', '2025-12-01 21:24:38', 2, 1, 1),
-(40, 28, 'It\'s already midnight 12AM, I\'m just finish watching douyin and decide to continue fighting with my final year project. To be honest, I don\'t know what to write, but since I wanna test this website, so yeah, it\'s time to write something. I think it is good to write down things that happen recently or maybe some life lesson that I learnt these days. \r\n\r\nSo yeah, the first thing I wanna written was, I felt that I\'m like lack of motivation in doing anything. It\'s like I\'m stress and I knew that I gonna rush and finish it as soon as possible. But there are something that stop you from continue moving on. Yeah, you might said that it\'s because of my laziness, but for me, I really like feel empty. \r\n\r\nBut yeah, it has no time for me to relax anymore, even if I have no motivation, but life needs to keep moving on. Just, continue fighting Sis :)', '2025-12-02 00:25:26', 1, 3, 1),
-(41, 70, 'Today was one of those days where everything felt just slightly off, and every small thing somehow managed to get on my nerves.\r\n\r\nNothing huge happened, but it was like the whole day was filled with tiny irritations — the kind that slowly build up and make me want to sigh every five minutes. People talking at the wrong time, things not working the way they should, and my patience just wearing thinner and thinner as the hours went by.\r\n\r\nI wasn’t angry, not really. Just… annoyed.\r\nAnnoyed at interruptions, annoyed at small mistakes, annoyed at things that normally wouldn’t bother me but today felt like too much.\r\n\r\nHonestly, I just want the day to end so I can reset.\r\nHoping tomorrow decides to be kinder, because today definitely wasn’t.', '2025-12-02 20:27:34', 1, 8, 1),
-(47, 20, 'Today tested my patience in ways I didn’t ask for.\r\nFrom the moment I woke up, it felt like the world was set to “irritate mode.”\r\n\r\nLittle things kept piling up — delays, interruptions, people asking things at the worst possible time. Every task seemed harder than it needed to be, and every sound felt louder than usual. I kept trying to stay calm, but honestly, my tolerance was running dangerously low.\r\n\r\nI wasn’t in a bad mood at first, but the day slowly dragged me into one.\r\nIt’s like the universe kept poking me just to see if I’d react.\r\n\r\nI didn’t snap at anyone, but trust me, the internal eye-rolls were constant.\r\n\r\nAnyway… I survived the day, even though it drained me more than it should have.\r\nHopefully tomorrow doesn’t copy today, because I’ve had enough of this annoying energy.', '2025-12-02 21:38:52', 2, 8, 1),
-(52, 10, 'Today has been a bright and uplifting day overall. I felt genuinely happy throughout most of it, and my mood stayed positive despite having a bit of stress lingering in the background. The happiness came naturally — I felt lighter, more energetic, and more motivated than usual. Even small moments felt enjoyable, and I managed to go through the day with a sense of ease and optimism.\r\n\r\nMy stress level today is around 10%, which is relatively low, but still present enough for me to notice. This stress mainly comes from academic-related issues. There are tasks, deadlines, and expectations that occasionally weigh on my mind. Even though the workload isn’t overwhelming right now, the constant reminder of assignments and upcoming responsibilities keeps me slightly tense. It’s the kind of stress that sits quietly at the back of my thoughts — not strong enough to ruin my mood, but enough to make me aware that I need to stay on track.\r\n\r\nDespite that, I’m proud that the stress didn’t take over my day. I managed to balance my emotions well, staying cheerful and productive. Today felt like a reminder that even with small pressures in life, I can still maintain positivity and enjoy the moments around me. I hope the next few days continue in the same direction, with happiness growing and stress staying small and manageable.', '2025-12-08 20:05:49', 2, 1, 1),
-(53, 100, 'Today has been an extremely heavy and overwhelming day. My mood has been deeply emotional, and I found myself breaking down into tears more than once. It feels like everything I’ve been carrying suddenly became too much to hold in, and the weight of it all finally pushed me past my limit. There’s a sense of sadness and exhaustion that I can’t ignore, and my heart feels unusually fragile today.\r\n\r\nMy stress level is at 100%, and it’s painfully clear that both academic pressure and relationship issues are hitting me at the same time. Academically, things feel chaotic — deadlines, expectations, and the fear of falling behind are all swirling in my mind nonstop. No matter how much I try to focus, the stress just keeps piling up, and it feels like I’m losing grip on the balance I used to have.\r\n\r\nOn top of that, the emotional strain from relationship matters makes everything even harder to handle. It’s the kind of hurt that sits deep inside — confusing, draining, and making me question things I normally wouldn’t. The mix of academic worries and relationship tension creates a storm inside me, making it nearly impossible to calm down or think clearly.\r\n\r\nToday feels like one of those days where everything collapses at once, and all I can do is let myself cry it out. Even though it’s overwhelming, I know this feeling won’t last forever. Right now, I’m just giving myself space to feel the pain, to acknowledge the stress, and to accept that it’s okay to not be okay sometimes.', '2025-12-08 21:50:24', 2, 5, 0),
-(61, 20, 'Today felt surprisingly uplifting, and I’m genuinely excited about everything that unfolded. There’s a kind of energy in me that makes the day feel brighter and more motivating than usual. Even though I still have some academic tasks on my mind, the stress level is very manageable—around 20%—and it isn’t weighing me down the way it sometimes does. Instead, it feels like a small reminder that I have responsibilities, but they’re not stopping me from enjoying the moment.\r\n\r\nThe excitement comes from a sense of progress and clarity in my academic journey. Maybe it’s understanding something better, completing something important, or simply feeling more confident about what’s ahead. Whatever it is, that spark really lifted my mood today. I felt more positive, more willing to engage, and more ready to take on what’s coming next.\r\n\r\nEven with academics being the reason behind the little bit of stress I’m carrying, it doesn’t affect the excitement in a negative way. In fact, it almost feels like part of the motivation—like the challenges are pushing me forward rather than slowing me down.\r\n\r\nOverall, today was a good mix of productivity, enthusiasm, and a refreshing emotional boost. I’m hoping I can carry this energy forward and keep using it to move through my academic tasks with confidence and momentum.', '2025-12-09 23:44:33', 1, 1, 0),
-(62, 50, 'Today I’m feeling genuinely happy, and it feels refreshing. Even though life still has its challenges, I can feel a lightness in my mood that makes the day brighter. My stress level is around 30%, which means the pressure is still there, but it isn’t weighing me down too much. I’m still able to smile, stay positive, and enjoy the little things happening around me.\r\n\r\nSome of my stress is coming from academic responsibilities and a bit from financial and lifestyle concerns. Those thoughts do pop up in the background, reminding me of the things I still need to handle and improve. But even with those worries, I’m choosing to stay hopeful and appreciate how far I’ve come. It feels good to know that I can be happy while still dealing with challenges — it shows I’m growing stronger and learning to balance everything better.\r\n\r\nOverall, today feels like a good day. I’m grateful for moments like this where happiness comes naturally, even with stress lingering around. I hope the rest of the day continues to carry this positive energy, and I’ll keep reminding myself that I’m capable of managing whatever comes next.', '2025-12-10 17:21:09', 7, 1, 1),
-(64, 30, 'Today feels like a very steady and balanced day. My mood is neutral — not particularly high or low — just somewhere comfortably in the middle. There isn’t anything overwhelming happening emotionally, and at the same time, nothing exceptionally uplifting either. It’s one of those days where things simply move at a normal pace, and I’m going along with it without much disturbance.\r\n\r\nMy stress level today is around 35%, which is manageable and not too heavy. It’s more like a small background tension rather than something tied to any specific problem. Sometimes this kind of mild stress just appears naturally from daily routines, responsibilities, or a busy mind, even when nothing major is actually wrong.\r\n\r\nInterestingly, there’s no clear reason behind the stress. It’s just there — quiet, soft, and not demanding too much attention. I can still function well, think clearly, and do what I need to do. It feels like one of those days where my mind is calm but slightly alert, keeping an even balance between rest and awareness.\r\n\r\nOverall, it’s a steady, uneventful day emotionally. Nothing dramatic, nothing overwhelming — just neutral. And sometimes, that’s perfectly okay.', '2025-12-10 18:49:12', 1, 3, 0),
-(65, 100, 'Today feels overwhelmingly heavy, and that anger sitting inside me is burning at its peak. With a stress level hitting 100%, it’s clear that everything from academics to social and interpersonal situations is pushing me to my limit. Handling academic pressure alone is already exhausting—deadlines, expectations, and the constant fear of not performing well enough keep stacking up until it feels like I’m suffocating under the weight. But adding social and interpersonal stress into the mix makes everything even more frustrating. Whether it’s misunderstandings, conflicts, or just feeling disconnected from the people around me, it all builds up into this intense emotional storm.\r\n\r\nRight now, it feels like I’m carrying too much at once. Every little thing triggers irritation, and even small problems feel huge because the frustration has nowhere to go. I’m trying to manage everything, but it’s like every time I take one step forward, something else pushes me two steps back. Still, even in moments like this, I know that these emotions won’t last forever. I just need time—time to breathe, time to sort out my thoughts, and time to let the anger cool down. For now, I’m acknowledging how I feel, accepting that it’s valid, and reminding myself that it’s okay to pause and reset when everything becomes too much.', '2025-12-12 13:35:56', 3, 6, 0),
-(66, 64, 'xxx', '2025-12-12 14:31:18', 3, 3, 0),
-(67, 20, 'Today felt relatively calm and steady overall. My mood stayed neutral, without any strong emotional highs or lows. It was one of those days where nothing particularly exciting or upsetting happened, and I was able to go through my routine at a comfortable pace. I felt emotionally balanced and grounded, just moving through the day as it came.\r\n\r\nMy stress level today was around 20%, which is quite low. There wasn’t any specific reason behind the stress — it felt more like a natural, background tension that comes from daily life rather than any particular problem or pressure. It didn’t interfere with my focus or mood, and I was able to manage everything without feeling overwhelmed.\r\n\r\nEven though the day wasn’t especially memorable, it felt peaceful in its own way. Having a neutral day reminds me that not every day needs to be emotionally intense to be meaningful. Sometimes, simply feeling okay and stable is enough, and today was one of those moments where balance mattered more than excitement or struggle.', '2025-12-14 22:10:23', 3, 3, 0),
-(68, 5, 'Today has been a refreshing and uplifting day. I felt genuinely excited from the moment I started the day, with a sense of positivity and anticipation carrying me through each moment. There was a lightness in my mood that made everything feel more enjoyable, and even simple tasks felt rewarding. It’s one of those days where energy flows naturally, and motivation comes without force.\r\n\r\nMy stress level today is very low, around 5%, barely noticeable. Any small worries that appeared were easy to manage and didn’t stay for long. Instead of feeling pressured, I felt calm and confident, able to focus on what mattered without feeling overwhelmed. This low level of stress allowed me to enjoy the day fully and stay present in the moment.\r\n\r\nOverall, today felt exciting in a gentle, reassuring way — not rushed or chaotic, but filled with good energy and optimism. Days like this remind me that balance is possible, and that even small moments of happiness can make a big difference. I hope to carry this feeling forward and let it motivate me in the days ahead.', '2025-12-14 23:57:02', 3, 1, 1),
-(69, 65, 'Today has been filled with a constant sense of uneasiness. My overall mood is anxious, and even though nothing feels completely out of control, there’s a lingering tension that I can’t easily shake off. My mind keeps jumping from one thought to another, making it hard to fully relax or feel settled. It’s not overwhelming panic, but rather a quiet, persistent worry that stays with me throughout the day.\r\n\r\nMy stress level today feels around 65%, which means it’s noticeably affecting my emotions and focus. I find myself overthinking small details and replaying situations in my head, wondering if I’ve done enough or if something might go wrong. This anxiety makes me feel restless and slightly drained, even when I try to take breaks or distract myself.\r\n\r\nDespite this, I’m still pushing through the day as best as I can. I remind myself that feeling anxious doesn’t mean I’m failing — it simply means I’m human and dealing with things that matter to me. Hopefully, with some rest, reassurance, and time, this anxious feeling will ease, and I’ll be able to regain a sense of calm and balance again.', '2025-12-15 00:08:54', 3, 7, 1),
-(70, 100, 'amasyam i love u', '2025-12-15 13:42:24', 9, 2, 1),
-(71, 45, 'Today, I’ve been feeling quite annoyed. It’s one of those days where everything seems to irritate me a little more than usual. Even small inconveniences or minor disruptions in my routine feel frustrating, and it’s taking more effort than normal to stay calm. My stress level is around 40%, which is moderate, and the main reasons come from emotional and personal stressors. These could be lingering worries, unresolved personal matters, or small interactions that unexpectedly affect my mood.\r\n\r\nDespite the annoyance, I’m trying to remind myself that it’s okay to feel this way. It’s normal to have off days, and acknowledging my emotions is the first step in managing them. I’ve noticed that some of my reactions are amplified because I’ve been carrying minor tensions over the past few days. I hope that by taking short breaks, practicing patience, and focusing on things I can control, I can gradually calm down and regain a sense of balance.\r\n\r\nEven though I feel irritated, I know I’m capable of handling these feelings without letting them take over my whole day. I will try to approach the challenges with a bit of humor and perspective, and remind myself that emotions are temporary—they come and go, and this annoyance will eventually fade. For now, I’ll accept that it’s okay to feel annoyed, and use this awareness to treat myself with a little extra care and patience.', '2025-12-16 16:42:07', 1, 8, 0),
-(72, 85, 'Today has been a really tough day emotionally. I’ve been feeling overwhelmingly sad, and my stress level is very high at around 85%. The primary reasons for this stress come from academic pressures and emotional or personal stressors. Academically, I’ve been feeling the weight of deadlines, assignments, or exams, and it’s making it hard to focus or find motivation. Every task feels heavier than usual, and I keep worrying about whether I can meet expectations, which is exhausting.\r\n\r\nOn top of that, personal and emotional stressors are adding to the heaviness I feel. Whether it’s unresolved conflicts, personal disappointments, or just an internal struggle with my feelings, it’s making it difficult to manage my mood. I feel drained and low on energy, like even small tasks require extra effort.\r\n\r\nDespite this, I am trying to acknowledge my feelings rather than suppress them. I know that sadness is a natural response to pressure and challenges, and it’s okay to feel this way. I am reminding myself to take breaks, breathe, and focus on small steps to ease the pressure. Reaching out to someone I trust or writing about my feelings might also help me process what I’m going through.\r\n\r\nAlthough today feels heavy and emotionally challenging, I understand that these feelings are temporary. By recognizing the sources of my stress and being mindful of my emotional state, I hope to regain a bit of clarity and strength to face tomorrow with a calmer mindset. For now, I will allow myself to feel this sadness while looking for small ways to care for my mental and emotional well-being.', '2025-12-16 17:31:51', 1, 4, 1),
-(73, 20, 'Today feels light and positive overall. I’m in a happy mood, and my stress level is very low at around 10%, which makes everything feel more manageable and enjoyable. I feel more relaxed and at ease with myself, and there’s a sense of balance in how the day has gone so far. Even if there were small tasks or responsibilities to take care of, they didn’t feel overwhelming or heavy.\r\n\r\nI noticed that I was able to focus better and enjoy the simple moments throughout the day, whether it was completing work smoothly, having a pleasant interaction, or just taking some quiet time for myself. My thoughts feel clearer, and I’m not carrying much emotional or mental tension. This calm and positive state makes me feel more motivated and appreciative of what I have.\r\n\r\nHaving such a low stress level reminds me how important it is to slow down and acknowledge good days like this. I want to remember this feeling and carry it forward, especially on more challenging days. Overall, today has been a genuinely pleasant day, and I’m grateful for the happiness and peace I feel right now.', '2025-12-17 21:10:20', 1, 2, 0),
-(74, 95, 'Today has been extremely overwhelming, and I feel deeply sad with my stress level reaching around 95%. Academic pressure is the main reason behind this feeling. The workload feels endless, and the expectations placed on me seem very heavy right now. Assignments, deadlines, and the fear of falling behind have been constantly on my mind, making it difficult to relax or feel at ease throughout the day.\r\n\r\nI find myself overthinking my academic performance and worrying about whether I’m doing enough or doing things correctly. Even when I try to focus, my thoughts keep drifting back to what I still need to complete, which increases my anxiety and emotional exhaustion. This pressure has drained my motivation and made everything feel harder than it normally would.\r\n\r\nEmotionally, the stress from academics has turned into sadness and frustration. It feels discouraging when I put in effort but still feel uncertain about the outcomes. The fear of disappointing myself or others adds to this emotional weight, making the day feel longer and more tiring.\r\n\r\nDespite feeling overwhelmed, I know that this is a difficult phase rather than a permanent situation. I’m trying to remind myself that it’s okay to feel sad and stressed when things become too much. Taking small breaks, organizing my tasks step by step, and giving myself permission to rest might help me slowly regain control.\r\n\r\nAlthough today feels very heavy, I hope that by acknowledging how intense my stress is and recognizing its academic source, I can find healthier ways to cope and move forward one step at a time. Tomorrow, I aim to approach my studies with a clearer mind and a bit more self-compassion.', '2025-12-17 22:16:49', 1, 4, 0),
-(75, 80, 'Today has been extremely frustrating, and I feel genuinely angry because of ongoing technical and system-related issues. My stress level is very high at around 80%, mainly because things that were supposed to work smoothly kept failing or behaving unexpectedly. These technical problems disrupted my workflow, wasted a lot of time, and made simple tasks feel unnecessarily complicated.\r\n\r\nWhat made it worse was the feeling of helplessness — no matter how much effort I put into fixing the issues, the system did not respond the way I expected. Errors, bugs, slow performance, or system failures kept piling up, and each problem added to my frustration. It felt unfair that progress depended so much on technology that was out of my control.\r\n\r\nThis situation affected my patience and emotional balance. I noticed myself becoming irritated more easily, thinking negatively, and losing focus. Instead of working productively, I spent most of my energy trying to troubleshoot, repeat steps, or search for solutions. The anger mostly came from the sense that my time and effort were being wasted due to technical limitations rather than my own mistakes.\r\n\r\nDespite feeling angry, I am trying to calm myself down and step back for a moment. Taking short breaks, restarting tasks later, or seeking help from others might reduce the pressure. I remind myself that technical problems are temporary and can eventually be resolved, even if they feel overwhelming in the moment.\r\n\r\nAlthough today was dominated by frustration and anger, I hope that once these system issues are fixed, I can regain control and move forward with a clearer and calmer mindset. For now, acknowledging this anger helps me understand my emotional state and reminds me to be patient with both myself and the situation.', '2025-12-17 23:16:10', 6, 6, 1),
-(78, 90, 'Annoy', '2025-12-18 00:00:16', 3, 8, 1),
-(79, 65, 'angry', '2025-12-18 00:01:34', 3, 3, 1),
-(80, 24, 'Happy with 10% Stress level', '2025-12-18 00:03:55', 1, 2, 1),
-(81, 25, 'Neutral with 25% stress', '2025-12-18 00:07:20', 6, 3, 1),
-(83, 9, 'test', '2025-12-18 11:24:34', 6, 2, 0),
-(84, 72, 'Annoying 72% Stress Level and Emotional Stress as Reason', '2025-12-18 11:56:13', 2, 8, 0),
-(85, 26, 'test', '2025-12-18 13:55:31', 1, 1, 1),
-(90, 37, 'Today feels a little heavier than usual. I’m feeling anxious, and my stress level is around 35%, mostly coming from academic pressure. Even though it’s not overwhelming, the constant thoughts about assignments, deadlines, and expectations keep lingering in my mind. I find myself worrying about whether I’m doing enough, whether I understand everything properly, and whether my efforts will pay off in the end.\r\n\r\nAt times, the anxiety comes quietly—just a sense of uneasiness while studying or thinking about upcoming tasks. It doesn’t completely stop me from functioning, but it makes everything feel slightly more tiring than it should be. I have moments where I overthink small academic matters, replaying them in my head even when I try to rest.\r\n\r\nStill, I’m trying to stay grounded and remind myself that this stress is manageable. I know that feeling anxious doesn’t mean I’m failing—it just means I care about my progress and my future. Taking short breaks, organizing my tasks, and reminding myself to go one step at a time helps keep things under control. Today is about acknowledging the anxiety without letting it take over, and trusting that with steady effort, things will gradually feel lighter.', '2025-12-25 16:41:13', 1, 7, 0),
-(91, 35, 'Today feels emotionally balanced, even though there’s a quiet weight from social and interpersonal matters. My mood is neutral—not particularly happy or sad—but there’s a sense of reflection throughout the day. Interactions with others have been on my mind, whether it’s misunderstandings, unspoken expectations, or simply feeling slightly disconnected in conversations. Nothing drastic happened, yet the accumulation of small social moments made me pause and think more deeply than usual.\r\n\r\nDespite this, I managed to stay calm and composed. I didn’t let emotions overflow, nor did I suppress them completely. Instead, I tried to observe how I felt and understand where those feelings were coming from. Being neutral today feels like standing in the middle—aware of the challenges but not overwhelmed by them. It’s a reminder that not every day has to be emotionally intense to be meaningful.\r\n\r\nI’m learning that social and interpersonal stress doesn’t always show itself loudly. Sometimes it exists quietly, nudging me to reflect on boundaries, communication, and self-worth. Today was more about awareness than reaction, and that in itself feels like progress. I’m giving myself space to process these thoughts and hoping that with time, clarity and emotional ease will naturally follow.', '2025-12-25 16:44:51', 1, 3, 1),
-(92, 30, '安迪要骗我钱 烦死了', '2025-12-25 17:22:17', 10, 3, 0),
-(93, 76, 'Today has been quite draining emotionally, and I’ve been feeling consistently annoyed throughout the day. My stress level is around 70%, mainly due to emotional and personal stressors that have been weighing heavily on my mind. Small things that normally wouldn’t bother me seem to trigger irritation more easily, and I find myself feeling restless and impatient without a clear outlet for those emotions.\r\n\r\nThere’s a sense of internal tension that’s difficult to shake off. Personal thoughts, unresolved feelings, or ongoing emotional challenges keep replaying in my head, making it hard to fully relax or focus. Even when things appear calm on the surface, I still feel this underlying frustration building up, which adds to the feeling of being overwhelmed.\r\n\r\nI notice that this emotional stress is affecting how I react to situations and people around me. I may feel more sensitive, easily annoyed, or withdrawn, even though I don’t necessarily want to be. It’s frustrating to recognize these reactions while still struggling to control them.\r\n\r\nDespite feeling annoyed, I’m trying to be aware of my emotions instead of letting them take over completely. Taking short breaks, distancing myself from stressful thoughts, and reminding myself that emotions are temporary helps a little. I know that these emotional and personal stressors won’t last forever, and acknowledging them is an important step toward managing them better.\r\n\r\nAlthough today feels emotionally heavy and irritating, I hope that with rest, reflection, and self-care, this tension will gradually ease. For now, I’m allowing myself to feel what I feel, while staying mindful of how I respond and giving myself the time and space needed to regain emotional balance.', '2025-12-26 01:30:18', 1, 8, 0),
-(105, NULL, 'Test 2', '2025-12-26 04:25:01', 1, 8, 1);
+INSERT INTO `moodtracking` (`moodId`, `note`, `datetimeRecord`, `studentId`, `moodTypeId`, `notePrivacy`) VALUES
+(2, 'Today felt like stepping into a quiet library just as the sun beams through the tall windows. The morning started calm, with soft light painting golden streaks across your desk, but the air was alive with subtle tension—like a page waiting to be turned. Each task you tackled was a little puzzle, some pieces fitting perfectly, others testing your patience.\r\n\r\nBy afternoon, there was a spark of excitement—a tiny victory, a moment of laughter, or an idea that finally clicked. Yet, the world outside reminded you to pause and breathe, with gentle whispers of wind and distant chatter grounding you.\r\n\r\nAs evening approaches, it feels like a cozy blanket settling around your shoulders. Today was a mix of focus and reflection, small wins and gentle lessons, leaving you with a sense of quiet accomplishment and the soft promise of tomorrow.', '2025-11-26 22:43:44', 1, 2, 1),
+(3, 'Today started off as a rather neutral day, neither particularly exciting nor overwhelmingly dull. The morning air felt calm as I got ready, and for a moment, I felt a sense of quiet balance. It was the kind of day where nothing dramatic happened, but at the same time, everything seemed to demand a little attention. My energy was steady, and I approached my tasks with a moderate focus, aware that the day would require careful management to avoid slipping into unnecessary stress.\r\n\r\nBy mid-morning, my thoughts began to drift toward the looming assignments that were due soon. Each task seemed manageable on its own, but seeing them all lined up created a subtle tension. I reminded myself to take things one step at a time, prioritizing the most urgent work first. Even though my stress level was relatively low, around 20%, the presence of these responsibilities lingered in the back of my mind, nudging me to stay organized and on track.\r\n\r\nThe afternoon was consumed by preparation for upcoming exams. I reviewed my notes and tried to mentally rehearse possible questions, but occasionally I found myself distracted by minor worries. The pressure wasn’t overwhelming, but it was enough to keep me alert. I felt a quiet determination to do my best, understanding that consistency matters more than perfection. This gentle push kept me productive without tipping the day into high stress.\r\n\r\nLater in the day, I considered the expectations set by my lecturer. While they were reasonable, they added another layer of responsibility that needed attention. It was not stressful enough to cause anxiety, but it reminded me to maintain a disciplined approach to my work. I took short breaks to relax my mind, appreciating that even neutral days benefit from small moments of self-care.\r\n\r\nAs the evening approached, I reflected on the day. Despite having a few sources of mild stress—assignments, exams, and lecturer expectations—the overall feeling remained calm and manageable. It was a reminder that stress doesn’t always have to be overwhelming; even when tasks accumulate, a neutral and steady approach can help keep things under control. The day closed quietly, leaving me with a sense of accomplishment for handling multiple responsibilities without losing balance.', '2025-11-27 02:00:22', 1, 3, 1),
+(35, '...............................................................', '2025-12-01 17:53:52', 1, 6, 1),
+(37, 'Today was surprisingly exciting, and honestly, I’m really happy about it. My stress level feels like 0%, which is such a great feeling because it’s been a while since I felt this light. From the moment I woke up, I felt a kind of positive energy that just stayed with me throughout the day. I felt more motivated, more alive, and more ready to take things on.\r\n\r\nEven though I’m excited and stress-free today, I still know deep down that some of my stress usually comes from academic pressure and a bit of social stuff too. Academically, I sometimes worry about whether I’m keeping up, whether I’m doing enough, and whether my results will reflect the effort I put in. I always remind myself that I’m trying my best, but the pressure still sticks around sometimes. As for social stress, it’s more subtle — it’s not always obvious, but sometimes I get anxious about how I present myself to others, whether I’m connecting well with people, or whether I’m meeting expectations. It’s not overwhelming, but it’s there in the background.\r\n\r\nBut today? None of that really pulled me down. It felt like my mind finally took a break. I felt free, present, and genuinely excited about everything happening around me. Maybe it’s because I accomplished something meaningful, or maybe it’s just one of those days where everything aligns and feels right.\r\n\r\nI’m glad I had a day like this. I’m grateful for the excitement, the peace, and the sense of confidence I felt. I hope I can carry this feeling forward — even when academic or social stress comes back, at least I know I can still have days like today where everything feels okay.', '2025-12-01 17:56:20', 1, 1, 1),
+(38, 'Happy Everyday OK!', '2025-12-01 21:22:07', 2, 2, 1),
+(39, 'Today is a good day! I\'m always happy all the time :) Have a nice sleep and relax OK! BRO!', '2025-12-01 21:24:38', 2, 1, 1),
+(40, 'It\'s already midnight 12AM, I\'m just finish watching douyin and decide to continue fighting with my final year project. To be honest, I don\'t know what to write, but since I wanna test this website, so yeah, it\'s time to write something. I think it is good to write down things that happen recently or maybe some life lesson that I learnt these days. \r\n\r\nSo yeah, the first thing I wanna written was, I felt that I\'m like lack of motivation in doing anything. It\'s like I\'m stress and I knew that I gonna rush and finish it as soon as possible. But there are something that stop you from continue moving on. Yeah, you might said that it\'s because of my laziness, but for me, I really like feel empty. \r\n\r\nBut yeah, it has no time for me to relax anymore, even if I have no motivation, but life needs to keep moving on. Just, continue fighting Sis :)', '2025-12-02 00:25:26', 1, 3, 1),
+(41, 'Today was one of those days where everything felt just slightly off, and every small thing somehow managed to get on my nerves.\r\n\r\nNothing huge happened, but it was like the whole day was filled with tiny irritations — the kind that slowly build up and make me want to sigh every five minutes. People talking at the wrong time, things not working the way they should, and my patience just wearing thinner and thinner as the hours went by.\r\n\r\nI wasn’t angry, not really. Just… annoyed.\r\nAnnoyed at interruptions, annoyed at small mistakes, annoyed at things that normally wouldn’t bother me but today felt like too much.\r\n\r\nHonestly, I just want the day to end so I can reset.\r\nHoping tomorrow decides to be kinder, because today definitely wasn’t.', '2025-12-02 20:27:34', 1, 8, 1),
+(47, 'Today tested my patience in ways I didn’t ask for.\r\nFrom the moment I woke up, it felt like the world was set to “irritate mode.”\r\n\r\nLittle things kept piling up — delays, interruptions, people asking things at the worst possible time. Every task seemed harder than it needed to be, and every sound felt louder than usual. I kept trying to stay calm, but honestly, my tolerance was running dangerously low.\r\n\r\nI wasn’t in a bad mood at first, but the day slowly dragged me into one.\r\nIt’s like the universe kept poking me just to see if I’d react.\r\n\r\nI didn’t snap at anyone, but trust me, the internal eye-rolls were constant.\r\n\r\nAnyway… I survived the day, even though it drained me more than it should have.\r\nHopefully tomorrow doesn’t copy today, because I’ve had enough of this annoying energy.', '2025-12-02 21:38:52', 2, 8, 1),
+(52, 'Today has been a bright and uplifting day overall. I felt genuinely happy throughout most of it, and my mood stayed positive despite having a bit of stress lingering in the background. The happiness came naturally — I felt lighter, more energetic, and more motivated than usual. Even small moments felt enjoyable, and I managed to go through the day with a sense of ease and optimism.\r\n\r\nMy stress level today is around 10%, which is relatively low, but still present enough for me to notice. This stress mainly comes from academic-related issues. There are tasks, deadlines, and expectations that occasionally weigh on my mind. Even though the workload isn’t overwhelming right now, the constant reminder of assignments and upcoming responsibilities keeps me slightly tense. It’s the kind of stress that sits quietly at the back of my thoughts — not strong enough to ruin my mood, but enough to make me aware that I need to stay on track.\r\n\r\nDespite that, I’m proud that the stress didn’t take over my day. I managed to balance my emotions well, staying cheerful and productive. Today felt like a reminder that even with small pressures in life, I can still maintain positivity and enjoy the moments around me. I hope the next few days continue in the same direction, with happiness growing and stress staying small and manageable.', '2025-12-08 20:05:49', 2, 1, 1),
+(53, 'Today has been an extremely heavy and overwhelming day. My mood has been deeply emotional, and I found myself breaking down into tears more than once. It feels like everything I’ve been carrying suddenly became too much to hold in, and the weight of it all finally pushed me past my limit. There’s a sense of sadness and exhaustion that I can’t ignore, and my heart feels unusually fragile today.\r\n\r\nMy stress level is at 100%, and it’s painfully clear that both academic pressure and relationship issues are hitting me at the same time. Academically, things feel chaotic — deadlines, expectations, and the fear of falling behind are all swirling in my mind nonstop. No matter how much I try to focus, the stress just keeps piling up, and it feels like I’m losing grip on the balance I used to have.\r\n\r\nOn top of that, the emotional strain from relationship matters makes everything even harder to handle. It’s the kind of hurt that sits deep inside — confusing, draining, and making me question things I normally wouldn’t. The mix of academic worries and relationship tension creates a storm inside me, making it nearly impossible to calm down or think clearly.\r\n\r\nToday feels like one of those days where everything collapses at once, and all I can do is let myself cry it out. Even though it’s overwhelming, I know this feeling won’t last forever. Right now, I’m just giving myself space to feel the pain, to acknowledge the stress, and to accept that it’s okay to not be okay sometimes.', '2025-12-08 21:50:24', 2, 5, 0),
+(61, 'Today felt surprisingly uplifting, and I’m genuinely excited about everything that unfolded. There’s a kind of energy in me that makes the day feel brighter and more motivating than usual. Even though I still have some academic tasks on my mind, the stress level is very manageable—around 20%—and it isn’t weighing me down the way it sometimes does. Instead, it feels like a small reminder that I have responsibilities, but they’re not stopping me from enjoying the moment.\r\n\r\nThe excitement comes from a sense of progress and clarity in my academic journey. Maybe it’s understanding something better, completing something important, or simply feeling more confident about what’s ahead. Whatever it is, that spark really lifted my mood today. I felt more positive, more willing to engage, and more ready to take on what’s coming next.\r\n\r\nEven with academics being the reason behind the little bit of stress I’m carrying, it doesn’t affect the excitement in a negative way. In fact, it almost feels like part of the motivation—like the challenges are pushing me forward rather than slowing me down.\r\n\r\nOverall, today was a good mix of productivity, enthusiasm, and a refreshing emotional boost. I’m hoping I can carry this energy forward and keep using it to move through my academic tasks with confidence and momentum.', '2025-12-09 23:44:33', 1, 1, 0),
+(62, 'Today I’m feeling genuinely happy, and it feels refreshing. Even though life still has its challenges, I can feel a lightness in my mood that makes the day brighter. My stress level is around 30%, which means the pressure is still there, but it isn’t weighing me down too much. I’m still able to smile, stay positive, and enjoy the little things happening around me.\r\n\r\nSome of my stress is coming from academic responsibilities and a bit from financial and lifestyle concerns. Those thoughts do pop up in the background, reminding me of the things I still need to handle and improve. But even with those worries, I’m choosing to stay hopeful and appreciate how far I’ve come. It feels good to know that I can be happy while still dealing with challenges — it shows I’m growing stronger and learning to balance everything better.\r\n\r\nOverall, today feels like a good day. I’m grateful for moments like this where happiness comes naturally, even with stress lingering around. I hope the rest of the day continues to carry this positive energy, and I’ll keep reminding myself that I’m capable of managing whatever comes next.', '2025-12-10 17:21:09', 7, 1, 1),
+(64, 'Today feels like a very steady and balanced day. My mood is neutral — not particularly high or low — just somewhere comfortably in the middle. There isn’t anything overwhelming happening emotionally, and at the same time, nothing exceptionally uplifting either. It’s one of those days where things simply move at a normal pace, and I’m going along with it without much disturbance.\r\n\r\nMy stress level today is around 35%, which is manageable and not too heavy. It’s more like a small background tension rather than something tied to any specific problem. Sometimes this kind of mild stress just appears naturally from daily routines, responsibilities, or a busy mind, even when nothing major is actually wrong.\r\n\r\nInterestingly, there’s no clear reason behind the stress. It’s just there — quiet, soft, and not demanding too much attention. I can still function well, think clearly, and do what I need to do. It feels like one of those days where my mind is calm but slightly alert, keeping an even balance between rest and awareness.\r\n\r\nOverall, it’s a steady, uneventful day emotionally. Nothing dramatic, nothing overwhelming — just neutral. And sometimes, that’s perfectly okay.', '2025-12-10 18:49:12', 1, 3, 0),
+(65, 'Today feels overwhelmingly heavy, and that anger sitting inside me is burning at its peak. With a stress level hitting 100%, it’s clear that everything from academics to social and interpersonal situations is pushing me to my limit. Handling academic pressure alone is already exhausting—deadlines, expectations, and the constant fear of not performing well enough keep stacking up until it feels like I’m suffocating under the weight. But adding social and interpersonal stress into the mix makes everything even more frustrating. Whether it’s misunderstandings, conflicts, or just feeling disconnected from the people around me, it all builds up into this intense emotional storm.\r\n\r\nRight now, it feels like I’m carrying too much at once. Every little thing triggers irritation, and even small problems feel huge because the frustration has nowhere to go. I’m trying to manage everything, but it’s like every time I take one step forward, something else pushes me two steps back. Still, even in moments like this, I know that these emotions won’t last forever. I just need time—time to breathe, time to sort out my thoughts, and time to let the anger cool down. For now, I’m acknowledging how I feel, accepting that it’s valid, and reminding myself that it’s okay to pause and reset when everything becomes too much.', '2025-12-12 13:35:56', 3, 6, 0),
+(66, 'xxx', '2025-12-12 14:31:18', 3, 3, 0),
+(67, 'Today felt relatively calm and steady overall. My mood stayed neutral, without any strong emotional highs or lows. It was one of those days where nothing particularly exciting or upsetting happened, and I was able to go through my routine at a comfortable pace. I felt emotionally balanced and grounded, just moving through the day as it came.\r\n\r\nMy stress level today was around 20%, which is quite low. There wasn’t any specific reason behind the stress — it felt more like a natural, background tension that comes from daily life rather than any particular problem or pressure. It didn’t interfere with my focus or mood, and I was able to manage everything without feeling overwhelmed.\r\n\r\nEven though the day wasn’t especially memorable, it felt peaceful in its own way. Having a neutral day reminds me that not every day needs to be emotionally intense to be meaningful. Sometimes, simply feeling okay and stable is enough, and today was one of those moments where balance mattered more than excitement or struggle.', '2025-12-14 22:10:23', 3, 3, 0),
+(68, 'Today has been a refreshing and uplifting day. I felt genuinely excited from the moment I started the day, with a sense of positivity and anticipation carrying me through each moment. There was a lightness in my mood that made everything feel more enjoyable, and even simple tasks felt rewarding. It’s one of those days where energy flows naturally, and motivation comes without force.\r\n\r\nMy stress level today is very low, around 5%, barely noticeable. Any small worries that appeared were easy to manage and didn’t stay for long. Instead of feeling pressured, I felt calm and confident, able to focus on what mattered without feeling overwhelmed. This low level of stress allowed me to enjoy the day fully and stay present in the moment.\r\n\r\nOverall, today felt exciting in a gentle, reassuring way — not rushed or chaotic, but filled with good energy and optimism. Days like this remind me that balance is possible, and that even small moments of happiness can make a big difference. I hope to carry this feeling forward and let it motivate me in the days ahead.', '2025-12-14 23:57:02', 3, 1, 1),
+(69, 'Today has been filled with a constant sense of uneasiness. My overall mood is anxious, and even though nothing feels completely out of control, there’s a lingering tension that I can’t easily shake off. My mind keeps jumping from one thought to another, making it hard to fully relax or feel settled. It’s not overwhelming panic, but rather a quiet, persistent worry that stays with me throughout the day.\r\n\r\nMy stress level today feels around 65%, which means it’s noticeably affecting my emotions and focus. I find myself overthinking small details and replaying situations in my head, wondering if I’ve done enough or if something might go wrong. This anxiety makes me feel restless and slightly drained, even when I try to take breaks or distract myself.\r\n\r\nDespite this, I’m still pushing through the day as best as I can. I remind myself that feeling anxious doesn’t mean I’m failing — it simply means I’m human and dealing with things that matter to me. Hopefully, with some rest, reassurance, and time, this anxious feeling will ease, and I’ll be able to regain a sense of calm and balance again.', '2025-12-15 00:08:54', 3, 7, 1),
+(70, 'amasyam i love u', '2025-12-15 13:42:24', 9, 2, 1),
+(71, 'Today, I’ve been feeling quite annoyed. It’s one of those days where everything seems to irritate me a little more than usual. Even small inconveniences or minor disruptions in my routine feel frustrating, and it’s taking more effort than normal to stay calm. My stress level is around 40%, which is moderate, and the main reasons come from emotional and personal stressors. These could be lingering worries, unresolved personal matters, or small interactions that unexpectedly affect my mood.\r\n\r\nDespite the annoyance, I’m trying to remind myself that it’s okay to feel this way. It’s normal to have off days, and acknowledging my emotions is the first step in managing them. I’ve noticed that some of my reactions are amplified because I’ve been carrying minor tensions over the past few days. I hope that by taking short breaks, practicing patience, and focusing on things I can control, I can gradually calm down and regain a sense of balance.\r\n\r\nEven though I feel irritated, I know I’m capable of handling these feelings without letting them take over my whole day. I will try to approach the challenges with a bit of humor and perspective, and remind myself that emotions are temporary—they come and go, and this annoyance will eventually fade. For now, I’ll accept that it’s okay to feel annoyed, and use this awareness to treat myself with a little extra care and patience.', '2025-12-16 16:42:07', 1, 8, 0),
+(72, 'Today has been a really tough day emotionally. I’ve been feeling overwhelmingly sad, and my stress level is very high at around 85%. The primary reasons for this stress come from academic pressures and emotional or personal stressors. Academically, I’ve been feeling the weight of deadlines, assignments, or exams, and it’s making it hard to focus or find motivation. Every task feels heavier than usual, and I keep worrying about whether I can meet expectations, which is exhausting.\r\n\r\nOn top of that, personal and emotional stressors are adding to the heaviness I feel. Whether it’s unresolved conflicts, personal disappointments, or just an internal struggle with my feelings, it’s making it difficult to manage my mood. I feel drained and low on energy, like even small tasks require extra effort.\r\n\r\nDespite this, I am trying to acknowledge my feelings rather than suppress them. I know that sadness is a natural response to pressure and challenges, and it’s okay to feel this way. I am reminding myself to take breaks, breathe, and focus on small steps to ease the pressure. Reaching out to someone I trust or writing about my feelings might also help me process what I’m going through.\r\n\r\nAlthough today feels heavy and emotionally challenging, I understand that these feelings are temporary. By recognizing the sources of my stress and being mindful of my emotional state, I hope to regain a bit of clarity and strength to face tomorrow with a calmer mindset. For now, I will allow myself to feel this sadness while looking for small ways to care for my mental and emotional well-being.', '2025-12-16 17:31:51', 1, 4, 1),
+(73, 'Today feels light and positive overall. I’m in a happy mood, and my stress level is very low at around 10%, which makes everything feel more manageable and enjoyable. I feel more relaxed and at ease with myself, and there’s a sense of balance in how the day has gone so far. Even if there were small tasks or responsibilities to take care of, they didn’t feel overwhelming or heavy.\r\n\r\nI noticed that I was able to focus better and enjoy the simple moments throughout the day, whether it was completing work smoothly, having a pleasant interaction, or just taking some quiet time for myself. My thoughts feel clearer, and I’m not carrying much emotional or mental tension. This calm and positive state makes me feel more motivated and appreciative of what I have.\r\n\r\nHaving such a low stress level reminds me how important it is to slow down and acknowledge good days like this. I want to remember this feeling and carry it forward, especially on more challenging days. Overall, today has been a genuinely pleasant day, and I’m grateful for the happiness and peace I feel right now.', '2025-12-17 21:10:20', 1, 2, 0),
+(74, 'Today has been extremely overwhelming, and I feel deeply sad with my stress level reaching around 95%. Academic pressure is the main reason behind this feeling. The workload feels endless, and the expectations placed on me seem very heavy right now. Assignments, deadlines, and the fear of falling behind have been constantly on my mind, making it difficult to relax or feel at ease throughout the day.\r\n\r\nI find myself overthinking my academic performance and worrying about whether I’m doing enough or doing things correctly. Even when I try to focus, my thoughts keep drifting back to what I still need to complete, which increases my anxiety and emotional exhaustion. This pressure has drained my motivation and made everything feel harder than it normally would.\r\n\r\nEmotionally, the stress from academics has turned into sadness and frustration. It feels discouraging when I put in effort but still feel uncertain about the outcomes. The fear of disappointing myself or others adds to this emotional weight, making the day feel longer and more tiring.\r\n\r\nDespite feeling overwhelmed, I know that this is a difficult phase rather than a permanent situation. I’m trying to remind myself that it’s okay to feel sad and stressed when things become too much. Taking small breaks, organizing my tasks step by step, and giving myself permission to rest might help me slowly regain control.\r\n\r\nAlthough today feels very heavy, I hope that by acknowledging how intense my stress is and recognizing its academic source, I can find healthier ways to cope and move forward one step at a time. Tomorrow, I aim to approach my studies with a clearer mind and a bit more self-compassion.', '2025-12-17 22:16:49', 1, 4, 0),
+(75, 'Today has been extremely frustrating, and I feel genuinely angry because of ongoing technical and system-related issues. My stress level is very high at around 80%, mainly because things that were supposed to work smoothly kept failing or behaving unexpectedly. These technical problems disrupted my workflow, wasted a lot of time, and made simple tasks feel unnecessarily complicated.\r\n\r\nWhat made it worse was the feeling of helplessness — no matter how much effort I put into fixing the issues, the system did not respond the way I expected. Errors, bugs, slow performance, or system failures kept piling up, and each problem added to my frustration. It felt unfair that progress depended so much on technology that was out of my control.\r\n\r\nThis situation affected my patience and emotional balance. I noticed myself becoming irritated more easily, thinking negatively, and losing focus. Instead of working productively, I spent most of my energy trying to troubleshoot, repeat steps, or search for solutions. The anger mostly came from the sense that my time and effort were being wasted due to technical limitations rather than my own mistakes.\r\n\r\nDespite feeling angry, I am trying to calm myself down and step back for a moment. Taking short breaks, restarting tasks later, or seeking help from others might reduce the pressure. I remind myself that technical problems are temporary and can eventually be resolved, even if they feel overwhelming in the moment.\r\n\r\nAlthough today was dominated by frustration and anger, I hope that once these system issues are fixed, I can regain control and move forward with a clearer and calmer mindset. For now, acknowledging this anger helps me understand my emotional state and reminds me to be patient with both myself and the situation.', '2025-12-17 23:16:10', 6, 6, 1),
+(78, 'Annoy', '2025-12-18 00:00:16', 3, 8, 1),
+(79, 'angry', '2025-12-18 00:01:34', 3, 3, 1),
+(80, 'Happy with 10% Stress level', '2025-12-18 00:03:55', 1, 2, 1),
+(81, 'Neutral with 25% stress', '2025-12-18 00:07:20', 6, 3, 1),
+(83, 'test', '2025-12-18 11:24:34', 6, 2, 0),
+(84, 'Annoying 72% Stress Level and Emotional Stress as Reason', '2025-12-18 11:56:13', 2, 8, 0),
+(85, 'test', '2025-12-18 13:55:31', 1, 1, 1),
+(90, 'Today feels a little heavier than usual. I’m feeling anxious, and my stress level is around 35%, mostly coming from academic pressure. Even though it’s not overwhelming, the constant thoughts about assignments, deadlines, and expectations keep lingering in my mind. I find myself worrying about whether I’m doing enough, whether I understand everything properly, and whether my efforts will pay off in the end.\r\n\r\nAt times, the anxiety comes quietly—just a sense of uneasiness while studying or thinking about upcoming tasks. It doesn’t completely stop me from functioning, but it makes everything feel slightly more tiring than it should be. I have moments where I overthink small academic matters, replaying them in my head even when I try to rest.\r\n\r\nStill, I’m trying to stay grounded and remind myself that this stress is manageable. I know that feeling anxious doesn’t mean I’m failing—it just means I care about my progress and my future. Taking short breaks, organizing my tasks, and reminding myself to go one step at a time helps keep things under control. Today is about acknowledging the anxiety without letting it take over, and trusting that with steady effort, things will gradually feel lighter.', '2025-12-25 16:41:13', 1, 7, 0),
+(91, 'Today feels emotionally balanced, even though there’s a quiet weight from social and interpersonal matters. My mood is neutral—not particularly happy or sad—but there’s a sense of reflection throughout the day. Interactions with others have been on my mind, whether it’s misunderstandings, unspoken expectations, or simply feeling slightly disconnected in conversations. Nothing drastic happened, yet the accumulation of small social moments made me pause and think more deeply than usual.\r\n\r\nDespite this, I managed to stay calm and composed. I didn’t let emotions overflow, nor did I suppress them completely. Instead, I tried to observe how I felt and understand where those feelings were coming from. Being neutral today feels like standing in the middle—aware of the challenges but not overwhelmed by them. It’s a reminder that not every day has to be emotionally intense to be meaningful.\r\n\r\nI’m learning that social and interpersonal stress doesn’t always show itself loudly. Sometimes it exists quietly, nudging me to reflect on boundaries, communication, and self-worth. Today was more about awareness than reaction, and that in itself feels like progress. I’m giving myself space to process these thoughts and hoping that with time, clarity and emotional ease will naturally follow.', '2025-12-25 16:44:51', 1, 3, 1),
+(92, '安迪要骗我钱 烦死了', '2025-12-25 17:22:17', 10, 3, 0),
+(93, 'Today has been quite draining emotionally, and I’ve been feeling consistently annoyed throughout the day. My stress level is around 70%, mainly due to emotional and personal stressors that have been weighing heavily on my mind. Small things that normally wouldn’t bother me seem to trigger irritation more easily, and I find myself feeling restless and impatient without a clear outlet for those emotions.\r\n\r\nThere’s a sense of internal tension that’s difficult to shake off. Personal thoughts, unresolved feelings, or ongoing emotional challenges keep replaying in my head, making it hard to fully relax or focus. Even when things appear calm on the surface, I still feel this underlying frustration building up, which adds to the feeling of being overwhelmed.\r\n\r\nI notice that this emotional stress is affecting how I react to situations and people around me. I may feel more sensitive, easily annoyed, or withdrawn, even though I don’t necessarily want to be. It’s frustrating to recognize these reactions while still struggling to control them.\r\n\r\nDespite feeling annoyed, I’m trying to be aware of my emotions instead of letting them take over completely. Taking short breaks, distancing myself from stressful thoughts, and reminding myself that emotions are temporary helps a little. I know that these emotional and personal stressors won’t last forever, and acknowledging them is an important step toward managing them better.\r\n\r\nAlthough today feels emotionally heavy and irritating, I hope that with rest, reflection, and self-care, this tension will gradually ease. For now, I’m allowing myself to feel what I feel, while staying mindful of how I respond and giving myself the time and space needed to regain emotional balance.', '2025-12-26 01:30:18', 1, 8, 0),
+(105, 'Test 2', '2025-12-26 04:25:01', 1, 8, 1),
+(117, 'Today Still ok', '2025-12-30 18:00:01', 1, 2, 0),
+(121, 'Today felt fairly balanced and calm overall. My mood remained neutral throughout the day, without any strong emotional highs or lows. The stress level was at about 30%, which feels manageable and did not significantly interfere with my daily activities. There wasn’t any specific event or reason that triggered stress; instead, it felt like a normal, routine day with mild pressure that naturally comes from everyday responsibilities.\r\n\r\nI was able to go through my tasks steadily, even if I didn’t feel particularly motivated or excited. At the same time, I didn’t feel overwhelmed or emotionally drained. This neutral state allowed me to think more clearly and respond to situations in a more controlled way, without reacting emotionally.\r\n\r\nAlthough nothing special stood out today, I think this kind of calm and steady day is still important. It gives me time to rest mentally, reflect, and reset before facing more demanding days ahead. Maintaining a low stress level without a clear cause also reminds me that not every day has to be intense to be meaningful. Overall, today felt stable, quiet, and emotionally balanced, which I appreciate.', '2025-12-31 02:08:13', 1, 3, 0),
+(123, 'Still ok', '2025-12-31 02:24:19', 1, 2, 1),
+(126, 'The presentation today has been cancelled by my lecturer. This is a bit annoying to my own schedule. ', '2026-01-05 16:30:48', 1, 3, 1),
+(127, 'okkkk', '2026-01-06 03:30:26', 1, 3, 1),
+(128, 'It is ok!', '2026-01-07 23:51:24', 1, 3, 1),
+(129, 'OK x111111', '2026-01-08 00:08:43', 1, 2, 1),
+(136, 'ok', '2026-01-08 11:47:24', 2, 5, 1),
+(137, 'okok', '2026-01-08 13:28:39', 7, 2, 0),
+(138, 'OOKOKOK', '2026-01-08 13:52:32', 7, 2, 1),
+(141, 'iijui', '2026-01-08 14:41:10', 1, 1, 1),
+(142, 'Today happy.', '2026-01-08 18:07:13', 2, 2, 1),
+(150, 'not ok', '2026-01-09 15:21:29', 2, 6, 1),
+(151, 'Stillllll ok ....', '2026-01-09 22:05:16', 8, 2, 1);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `notification`
+--
+-- Creation: Jan 07, 2026 at 08:14 AM
+-- Last update: Jan 09, 2026 at 02:12 PM
 --
 
 DROP TABLE IF EXISTS `notification`;
@@ -483,7 +706,19 @@ CREATE TABLE IF NOT EXISTS `notification` (
   KEY `staffId` (`staffId`),
   KEY `dassId` (`dassId`),
   KEY `moodId` (`moodId`)
-) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `notification`:
+--   `studentId`
+--       `student` -> `studentId`
+--   `staffId`
+--       `staff` -> `staffId`
+--   `dassId`
+--       `dass` -> `dassId`
+--   `moodId`
+--       `moodtracking` -> `moodId`
+--
 
 --
 -- Dumping data for table `notification`
@@ -514,12 +749,29 @@ INSERT INTO `notification` (`notificationId`, `title`, `content`, `notiStatus`, 
 (81, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-25 17:37:42', NULL, 1, NULL, NULL, 'The DASS assessment for 25-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/8'),
 (82, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2025-12-25 17:38:17', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310439! Click and check it out.', NULL),
 (84, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2025-12-27 23:53:46', NULL, 7, NULL, NULL, 'The DASS assessment for 27-12-2025 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/10'),
-(88, 'Meeting Request from Your PA', NULL, 'UNREAD', 'contact', '2025-12-28 05:28:24', NULL, 1, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/4');
+(88, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2025-12-28 05:28:24', NULL, 1, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/4'),
+(99, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2026-01-01 19:11:10', NULL, 1, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/10'),
+(100, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2026-01-06 03:09:33', NULL, NULL, 1, NULL, 'DASS Assessment has completed by D032310456! Click and check it out.', NULL),
+(104, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2026-01-08 11:48:59', NULL, 2, NULL, NULL, 'The DASS assessment for 08-01-2026 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/16'),
+(105, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2026-01-08 11:51:25', NULL, NULL, 1, NULL, 'DASS Assessment has completed by D032310456! Click and check it out.', NULL),
+(106, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2026-01-08 13:30:43', NULL, 1, NULL, NULL, 'The DASS assessment for 08-01-2026 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/17'),
+(107, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2026-01-08 13:31:38', NULL, 1, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/14'),
+(108, 'DASS Assessment Completed By A Student!', NULL, 'UNREAD', 'dass', '2026-01-08 13:32:40', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310439! Click and check it out.', NULL),
+(109, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2026-01-08 13:53:58', NULL, 9, NULL, NULL, 'The DASS assessment for 08-01-2026 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/18'),
+(110, 'DASS Assessment Completed By A Student!', NULL, 'UNREAD', 'dass', '2026-01-08 13:57:16', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310126! Click and check it out.', NULL),
+(111, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2026-01-08 13:57:47', NULL, 9, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/15'),
+(112, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2026-01-08 14:18:53', NULL, 1, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/16'),
+(113, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2026-01-08 18:17:27', NULL, 1, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/17'),
+(114, 'Meeting Request from Your PA', NULL, 'UNREAD', 'contact', '2026-01-09 18:13:41', NULL, 2, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/18'),
+(115, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2026-01-09 22:11:58', NULL, 8, NULL, NULL, 'The DASS assessment for 09-01-2026 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/19'),
+(116, 'DASS Assessment Completed By A Student!', NULL, 'UNREAD', 'dass', '2026-01-09 22:12:51', NULL, NULL, 5, NULL, 'DASS Assessment has completed by B112420015! Click and check it out.', NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `recommendation`
+--
+-- Creation: Jan 07, 2026 at 08:14 AM
 --
 
 DROP TABLE IF EXISTS `recommendation`;
@@ -530,6 +782,10 @@ CREATE TABLE IF NOT EXISTS `recommendation` (
   `hyperlink` longtext DEFAULT NULL,
   PRIMARY KEY (`recommendId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `recommendation`:
+--
 
 --
 -- Dumping data for table `recommendation`
@@ -582,6 +838,9 @@ INSERT INTO `recommendation` (`recommendId`, `quote`, `type`, `hyperlink`) VALUE
 --
 -- Table structure for table `recommendationdisplay`
 --
+-- Creation: Jan 07, 2026 at 08:14 AM
+-- Last update: Jan 09, 2026 at 02:05 PM
+--
 
 DROP TABLE IF EXISTS `recommendationdisplay`;
 CREATE TABLE IF NOT EXISTS `recommendationdisplay` (
@@ -593,7 +852,15 @@ CREATE TABLE IF NOT EXISTS `recommendationdisplay` (
   PRIMARY KEY (`recommendationDisplayId`),
   KEY `studentId` (`studentId`),
   KEY `recommendationdisplay_ibfk_1` (`recommendId`)
-) ENGINE=InnoDB AUTO_INCREMENT=138 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `recommendationdisplay`:
+--   `recommendId`
+--       `recommendation` -> `recommendId`
+--   `studentId`
+--       `student` -> `studentId`
+--
 
 --
 -- Dumping data for table `recommendationdisplay`
@@ -698,12 +965,59 @@ INSERT INTO `recommendationdisplay` (`recommendId`, `studentId`, `displayCount`,
 (3, 7, 1, 3, 134),
 (3, 7, 1, 3, 135),
 (8, 7, 1, 3, 136),
-(20, 7, 1, 3, 137);
+(20, 7, 1, 3, 137),
+(16, 1, 1, 3, 138),
+(2, 1, 1, 3, 139),
+(4, 1, 1, 3, 140),
+(4, 1, 1, 3, 141),
+(18, 1, 1, 3, 142),
+(18, 1, 1, 3, 143),
+(12, 1, 1, 3, 144),
+(34, 10, 1, 3, 145),
+(37, 10, 1, 3, 146),
+(18, 1, 1, 3, 147),
+(20, 1, 1, 3, 148),
+(3, 1, 1, 3, 149),
+(8, 1, 1, 3, 150),
+(2, 1, 1, 3, 151),
+(8, 1, 1, 3, 152),
+(14, 1, 1, 3, 153),
+(10, 1, 1, 3, 154),
+(1, 1, 1, 3, 155),
+(5, 1, 1, 3, 156),
+(38, 1, 1, 3, 157),
+(33, 1, 1, 3, 158),
+(27, 1, 1, 3, 159),
+(26, 1, 1, 3, 160),
+(30, 1, 1, 3, 161),
+(7, 2, 1, 3, 162),
+(10, 7, 1, 0, 163),
+(1, 7, 1, 1, 164),
+(13, 7, 1, 0, 165),
+(18, 7, 1, 3, 166),
+(38, 1, 1, 3, 167),
+(32, 1, 1, 3, 168),
+(15, 1, 1, 3, 169),
+(13, 2, 1, 3, 170),
+(10, 2, 1, 3, 171),
+(19, 6, 1, 3, 172),
+(12, 6, 1, 3, 173),
+(11, 6, 1, 3, 174),
+(2, 6, 1, 3, 175),
+(18, 6, 1, 3, 176),
+(18, 6, 1, 3, 177),
+(19, 2, 1, 3, 178),
+(27, 2, 1, 3, 179),
+(26, 2, 1, 3, 180),
+(2, 8, 1, 3, 181);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `staff`
+--
+-- Creation: Jan 07, 2026 at 06:42 PM
+-- Last update: Jan 09, 2026 at 05:02 PM
 --
 
 DROP TABLE IF EXISTS `staff`;
@@ -716,29 +1030,38 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `staffFaculty` varchar(12) NOT NULL,
   `staffProPic` varchar(255) NOT NULL,
   `staffOffice` varchar(80) NOT NULL,
-  `staffMemberSince` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `staffMemberSince` timestamp NOT NULL DEFAULT current_timestamp(),
   `staffRole` varchar(30) NOT NULL,
   `staffPassword` varchar(255) NOT NULL,
   `loginToken` varchar(255) DEFAULT NULL,
+  `expiresAt` datetime DEFAULT NULL,
   PRIMARY KEY (`staffId`),
   UNIQUE KEY `staffNo` (`staffNo`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `staff`:
+--
 
 --
 -- Dumping data for table `staff`
 --
 
-INSERT INTO `staff` (`staffId`, `staffNo`, `staffName`, `staffEmail`, `staffContact`, `staffFaculty`, `staffProPic`, `staffOffice`, `staffMemberSince`, `staffRole`, `staffPassword`, `loginToken`) VALUES
-(1, 'S032310001', 'TEN LEE KONG', 's032310001@utem.edu.my', '0126785432', 'FTMK', '', 'RIGHT WING 2nd FLOOR B01', '2025-12-18 06:23:27', 'PENASIHAT AKADEMIK', '$2y$10$XzMA6eIBzTBEr.WWrZ/1o.ZWzdReplWEfx3iZzAJxxUzN1V5ig2Pa', '5cafb56defa94c8e2b94e450aee1c6f661c746dde06bb909a76e4b38d3ba80d8'),
-(2, 'S032310002', 'LEE XING RU', 's032310002@utem.edu.my', '0166571254', 'FTMK', '', 'RIGHT WING 1st FLOOR B05', '2025-12-27 18:25:41', 'PENASIHAT AKADEMIK', '$2y$10$ZBaZ85aT2uOpp/F3VAx1gOtxFX9TCZbS4VciehdkCC8XXIlPm0/7a', 'e7882cb7df72d802a68a02d635172b177b79127a743689ea5b2b29dbb6502d64'),
-(3, 'S032310003', 'NG JIA SENG', 's032310003@utem.edu.my', '0104571685', 'FTMK', '', 'LEFT WING 1st FLOOR B07', '2025-11-24 14:30:45', 'PENASIHAT AKADEMIK', '$2y$10$atrL3atMEo82Uc32ajT1F.x/DA5ZbCCQ1Zb5t3HsyoGXOun5eOeme', NULL),
-(4, 'S032310004', 'CHIN ZHI ROU', 's032310004@utem.edu.my', '0146241524', 'FTMK', '', 'LEFT WING 3rd FLOOR B02', '2025-12-27 15:09:00', 'PENASIHAT AKADEMIK', '$2y$10$8bkUPoDQco4F1sxIfXV0seeGFVQesDivHDwQn35ynI2IhcHGc7kDC', 'aad184cc3865fe1f0c974762bdcfc0a1801e72e452f17375e012635466620116'),
-(5, 'S032210001', 'NG KAH MING', 's032210001@utem.edu.my', '0123542165', 'FTKE', '', '1st FLOOR K03', '2025-12-25 09:30:50', 'PENASIHAT AKADEMIK', '$2y$10$NuaQM4E7ftMepgJ4MGvuHu6B9rxBRO8WALrl6YpvZMUvjPe0Lplq.', '996493a25795ed91c7ee886c03b649f169b190f26d1a1307f648e113ed21fdcb');
+INSERT INTO `staff` (`staffId`, `staffNo`, `staffName`, `staffEmail`, `staffContact`, `staffFaculty`, `staffProPic`, `staffOffice`, `staffMemberSince`, `staffRole`, `staffPassword`, `loginToken`, `expiresAt`) VALUES
+(1, 'S032310001', 'TEN LEE KONG', 's032310001@utem.edu.my', '0126785432', 'FTMK', '', 'RIGHT WING 2nd FLOOR B01', '2025-11-24 19:47:01', 'PENASIHAT AKADEMIK', '$2y$10$VPhoKWYfWdHNdvLXjheuq.DIVouy6n2QhOOE.1glEU.YSyrQP4Kee', '0d6dd8e2886e4bc3e2dfd786ad6d141f76f598436536e2ca6f2f0fd87153cff3', NULL),
+(2, 'S032310002', 'LEE XING RU', 's032310002@utem.edu.my', '0166571254', 'FTMK', '', 'RIGHT WING 1st FLOOR B05', '2025-11-23 19:30:40', 'PENASIHAT AKADEMIK', '$2y$10$ZBaZ85aT2uOpp/F3VAx1gOtxFX9TCZbS4VciehdkCC8XXIlPm0/7a', '154834d588a401db24cb56237d35082844e3b50a1ce79c38edac7fbdd2e211f7', NULL),
+(3, 'S032310003', 'NG JIA SENG', 's032310003@utem.edu.my', '0104571685', 'FTMK', '', 'LEFT WING 1st FLOOR B07', '2025-11-24 14:30:45', 'PENASIHAT AKADEMIK', '$2y$10$atrL3atMEo82Uc32ajT1F.x/DA5ZbCCQ1Zb5t3HsyoGXOun5eOeme', '960c3a91ebf889a4db121450c8878b6da937bf364a628d64abc0f7591fbba0e0', NULL),
+(4, 'S032310004', 'CHIN ZHI ROU', 's032310004@utem.edu.my', '0146241524', 'FTMK', '', 'LEFT WING 3rd FLOOR B02', '2025-12-27 15:09:00', 'PENASIHAT AKADEMIK', '$2y$10$8bkUPoDQco4F1sxIfXV0seeGFVQesDivHDwQn35ynI2IhcHGc7kDC', 'aad184cc3865fe1f0c974762bdcfc0a1801e72e452f17375e012635466620116', NULL),
+(5, 'S032210001', 'NG KAH MING', 's032210001@utem.edu.my', '0123542165', 'FTKE', '', '1st FLOOR K03', '2025-12-25 09:30:50', 'PENASIHAT AKADEMIK', '$2y$10$NuaQM4E7ftMepgJ4MGvuHu6B9rxBRO8WALrl6YpvZMUvjPe0Lplq.', 'ed9e5332e5d914db1385195ceffa00590c7ca493c4f847b701f379e843093b74', NULL),
+(6, 'C032310001', 'CHANG YEE QI', 'changyeeqi@utem.edu.my', '0162487513', 'HEPA', '', 'Aras 1, Pusat Persatuan Pelajar (PPP)', '2025-12-26 18:49:29', 'PEGAWAI PSIKOLOGI', '$2y$10$1..skBPbrRYGK.mUPiElhesyL3AOZzo/VW6yxslAL4PiW1qj4kIFa', '976d6e5feec090a3fc3c4bbbaa123af4b5e584c0e9a04d13735face7f3c4537a', NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `stress`
+--
+-- Creation: Jan 07, 2026 at 08:14 AM
+-- Last update: Jan 09, 2026 at 02:05 PM
 --
 
 DROP TABLE IF EXISTS `stress`;
@@ -749,7 +1072,13 @@ CREATE TABLE IF NOT EXISTS `stress` (
   `studentId` int(11) DEFAULT NULL,
   PRIMARY KEY (`stressId`),
   KEY `studentId` (`studentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `stress`:
+--   `studentId`
+--       `student` -> `studentId`
+--
 
 --
 -- Dumping data for table `stress`
@@ -766,12 +1095,29 @@ INSERT INTO `stress` (`stressId`, `stressLevel`, `datetimeRecord`, `studentId`) 
 (21, 100, '2025-12-01 00:00:00', 1),
 (22, 20, '2025-12-09 00:00:00', 1),
 (23, 76, '2025-12-26 01:30:18', 1),
-(31, 50, '2025-12-10 00:00:00', 7);
+(31, 50, '2025-12-10 00:00:00', 7),
+(35, 30, '2025-12-30 18:00:01', 1),
+(38, 30, '2025-12-31 02:08:13', 1),
+(41, 60, '2026-01-05 16:30:48', 1),
+(42, 55, '2026-01-06 03:30:26', 1),
+(44, 28, '2026-01-07 23:51:24', 1),
+(46, 68, '2026-01-08 00:08:43', 1),
+(47, 58, '2026-01-08 11:47:24', 2),
+(48, 8, '2026-01-08 13:28:39', 7),
+(56, 73, '2026-01-09 15:21:29', 2),
+(57, 20, '2025-12-18 00:00:00', 2),
+(58, 66, '2025-12-08 00:00:00', 2),
+(59, 79, '2025-12-02 00:00:00', 2),
+(60, 7, '2025-12-01 00:00:00', 2),
+(61, 65, '2026-01-09 22:05:16', 8);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `student`
+--
+-- Creation: Jan 07, 2026 at 06:42 PM
+-- Last update: Jan 09, 2026 at 09:39 PM
 --
 
 DROP TABLE IF EXISTS `student`;
@@ -791,25 +1137,32 @@ CREATE TABLE IF NOT EXISTS `student` (
   `studentCourse` varchar(100) NOT NULL,
   `studentMemberSince` datetime DEFAULT current_timestamp(),
   `loginToken` varchar(255) DEFAULT NULL,
+  `expiresAt` datetime DEFAULT NULL,
   PRIMARY KEY (`studentId`),
   KEY `staffId` (`staffId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 
 --
+-- RELATIONSHIPS FOR TABLE `student`:
+--   `staffId`
+--       `staff` -> `staffId`
+--
+
+--
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`studentId`, `matricNo`, `studentName`, `studentEmail`, `studentContact`, `studentFaculty`, `studentYearOfStudy`, `studentSection`, `studentGrp`, `studentProPic`, `studentPassword`, `staffId`, `studentCourse`, `studentMemberSince`, `loginToken`) VALUES
-(1, 'D032310439', 'CHONG WAN XIAN CASEY', 'd032310439@student.utem.edu.my', '0122643499', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$9E8c.HpCNyuSUU2OPc7OvuVJ4gkAs0yMoJ5yRqo0h2AglN31VuZem', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', 'aa623e7989d55d5d3ea10e9b5af421c633f5e74be81890e6f03cf6b3d0a39c31'),
-(2, 'D032310456', 'CHIEW CHIN KUAN', 'd032310456@student.utem.edu.my', '0129318660', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$qVJ6AV0SqRc25DSJYjMsTOBS5.U3o2erBPvbh./8yXy6.nGGUJ2da', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '11171234f0467105fe2d461fad6b995f217969a894dc309477237d64739a3103'),
-(3, 'D032310403', 'A\'SYAH INSYIRAH BINTI MOHD NIZAM', 'd032310403@student.utem.edu.my', '0163249854', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$eQwLVlu2NELlJOVCmhW2F.XwegeDD0Qs03I6bnaAY9Nkey03d0D5q', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '860d0b17f1a3a0613fdd7a53acef112df8943ea32b717f3274bbad8442343f09'),
-(4, 'D032310149', 'SIA XIN WAN', 'd032310149@student.utem.edu.my', '01110356547', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$GJ/TBuE.U9JoWDMMyMVkve04D/CHJ382FH4D53ht1XKEKkzPRuAiC', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', NULL),
-(5, 'D032310347', 'TEOH HUI YU', 'd032310347@student.utem.edu.my', '0125428971', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$RSUuBTnnwB0VEaYFacCI8errJuhc4tRmoxrlddWfYt3Ht9IkrA0Ma', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', NULL),
-(6, 'D032310490', 'FELICIA TEE JIA XUAN', 'd032310490@student.utem.edu.my', '0125468751', 'FTMK', 3, 'SECTION 3', 'GROUP 2', '', '$2y$10$RDxGSe2VagOKi4UhR/sgMO/GYLLY2ntI.aFFEPRnS8JZno7MIezHK', 3, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '972fc1873728894d633861a0dabc15176850e4c0af057ff8513db04bdb97aacd'),
-(7, 'D032310460', 'CHAN MEI YEANG', 'd032310460@student.utem.edu.my', '01110265475', 'FTMK', 3, 'SECTION 3', 'GROUP 1', '', '$2y$10$7/YG5UbsmlPY5JHO2r89jOv9wTJVKDwxm.CvTeV.Dh8jzusUV31wS', 4, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '18c0fb89325a50204c8620390d68a339bd6279c3e1709907e3f81b64c25759ef'),
-(8, 'B112420015', 'LIM KE ROU', 'b1112420015@student.utem.edu.my', '0162195483', 'FTKE', 2, 'SECTION 1', 'GROUP 1', '', '$2y$10$BhO/EVlGjtiJwJBkvGrnFeqNE5BIlgaznlwsZ5SV2EFLWEcE0xtMi', 5, 'BACHELOR IN ELECTRICAL', '2025-11-25 16:03:10', NULL),
-(9, 'D032310126', 'EISYAH MAISARAH BINTI AZHARI', 'eisyahmaisarah@student.utem.edu.my', '0162195489', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$/FzRDss7RcetMi4pkchwA.OjfRpPDAuYALUe0WJwQ3eraBuPVN2/m', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-15 13:39:45', '83d094af2f6b1cc43d537b717925370e7917ff0b55e193eb72e7d31dbcc1cf1e'),
-(10, 'D032310322', 'CHONG PUI YI', 'chongpuiyi@student.utem.edu.my', '0124568542', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$RjhVTN18Ah0HYM8bouPEhefaZr3P9HPtT.5/GMs6/.ZI0FjDdqTXq', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-25 17:17:49', 'f9d21d6579bf86caf7d783a59b47b73d7831bfe84407fe8995ca6ac7eafff66b');
+INSERT INTO `student` (`studentId`, `matricNo`, `studentName`, `studentEmail`, `studentContact`, `studentFaculty`, `studentYearOfStudy`, `studentSection`, `studentGrp`, `studentProPic`, `studentPassword`, `staffId`, `studentCourse`, `studentMemberSince`, `loginToken`, `expiresAt`) VALUES
+(1, 'D032310439', 'CHONG WAN XIAN CASEY', 'd032310439@student.utem.edu.my', '0122643499', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$SSiubgKLFkMy1O9pKuaiKO7f2O8kCm4NQQJo79Fb88G5ogKbNnl4G', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '183a4ff62110e7f611f894dc002d3e9541a2af1d623ecbf73d9e677bec247a5b', NULL),
+(2, 'D032310456', 'CHIEW CHIN KUAN', 'd032310456@student.utem.edu.my', '0129318660', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$qVJ6AV0SqRc25DSJYjMsTOBS5.U3o2erBPvbh./8yXy6.nGGUJ2da', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', 'd81338e53fe756fb92944be49e5bbb991dbca512e2e85fc32e3780b1e3067dbe', NULL),
+(3, 'D032310403', 'A\'SYAH INSYIRAH BINTI MOHD NIZAM', 'd032310403@student.utem.edu.my', '0163249854', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$eQwLVlu2NELlJOVCmhW2F.XwegeDD0Qs03I6bnaAY9Nkey03d0D5q', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '860d0b17f1a3a0613fdd7a53acef112df8943ea32b717f3274bbad8442343f09', NULL),
+(4, 'D032310149', 'SIA XIN WAN', 'd032310149@student.utem.edu.my', '01110356547', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$GJ/TBuE.U9JoWDMMyMVkve04D/CHJ382FH4D53ht1XKEKkzPRuAiC', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', NULL, NULL),
+(5, 'D032310347', 'TEOH HUI YU', 'd032310347@student.utem.edu.my', '0125428971', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$RSUuBTnnwB0VEaYFacCI8errJuhc4tRmoxrlddWfYt3Ht9IkrA0Ma', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', NULL, NULL),
+(6, 'D032310490', 'FELICIA TEE JIA XUAN', 'd032310490@student.utem.edu.my', '0125468751', 'FTMK', 3, 'SECTION 3', 'GROUP 2', '', '$2y$10$RDxGSe2VagOKi4UhR/sgMO/GYLLY2ntI.aFFEPRnS8JZno7MIezHK', 3, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', 'c1794f9966809bc1c050e7ab6aac6921081174d099ee84f41f77a0786384b311', NULL),
+(7, 'D032310460', 'CHAN MEI YEANG', 'd032310460@student.utem.edu.my', '01110265475', 'FTMK', 3, 'SECTION 3', 'GROUP 1', '', '$2y$10$7/YG5UbsmlPY5JHO2r89jOv9wTJVKDwxm.CvTeV.Dh8jzusUV31wS', 4, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '1f146adfc8f684d943ce06de56127c664c5d95cb2d0bb51bf7ecc999201375ab', NULL),
+(8, 'B112420015', 'LIM KE ROU', 'b1112420015@student.utem.edu.my', '0162195483', 'FTKE', 2, 'SECTION 1', 'GROUP 1', '', '$2y$10$BhO/EVlGjtiJwJBkvGrnFeqNE5BIlgaznlwsZ5SV2EFLWEcE0xtMi', 5, 'BACHELOR IN ELECTRICAL', '2025-11-25 16:03:10', '29bab9a5d673a4c99090f4683d804a935b08af97dc366329668777a8b844bf40', NULL),
+(9, 'D032310126', 'EISYAH MAISARAH BINTI AZHARI', 'eisyahmaisarah@student.utem.edu.my', '0162195489', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$/FzRDss7RcetMi4pkchwA.OjfRpPDAuYALUe0WJwQ3eraBuPVN2/m', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-15 13:39:45', '264cedfa5b703beba0b3238146d29b3e08e79c2333133b8fced56a1f099a301b', NULL),
+(10, 'D032310322', 'CHONG PUI YI', 'chongpuiyi@student.utem.edu.my', '0124568542', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$RjhVTN18Ah0HYM8bouPEhefaZr3P9HPtT.5/GMs6/.ZI0FjDdqTXq', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-25 17:17:49', '6c42c16396898be15737869be98d769da5ca0bade7d0bd93a08750c0a9af7006', NULL);
 
 --
 -- Constraints for dumped tables

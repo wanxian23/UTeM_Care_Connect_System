@@ -29,19 +29,19 @@ button, input[type="submit"], input[type="reset"] {
 
 header {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     height:80px;
     width: 100%;
     margin: 0 auto;
     /* background-color: white; */
     background-color: #FFF8E7;
-    padding: 20px;
+    padding: 20px 50px;
     /* border-radius: 0 0px 20px 20px; */
     font-size: 2.8vh;
     /* box-shadow: 1px 3px 10px rgb(178, 178, 255); */
     position: fixed;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
 }
 
 header a#logo {
@@ -58,8 +58,8 @@ header a#logo:hover {
 }
 
 header a#logo img {
-    width: 100%;
-    height: 100%;
+    width: 45px;
+    height: 45px;
 }
 
 header a#logo label {
