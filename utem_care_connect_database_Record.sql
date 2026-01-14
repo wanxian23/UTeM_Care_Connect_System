@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3301
--- Generation Time: Jan 10, 2026 at 05:47 AM
+-- Generation Time: Jan 11, 2026 at 05:39 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.2.12
 
@@ -28,8 +28,7 @@ USE `utem_care_connect`;
 --
 -- Table structure for table `contactnote`
 --
--- Creation: Jan 07, 2026 at 08:14 AM
--- Last update: Jan 09, 2026 at 10:29 AM
+-- Creation: Jan 10, 2026 at 03:21 AM
 --
 
 DROP TABLE IF EXISTS `contactnote`;
@@ -70,8 +69,7 @@ INSERT INTO `contactnote` (`contactId`, `message`, `datetimeRecord`, `studentId`
 --
 -- Table structure for table `dass`
 --
--- Creation: Jan 07, 2026 at 08:14 AM
--- Last update: Jan 09, 2026 at 02:12 PM
+-- Creation: Jan 10, 2026 at 03:21 AM
 --
 
 DROP TABLE IF EXISTS `dass`;
@@ -116,7 +114,7 @@ INSERT INTO `dass` (`dassId`, `dassCreatedDateTime`, `status`, `staffId`, `stude
 --
 -- Table structure for table `dassquestion`
 --
--- Creation: Jan 07, 2026 at 08:14 AM
+-- Creation: Jan 10, 2026 at 03:21 AM
 --
 
 DROP TABLE IF EXISTS `dassquestion`;
@@ -163,8 +161,7 @@ INSERT INTO `dassquestion` (`dassQuestionId`, `question`, `type`) VALUES
 --
 -- Table structure for table `dassrecord`
 --
--- Creation: Jan 07, 2026 at 08:14 AM
--- Last update: Jan 09, 2026 at 02:12 PM
+-- Creation: Jan 10, 2026 at 03:21 AM
 --
 
 DROP TABLE IF EXISTS `dassrecord`;
@@ -384,7 +381,7 @@ INSERT INTO `dassrecord` (`dassId`, `dassQuestionId`, `scale`) VALUES
 --
 -- Table structure for table `entries`
 --
--- Creation: Jan 07, 2026 at 08:14 AM
+-- Creation: Jan 10, 2026 at 03:21 AM
 --
 
 DROP TABLE IF EXISTS `entries`;
@@ -443,8 +440,8 @@ INSERT INTO `entries` (`entriesId`, `entries`, `entriesStoreLocation`, `entriesT
 --
 -- Table structure for table `entriesrecord`
 --
--- Creation: Jan 07, 2026 at 08:14 AM
--- Last update: Jan 09, 2026 at 02:05 PM
+-- Creation: Jan 10, 2026 at 03:21 AM
+-- Last update: Jan 10, 2026 at 02:10 PM
 --
 
 DROP TABLE IF EXISTS `entriesrecord`;
@@ -455,7 +452,7 @@ CREATE TABLE IF NOT EXISTS `entriesrecord` (
   PRIMARY KEY (`entriesRecordId`),
   KEY `moodId` (`moodId`),
   KEY `entriesTypeId_2` (`entriesTypeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=214 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=224 DEFAULT CHARSET=utf8mb4;
 
 --
 -- RELATIONSHIPS FOR TABLE `entriesrecord`:
@@ -510,7 +507,6 @@ INSERT INTO `entriesrecord` (`entriesRecordId`, `moodId`, `entriesTypeId`) VALUE
 (183, 123, 2),
 (184, 123, 3),
 (185, 123, 4),
-(190, 126, 1),
 (192, 127, 1),
 (193, 136, 1),
 (194, 136, 2),
@@ -522,14 +518,17 @@ INSERT INTO `entriesrecord` (`entriesRecordId`, `moodId`, `entriesTypeId`) VALUE
 (210, 47, 2),
 (211, 38, 1),
 (212, 150, 1),
-(213, 151, 1);
+(213, 151, 1),
+(217, 155, 1),
+(218, 154, 1),
+(220, 126, 1);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `entriestype`
 --
--- Creation: Jan 07, 2026 at 08:14 AM
+-- Creation: Jan 10, 2026 at 03:21 AM
 --
 
 DROP TABLE IF EXISTS `entriestype`;
@@ -560,7 +559,7 @@ INSERT INTO `entriestype` (`entriesTypeId`, `entriesType`) VALUES
 --
 -- Table structure for table `mood`
 --
--- Creation: Jan 07, 2026 at 08:14 AM
+-- Creation: Jan 10, 2026 at 03:21 AM
 --
 
 DROP TABLE IF EXISTS `mood`;
@@ -596,8 +595,8 @@ INSERT INTO `mood` (`moodTypeId`, `moodStatus`, `moodStoreLocation`, `priority`,
 --
 -- Table structure for table `moodtracking`
 --
--- Creation: Jan 07, 2026 at 04:07 PM
--- Last update: Jan 09, 2026 at 02:05 PM
+-- Creation: Jan 10, 2026 at 03:21 AM
+-- Last update: Jan 10, 2026 at 02:10 PM
 --
 
 DROP TABLE IF EXISTS `moodtracking`;
@@ -611,7 +610,7 @@ CREATE TABLE IF NOT EXISTS `moodtracking` (
   PRIMARY KEY (`moodId`),
   KEY `studentId` (`studentId`),
   KEY `moodTypeId` (`moodTypeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8mb4;
 
 --
 -- RELATIONSHIPS FOR TABLE `moodtracking`:
@@ -666,9 +665,9 @@ INSERT INTO `moodtracking` (`moodId`, `note`, `datetimeRecord`, `studentId`, `mo
 (117, 'Today Still ok', '2025-12-30 18:00:01', 1, 2, 0),
 (121, 'Today felt fairly balanced and calm overall. My mood remained neutral throughout the day, without any strong emotional highs or lows. The stress level was at about 30%, which feels manageable and did not significantly interfere with my daily activities. There wasn’t any specific event or reason that triggered stress; instead, it felt like a normal, routine day with mild pressure that naturally comes from everyday responsibilities.\r\n\r\nI was able to go through my tasks steadily, even if I didn’t feel particularly motivated or excited. At the same time, I didn’t feel overwhelmed or emotionally drained. This neutral state allowed me to think more clearly and respond to situations in a more controlled way, without reacting emotionally.\r\n\r\nAlthough nothing special stood out today, I think this kind of calm and steady day is still important. It gives me time to rest mentally, reflect, and reset before facing more demanding days ahead. Maintaining a low stress level without a clear cause also reminds me that not every day has to be intense to be meaningful. Overall, today felt stable, quiet, and emotionally balanced, which I appreciate.', '2025-12-31 02:08:13', 1, 3, 0),
 (123, 'Still ok', '2025-12-31 02:24:19', 1, 2, 1),
-(126, 'The presentation today has been cancelled by my lecturer. This is a bit annoying to my own schedule. ', '2026-01-05 16:30:48', 1, 3, 1),
+(126, 'The presentation today has been cancelled by my lecturer. This is a bit annoying to my own schedule. ', '2026-01-05 16:30:48', 1, 5, 1),
 (127, 'okkkk', '2026-01-06 03:30:26', 1, 3, 1),
-(128, 'It is ok!', '2026-01-07 23:51:24', 1, 3, 1),
+(128, 'It is ok!', '2026-01-07 23:51:24', 1, 7, 1),
 (129, 'OK x111111', '2026-01-08 00:08:43', 1, 2, 1),
 (136, 'ok', '2026-01-08 11:47:24', 2, 5, 1),
 (137, 'okok', '2026-01-08 13:28:39', 7, 2, 0),
@@ -676,15 +675,16 @@ INSERT INTO `moodtracking` (`moodId`, `note`, `datetimeRecord`, `studentId`, `mo
 (141, 'iijui', '2026-01-08 14:41:10', 1, 1, 1),
 (142, 'Today happy.', '2026-01-08 18:07:13', 2, 2, 1),
 (150, 'not ok', '2026-01-09 15:21:29', 2, 6, 1),
-(151, 'Stillllll ok ....', '2026-01-09 22:05:16', 8, 2, 1);
+(151, 'Stillllll ok ....', '2026-01-09 22:05:16', 8, 2, 1),
+(154, 'okla', '2026-01-10 13:16:47', 1, 6, 1),
+(155, 'Panic', '2026-01-10 13:17:14', 7, 7, 1);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `notification`
 --
--- Creation: Jan 07, 2026 at 08:14 AM
--- Last update: Jan 09, 2026 at 02:12 PM
+-- Creation: Jan 10, 2026 at 03:21 AM
 --
 
 DROP TABLE IF EXISTS `notification`;
@@ -771,7 +771,7 @@ INSERT INTO `notification` (`notificationId`, `title`, `content`, `notiStatus`, 
 --
 -- Table structure for table `recommendation`
 --
--- Creation: Jan 07, 2026 at 08:14 AM
+-- Creation: Jan 10, 2026 at 03:21 AM
 --
 
 DROP TABLE IF EXISTS `recommendation`;
@@ -838,8 +838,8 @@ INSERT INTO `recommendation` (`recommendId`, `quote`, `type`, `hyperlink`) VALUE
 --
 -- Table structure for table `recommendationdisplay`
 --
--- Creation: Jan 07, 2026 at 08:14 AM
--- Last update: Jan 09, 2026 at 02:05 PM
+-- Creation: Jan 10, 2026 at 03:21 AM
+-- Last update: Jan 10, 2026 at 02:10 PM
 --
 
 DROP TABLE IF EXISTS `recommendationdisplay`;
@@ -852,7 +852,7 @@ CREATE TABLE IF NOT EXISTS `recommendationdisplay` (
   PRIMARY KEY (`recommendationDisplayId`),
   KEY `studentId` (`studentId`),
   KEY `recommendationdisplay_ibfk_1` (`recommendId`)
-) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8mb4;
 
 --
 -- RELATIONSHIPS FOR TABLE `recommendationdisplay`:
@@ -1009,15 +1009,25 @@ INSERT INTO `recommendationdisplay` (`recommendId`, `studentId`, `displayCount`,
 (19, 2, 1, 3, 178),
 (27, 2, 1, 3, 179),
 (26, 2, 1, 3, 180),
-(2, 8, 1, 3, 181);
+(2, 8, 1, 3, 181),
+(4, 1, 1, 3, 182),
+(8, 1, 1, 3, 183),
+(14, 1, 1, 3, 184),
+(18, 7, 1, 3, 185),
+(14, 1, 1, 3, 186),
+(17, 1, 1, 0, 187),
+(25, 1, 1, 3, 188),
+(1, 6, 1, 3, 189),
+(7, 6, 1, 3, 190),
+(12, 6, 1, 3, 191);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `staff`
 --
--- Creation: Jan 07, 2026 at 06:42 PM
--- Last update: Jan 09, 2026 at 05:02 PM
+-- Creation: Jan 10, 2026 at 03:21 AM
+-- Last update: Jan 10, 2026 at 04:58 PM
 --
 
 DROP TABLE IF EXISTS `staff`;
@@ -1049,19 +1059,19 @@ CREATE TABLE IF NOT EXISTS `staff` (
 
 INSERT INTO `staff` (`staffId`, `staffNo`, `staffName`, `staffEmail`, `staffContact`, `staffFaculty`, `staffProPic`, `staffOffice`, `staffMemberSince`, `staffRole`, `staffPassword`, `loginToken`, `expiresAt`) VALUES
 (1, 'S032310001', 'TEN LEE KONG', 's032310001@utem.edu.my', '0126785432', 'FTMK', '', 'RIGHT WING 2nd FLOOR B01', '2025-11-24 19:47:01', 'PENASIHAT AKADEMIK', '$2y$10$VPhoKWYfWdHNdvLXjheuq.DIVouy6n2QhOOE.1glEU.YSyrQP4Kee', '0d6dd8e2886e4bc3e2dfd786ad6d141f76f598436536e2ca6f2f0fd87153cff3', NULL),
-(2, 'S032310002', 'LEE XING RU', 's032310002@utem.edu.my', '0166571254', 'FTMK', '', 'RIGHT WING 1st FLOOR B05', '2025-11-23 19:30:40', 'PENASIHAT AKADEMIK', '$2y$10$ZBaZ85aT2uOpp/F3VAx1gOtxFX9TCZbS4VciehdkCC8XXIlPm0/7a', '154834d588a401db24cb56237d35082844e3b50a1ce79c38edac7fbdd2e211f7', NULL),
+(2, 'S032310002', 'LEE XING RU', 's032310002@utem.edu.my', '0166571254', 'FTMK', '', 'RIGHT WING 1st FLOOR B05', '2025-11-23 19:30:40', 'PENASIHAT AKADEMIK', '$2y$10$ZBaZ85aT2uOpp/F3VAx1gOtxFX9TCZbS4VciehdkCC8XXIlPm0/7a', 'a420ae0534934e4c004b2a393aa46ab3c978bc79e8ff13c1ca048bf54854a413', NULL),
 (3, 'S032310003', 'NG JIA SENG', 's032310003@utem.edu.my', '0104571685', 'FTMK', '', 'LEFT WING 1st FLOOR B07', '2025-11-24 14:30:45', 'PENASIHAT AKADEMIK', '$2y$10$atrL3atMEo82Uc32ajT1F.x/DA5ZbCCQ1Zb5t3HsyoGXOun5eOeme', '960c3a91ebf889a4db121450c8878b6da937bf364a628d64abc0f7591fbba0e0', NULL),
 (4, 'S032310004', 'CHIN ZHI ROU', 's032310004@utem.edu.my', '0146241524', 'FTMK', '', 'LEFT WING 3rd FLOOR B02', '2025-12-27 15:09:00', 'PENASIHAT AKADEMIK', '$2y$10$8bkUPoDQco4F1sxIfXV0seeGFVQesDivHDwQn35ynI2IhcHGc7kDC', 'aad184cc3865fe1f0c974762bdcfc0a1801e72e452f17375e012635466620116', NULL),
 (5, 'S032210001', 'NG KAH MING', 's032210001@utem.edu.my', '0123542165', 'FTKE', '', '1st FLOOR K03', '2025-12-25 09:30:50', 'PENASIHAT AKADEMIK', '$2y$10$NuaQM4E7ftMepgJ4MGvuHu6B9rxBRO8WALrl6YpvZMUvjPe0Lplq.', 'ed9e5332e5d914db1385195ceffa00590c7ca493c4f847b701f379e843093b74', NULL),
-(6, 'C032310001', 'CHANG YEE QI', 'changyeeqi@utem.edu.my', '0162487513', 'HEPA', '', 'Aras 1, Pusat Persatuan Pelajar (PPP)', '2025-12-26 18:49:29', 'PEGAWAI PSIKOLOGI', '$2y$10$1..skBPbrRYGK.mUPiElhesyL3AOZzo/VW6yxslAL4PiW1qj4kIFa', '976d6e5feec090a3fc3c4bbbaa123af4b5e584c0e9a04d13735face7f3c4537a', NULL);
+(6, 'C032310001', 'CHANG YEE QI', 'changyeeqi@utem.edu.my', '0162487513', 'HEPA', '', 'Aras 1, Pusat Persatuan Pelajar (PPP)', '2025-12-26 18:49:29', 'PEGAWAI PSIKOLOGI', '$2y$10$1..skBPbrRYGK.mUPiElhesyL3AOZzo/VW6yxslAL4PiW1qj4kIFa', '74ba8a1424cc5038b4c6e1f431a3fd0a84e0fc9c385f859c573817c1bb125896', NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `stress`
 --
--- Creation: Jan 07, 2026 at 08:14 AM
--- Last update: Jan 09, 2026 at 02:05 PM
+-- Creation: Jan 10, 2026 at 03:21 AM
+-- Last update: Jan 10, 2026 at 02:10 PM
 --
 
 DROP TABLE IF EXISTS `stress`;
@@ -1072,7 +1082,7 @@ CREATE TABLE IF NOT EXISTS `stress` (
   `studentId` int(11) DEFAULT NULL,
   PRIMARY KEY (`stressId`),
   KEY `studentId` (`studentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4;
 
 --
 -- RELATIONSHIPS FOR TABLE `stress`:
@@ -1109,15 +1119,17 @@ INSERT INTO `stress` (`stressId`, `stressLevel`, `datetimeRecord`, `studentId`) 
 (58, 66, '2025-12-08 00:00:00', 2),
 (59, 79, '2025-12-02 00:00:00', 2),
 (60, 7, '2025-12-01 00:00:00', 2),
-(61, 65, '2026-01-09 22:05:16', 8);
+(61, 65, '2026-01-09 22:05:16', 8),
+(64, 90, '2026-01-10 13:16:47', 1),
+(65, 60, '2026-01-10 13:17:14', 7);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `student`
 --
--- Creation: Jan 07, 2026 at 06:42 PM
--- Last update: Jan 09, 2026 at 09:39 PM
+-- Creation: Jan 10, 2026 at 03:21 AM
+-- Last update: Jan 10, 2026 at 07:29 PM
 --
 
 DROP TABLE IF EXISTS `student`;
@@ -1153,13 +1165,13 @@ CREATE TABLE IF NOT EXISTS `student` (
 --
 
 INSERT INTO `student` (`studentId`, `matricNo`, `studentName`, `studentEmail`, `studentContact`, `studentFaculty`, `studentYearOfStudy`, `studentSection`, `studentGrp`, `studentProPic`, `studentPassword`, `staffId`, `studentCourse`, `studentMemberSince`, `loginToken`, `expiresAt`) VALUES
-(1, 'D032310439', 'CHONG WAN XIAN CASEY', 'd032310439@student.utem.edu.my', '0122643499', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$SSiubgKLFkMy1O9pKuaiKO7f2O8kCm4NQQJo79Fb88G5ogKbNnl4G', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '183a4ff62110e7f611f894dc002d3e9541a2af1d623ecbf73d9e677bec247a5b', NULL),
+(1, 'D032310439', 'CHONG WAN XIAN CASEY', 'd032310439@student.utem.edu.my', '0122643499', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$BgAJz4Lla1XATh86MctbE.NJwvZA0wLGv9wvCDT18V4P8FfN2qUZ2', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', 'f30ab25772dd04190f47bc167b687524d862fcad5a10c298d3a4c8d4ac41979d', NULL),
 (2, 'D032310456', 'CHIEW CHIN KUAN', 'd032310456@student.utem.edu.my', '0129318660', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$qVJ6AV0SqRc25DSJYjMsTOBS5.U3o2erBPvbh./8yXy6.nGGUJ2da', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', 'd81338e53fe756fb92944be49e5bbb991dbca512e2e85fc32e3780b1e3067dbe', NULL),
 (3, 'D032310403', 'A\'SYAH INSYIRAH BINTI MOHD NIZAM', 'd032310403@student.utem.edu.my', '0163249854', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$eQwLVlu2NELlJOVCmhW2F.XwegeDD0Qs03I6bnaAY9Nkey03d0D5q', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '860d0b17f1a3a0613fdd7a53acef112df8943ea32b717f3274bbad8442343f09', NULL),
 (4, 'D032310149', 'SIA XIN WAN', 'd032310149@student.utem.edu.my', '01110356547', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$GJ/TBuE.U9JoWDMMyMVkve04D/CHJ382FH4D53ht1XKEKkzPRuAiC', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', NULL, NULL),
 (5, 'D032310347', 'TEOH HUI YU', 'd032310347@student.utem.edu.my', '0125428971', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$RSUuBTnnwB0VEaYFacCI8errJuhc4tRmoxrlddWfYt3Ht9IkrA0Ma', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', NULL, NULL),
-(6, 'D032310490', 'FELICIA TEE JIA XUAN', 'd032310490@student.utem.edu.my', '0125468751', 'FTMK', 3, 'SECTION 3', 'GROUP 2', '', '$2y$10$RDxGSe2VagOKi4UhR/sgMO/GYLLY2ntI.aFFEPRnS8JZno7MIezHK', 3, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', 'c1794f9966809bc1c050e7ab6aac6921081174d099ee84f41f77a0786384b311', NULL),
-(7, 'D032310460', 'CHAN MEI YEANG', 'd032310460@student.utem.edu.my', '01110265475', 'FTMK', 3, 'SECTION 3', 'GROUP 1', '', '$2y$10$7/YG5UbsmlPY5JHO2r89jOv9wTJVKDwxm.CvTeV.Dh8jzusUV31wS', 4, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '1f146adfc8f684d943ce06de56127c664c5d95cb2d0bb51bf7ecc999201375ab', NULL),
+(6, 'D032310490', 'FELICIA TEE JIA XUAN', 'd032310490@student.utem.edu.my', '0125468751', 'FTMK', 3, 'SECTION 3', 'GROUP 2', '', '$2y$10$RDxGSe2VagOKi4UhR/sgMO/GYLLY2ntI.aFFEPRnS8JZno7MIezHK', 3, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '9250ac6f82f9bc32866df9a39f76660bfd63df907078b6e412eef06aaa0efe63', NULL),
+(7, 'D032310460', 'CHAN MEI YEANG', 'd032310460@student.utem.edu.my', '01110265475', 'FTMK', 3, 'SECTION 3', 'GROUP 1', '', '$2y$10$7/YG5UbsmlPY5JHO2r89jOv9wTJVKDwxm.CvTeV.Dh8jzusUV31wS', 4, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '6909e3503721b5da3616515e7b4dde69895e02df2f5722d33d157fa13a6b1c45', NULL),
 (8, 'B112420015', 'LIM KE ROU', 'b1112420015@student.utem.edu.my', '0162195483', 'FTKE', 2, 'SECTION 1', 'GROUP 1', '', '$2y$10$BhO/EVlGjtiJwJBkvGrnFeqNE5BIlgaznlwsZ5SV2EFLWEcE0xtMi', 5, 'BACHELOR IN ELECTRICAL', '2025-11-25 16:03:10', '29bab9a5d673a4c99090f4683d804a935b08af97dc366329668777a8b844bf40', NULL),
 (9, 'D032310126', 'EISYAH MAISARAH BINTI AZHARI', 'eisyahmaisarah@student.utem.edu.my', '0162195489', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$/FzRDss7RcetMi4pkchwA.OjfRpPDAuYALUe0WJwQ3eraBuPVN2/m', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-15 13:39:45', '264cedfa5b703beba0b3238146d29b3e08e79c2333133b8fced56a1f099a301b', NULL),
 (10, 'D032310322', 'CHONG PUI YI', 'chongpuiyi@student.utem.edu.my', '0124568542', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$RjhVTN18Ah0HYM8bouPEhefaZr3P9HPtT.5/GMs6/.ZI0FjDdqTXq', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-25 17:17:49', '6c42c16396898be15737869be98d769da5ca0bade7d0bd93a08750c0a9af7006', NULL);

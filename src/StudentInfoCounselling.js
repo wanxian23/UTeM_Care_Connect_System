@@ -257,6 +257,10 @@ function StudentInfoContent({
                                     <p>{studentData.studentYearOfStudy}</p>
                                 </aside>
                                 <aside>
+                                    <label>Assigned PA:</label>
+                                    <p>{allData.PADetails.staffName}</p>
+                                </aside>
+                                <aside>
                                     <label>Member Since:</label>
                                     <p>{dateOnly}</p>
                                 </aside>

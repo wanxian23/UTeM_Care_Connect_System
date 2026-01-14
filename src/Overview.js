@@ -7,7 +7,7 @@ import {Header, Footer} from "./HeaderFooterB4Login";
 import MessageBox from "./Modal";
 import "./css/Modal.css";
 
-import './css/View2.css';
+import './css/overview.css';
 import tuahLogo from './image/tuahLogo.png';
 import counsellingUnitInfoImg from './image/cousellingUnitInfo.jpeg';
 import pppImg from './image/pppUTeM.jpg';

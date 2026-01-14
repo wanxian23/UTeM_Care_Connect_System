@@ -1,13 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Profiler } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import { NavLink } from "react-router-dom";
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+
 import "./css/StudentInfo.css";
 import {HeaderCounsellor, Footer} from "./HeaderFooter";
 import {SubHeader} from "./PaInfo";
-import MessageBox, {ConfirmationModal, TextareaModal} from "./Modal";
+import MessageBox from "./Modal";
 import { DashboardInfo } from "./StudentTableData";
 
 function StudentAssignedTable() {
@@ -46,7 +50,7 @@ function StudentAssignedTable() {
                 setStudentTableData(data);
                 setDashbaordData(data.dashboardData);
                 setDassData(data);
-                // setProfileData(data.profileData);
+                setProfileData(data?.PADetails);
 
             } else {
                 // Token invalid → clear storage & redirect
@@ -60,7 +64,7 @@ function StudentAssignedTable() {
     return(
         <>
             <HeaderCounsellor />
-            <StudentInformation paId={paId} studentData={studentTableData?.studentData} dashboardData={dashboardData} dassData={dassData?.studentDassData}/>
+            <StudentInformation paId={paId} PADetails={profileData} studentData={studentTableData?.studentData} dashboardData={dashboardData} dassData={dassData?.studentDassData}/>
         </>
     );
 }
@@ -76,16 +80,6 @@ function StudentSearch({paId, selected, activeTab, onSearchFilter, exportCSV}) {
         message: "",
         buttonValue: "",
         redirect: true
-    });
-
-    const [confirmationBox, setConfirmationBox] = useState({
-        show: false,
-        title: "",
-        message: "",
-        confirmText: "",
-        cancelText: "",
-        onConfirm: null,
-        onCancel: null
     });
 
     const handleModalButton = () => {
@@ -336,7 +330,14 @@ function StudentSearch({paId, selected, activeTab, onSearchFilter, exportCSV}) {
                     />
                 </form>
                 <div>
-                    <button onClick={exportCSV}>
+                    <button onClick={() => exportCSV('pdf')}>
+                        Export PDF
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-file-earmark-pdf" viewBox="0 0 16 16">
+                            <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+                            <path d="M4.603 14.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.188-.012.396-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.066.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.7 11.7 0 0 0-1.997.406 11.3 11.3 0 0 1-1.02 1.51c-.292.35-.609.656-.927.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.245.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 7.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z"/>
+                        </svg>
+                    </button>
+                    <button onClick={() => exportCSV('csv')}>
                         Export CSV
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-filetype-csv" viewBox="0 0 16 16">
                             <path fillRule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM3.517 14.841a1.13 1.13 0 0 0 .401.823q.195.162.478.252.284.091.665.091.507 0 .859-.158.354-.158.539-.44.187-.284.187-.656 0-.336-.134-.56a1 1 0 0 0-.375-.357 2 2 0 0 0-.566-.21l-.621-.144a1 1 0 0 1-.404-.176.37.37 0 0 1-.144-.299q0-.234.185-.384.188-.152.512-.152.214 0 .37.068a.6.6 0 0 1 .246.181.56.56 0 0 1 .12.258h.75a1.1 1.1 0 0 0-.2-.566 1.2 1.2 0 0 0-.5-.41 1.8 1.8 0 0 0-.78-.152q-.439 0-.776.15-.337.149-.527.421-.19.273-.19.639 0 .302.122.524.124.223.352.367.228.143.539.213l.618.144q.31.073.463.193a.39.39 0 0 1 .152.326.5.5 0 0 1-.085.29.56.56 0 0 1-.255.193q-.167.07-.413.07-.175 0-.32-.04a.8.8 0 0 1-.248-.115.58.58 0 0 1-.255-.384zM.806 13.693q0-.373.102-.633a.87.87 0 0 1 .302-.399.8.8 0 0 1 .475-.137q.225 0 .398.097a.7.7 0 0 1 .272.26.85.85 0 0 1 .12.381h.765v-.072a1.33 1.33 0 0 0-.466-.964 1.4 1.4 0 0 0-.489-.272 1.8 1.8 0 0 0-.606-.097q-.534 0-.911.223-.375.222-.572.632-.195.41-.196.979v.498q0 .568.193.976.197.407.572.626.375.217.914.217.439 0 .785-.164t.55-.454a1.27 1.27 0 0 0 .226-.674v-.076h-.764a.8.8 0 0 1-.118.363.7.7 0 0 1-.272.25.9.9 0 0 1-.401.087.85.85 0 0 1-.478-.132.83.83 0 0 1-.299-.392 1.7 1.7 0 0 1-.102-.627zm8.239 2.238h-.953l-1.338-3.999h.917l.896 3.138h.038l.888-3.138h.879z"/>
@@ -351,20 +352,11 @@ function StudentSearch({paId, selected, activeTab, onSearchFilter, exportCSV}) {
                 buttonValue={messagebox.buttonValue}
                 onClose={handleModalButton}
             />
-            <ConfirmationModal
-                show={confirmationBox.show}
-                title={confirmationBox.title}
-                message={confirmationBox.message}
-                confirmText={confirmationBox.confirmText}
-                cancelText={confirmationBox.cancelText}
-                onConfirm={confirmationBox.onConfirm}
-                onCancel={confirmationBox.onCancel}
-            />
         </>
     );
 }
 
-function StudentInformation({paId, studentData, dashboardData, dassData}) {
+function StudentInformation({paId, PADetails, studentData, dashboardData, dassData}) {
 
     const [activeTab, setActiveTab] = useState("studentList");
     const [selected, setSelected] = useState([]);
@@ -377,6 +369,28 @@ function StudentInformation({paId, studentData, dashboardData, dassData}) {
     
     // ✅ Track if filter/search is active
     const [isFilterActive, setIsFilterActive] = useState(false);
+
+    let highRiskMoodCount = 0;
+
+    if (Array.isArray(studentData)) {
+        studentData.forEach(student => {
+            const trendMood = student.monthlyComparison?.mood?.positive?.trend;
+            const trendStress = student.monthlyComparison?.stress?.trend;  
+
+            // - Positive mood DECREASING = bad (less positive moods)
+            // - Stress INCREASING = bad (more stress)
+            if (trendMood === "decreasing" && trendStress === "increasing") {
+                // HIGH RISK: Both conditions are bad
+                highRiskMoodCount++;
+            } else if (trendMood === "decreasing" || trendStress === "increasing") {
+                // MODERATE RISK: One condition is bad
+                // If you want to count this as "high risk" too, keep this
+                // Otherwise, remove this else-if block
+                highRiskMoodCount++;
+            }
+        });
+    }
+
 
     // ✅ Update when props change (only if no filter is active)
     useEffect(() => {
@@ -426,137 +440,403 @@ function StudentInformation({paId, studentData, dashboardData, dassData}) {
         setIsFilterActive(false);
     }, [activeTab]);
 
-    const handleExportCSV = () => {
+    const handleExportCSV = (format) => {
         if (activeTab === "studentList") {
-            exportMoodSummaryCSV(filteredStudentData);
+            if (format === 'csv') {
+                exportMoodSummaryCSV(filteredStudentData);
+            } else {
+                exportMoodSummaryPDF(filteredStudentData);
+            }
         } else {
-            exportDassSummaryCSV(filteredDassData);
+            if (format === 'csv') {
+                exportDassSummaryCSV(filteredDassData);
+            } else {
+                exportDassSummaryPDF(filteredDassData);
+            }
         }   
     };
 
     // Mood Report
+    // ============= FIXED CSV EXPORT FOR MOOD =============
     const exportMoodSummaryCSV = (studentData) => {
         if (!studentData || studentData.length === 0) return;
 
-        // CSV Header Section with Title and Export Date
         const headerSection = [
             ["Student Emotion Report"],
-            ["Export Date:", new Date().toLocaleString()],
             [""],
+            ["Summary"],
+            ["PA Details", PADetails?.staffName || "N/A"],
+            ["Total Student Assigned", dashboardData?.studentAssignedCount || 0],
+            ["Students Who Recorded Mood Today", `${dashboardData?.moodRecordedTodayCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+            ["DASS Completion Status", `${dashboardData?.dassRecordedCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+            ["Students at High Emotional Risk", `${highRiskMoodCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+            ["Students at High DASS Risk", `${dashboardData?.highDassRiskCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+            ["Export Date", new Date().toLocaleString()],
             [""]
         ];
-
 
         const headers = [
             "Matric No",
             "Student Name",
+            "Period",
+            "Mood Pos Change",
+            "Mood Neg Change",
+            "Mood Summary",
+            "Stress Low Change",
+            "Stress High Change",
+            "Stress Summary",
             "Risk Indicator",
-            "Mood Pattern",
-            "Stress Pattern",
-            "Stress Trend",
-            "Last Recorded Date",
-            "Last Recorded Time",
-            "Risk Indicator",
-            "Today Contact Sent",
-            "Today Note Recorded",
-            'Num of Contact Sent (Total)',
-            'Num of Note Recorded (Total)'
+            // "Contact Today",
+            // "Note Today",
+            // "Total Contacts",
+            // "Total Notes"
         ];
 
         const rows = studentData.map(student => {
+            const getArrowText = (trend) => {
+                if (!student.monthlyComparison?.mood) {
+                    return '';
+                }
+                if (trend === 'increasing') return 'Rise';
+                if (trend === 'decreasing') return 'Drop';
+                return 'Unchanged';
+            };
 
+            const getOverallMessage = () => {
+                if (!student.monthlyComparison?.mood) {
+                    return 'No data';
+                }
+                const { overallTrend } = student.monthlyComparison.mood;
+                if (overallTrend === 'improving') return 'Positive improvement';
+                if (overallTrend === 'declining') return 'Mood balance changed';
+                return 'Remains stable';
+            };
+
+            const getStressMessage = () => {
+                if (!student.monthlyComparison?.stress) {
+                    return 'No Data';
+                }
+                const interpretation = student.monthlyComparison?.stress?.overallTrend;
+                if (interpretation === 'improving') return 'Moderate improvement';
+                if (interpretation === 'worsening') return 'Significant increase';
+                return 'Stable';
+            };
+
+            const getRiskIndicator = () => {
+                if (!student.monthlyComparison?.mood) {
+                    return 'No Data';
+                }
+                const trendMood = student.monthlyComparison?.mood?.negative?.trend;
+                const trendStress = student.monthlyComparison?.stress?.high?.trend;
+
+                if (!trendMood && !trendStress) return "No Data";
+                if (trendMood === "increasing" && trendStress === "increasing") return "High";
+                if (trendMood === "increasing" || trendStress === "increasing") return "Moderate";
+                return "Low";
+            };
+
+            // Build row data
             return [
-                student.matricNo,
-                student.studentName,
-                student.riskIndicator,
-                student.moodPattern,
-                student.stressPattern,
-                student.trend,
-                student.lastRecordedDate,
-                student.lastRecordedTime,
-                student.riskIndicator,
-                student.contactRecord ? "Yes" : "No",
-                !student.contactRecord ? "No" : student.noteRecord ? "Yes" : "No",
-                student.contactCount,
-                student.noteCount
-            ]
+                student.matricNo || "N/A",
+                student.studentName || "N/A",
+                student.period || "N/A",
+                `${getArrowText(student.monthlyComparison?.mood?.positive?.trend)} ${student.monthlyComparison?.mood?.positive?.difference !== null && student.monthlyComparison?.mood?.positive?.difference !== undefined ? Math.abs(student.monthlyComparison.mood.positive.difference) + '%' : 'No Data'}`,
+                `${getArrowText(student.monthlyComparison?.mood?.negative?.trend)} ${student.monthlyComparison?.mood?.negative?.difference !== null && student.monthlyComparison?.mood?.negative?.difference !== undefined ? Math.abs(student.monthlyComparison.mood.negative.difference) + '%' : 'No Data'}`,
+                getOverallMessage(),
+                `${getArrowText(student.monthlyComparison?.stress?.low?.trend)} ${student.monthlyComparison?.stress?.low?.difference !== null &&  student.monthlyComparison?.stress?.low?.difference !== undefined ? Math.abs(student.monthlyComparison?.stress?.low?.difference) + "%" : "No Data"}`,
+                `${getArrowText(student.monthlyComparison?.stress?.high?.trend)} ${student.monthlyComparison?.stress?.high?.difference !== null &&  student.monthlyComparison?.stress?.high?.difference !== undefined ? Math.abs(student.monthlyComparison?.stress?.high?.difference) + "%" : "No Data"}`,
+                getStressMessage(),
+                getRiskIndicator(),
+                // student.contactRecord ? "Yes" : "No",
+                // !student.contactRecord ? "No" : student.noteRecord ? "Yes" : "No",
+                // student.contactCount || 0,
+                // student.noteCount || 0
+            ];
         });
 
-        const csvContent = [
-            // Header section with title and date
-            ...headerSection.map(row => row.join(",")),
-            headers.join(","),
-            ...rows.map(row =>
-                row.map(value => `"${value ?? ""}"`).join(",")
-            )
-        ].join("\n");
+    const csvContent = [
+        ...headerSection.map(row => row.join(",")),
+        headers.join(","),
+        ...rows.map(row => row.map(value => `"${value}"`).join(","))
+    ].join("\n");
 
-        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Student_Mood_Summary_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+};
 
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `Student_Mood_Summary.csv`;
-        link.click();
+// ============= FIXED CSV EXPORT FOR DASS =============
+const exportDassSummaryCSV = (dassData) => {
+    if (!dassData || dassData.length === 0) return;
 
-        URL.revokeObjectURL(url);
-    };
+    const headerSection = [
+        ["Student Emotion Report"],
+        [""],
+        ["Summary"],
+        ["PA Details", PADetails?.staffName || "N/A"],
+        ["Total Student Assigned", dashboardData?.studentAssignedCount || 0],
+        ["Students Who Recorded Mood Today", `${dashboardData?.moodRecordedTodayCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+        ["DASS Completion Status", `${dashboardData?.dassRecordedCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+        ["Students at High Emotional Risk", `${dashboardData?.highMoodRiskCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+        ["Students at High DASS Risk", `${dashboardData?.highDassRiskCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+        ["Export Date", new Date().toLocaleString()],
+        [""]
+    ];
 
-    // Dass Report
+    const headers = [
+        "Matric No",
+        "Student Name",
+        "Depression Level",
+        "Anxiety Level",
+        "Stress Level",
+        "Status",
+        "Completed Date",
+        "Risk Indicator",
+        "Contact Today",
+        "Note Today",
+        "Total Contacts",
+        "Total Notes"
+    ];
+
     const getRiskIndicatorFromLevels = (levels) => {
-        let normalCount = 0;
-        let mildCount = 0;
-        let moderateCount = 0;
-        let severeCount = 0;
         let extremeSevereCount = 0;
+        let severeCount = 0;
+        let moderateCount = 0;
 
-        for (let i = 0; i < levels.length; i++) {
-            if (levels[i] === "Normal") normalCount++;
-            else if (levels[i] === "Mild") mildCount++;
-            else if (levels[i] === "Moderate") moderateCount++;
-            else if (levels[i] === "Severe") severeCount++;
-            else if (levels[i] === "Extremely Severe") extremeSevereCount++;
+        for (let level of levels) {
+            if (level === "Extremely Severe") extremeSevereCount++;
+            else if (level === "Severe") severeCount++;
+            else if (level === "Moderate") moderateCount++;
         }
 
-        if (extremeSevereCount > 0) {
-            return "Critical";
-        } else if (severeCount > 0) {
-            return "High";
-        } else if (moderateCount > 0) {
-            return "Medium";
-        } else {
-            return "Low";
-        }
+        if (extremeSevereCount > 0) return "Critical";
+        if (severeCount > 0) return "High";
+        if (moderateCount > 0) return "Medium";
+        return "Low";
     };
 
-    const exportDassSummaryCSV = (dassData) => {
+    const rows = dassData.map(dass => {
+        const riskIndicator = getRiskIndicatorFromLevels([
+            dass.depressionLevel,
+            dass.anxietyLevel,
+            dass.stressLevel
+        ]);
+
+        return [
+            dass.matricNo || "N/A",
+            dass.studentName || "N/A",
+            dass.depressionLevel || "No Record",
+            dass.anxietyLevel || "No Record",
+            dass.stressLevel || "No Record",
+            dass.dassStatus || "No Record",
+            dass.completedDate || "No Record",
+            riskIndicator,
+            dass.contactRecord ? "Yes" : "No",
+            !dass.contactRecord ? "No" : dass.noteRecord ? "Yes" : "No",
+            dass.contactCount || 0,
+            dass.noteCount || 0
+        ];
+    });
+
+    const csvContent = [
+        ...headerSection.map(row => row.join(",")),
+        headers.join(","),
+        ...rows.map(row => row.map(value => `"${value}"`).join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Student_Dass_Records_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+};
+
+// ============= NEW: PDF EXPORT FOR MOOD =============
+const exportMoodSummaryPDF = (studentData) => {
+    if (!studentData || studentData.length === 0) return;
+
+    const doc = new jsPDF({ orientation: 'landscape' }); // Landscape for wide table
+    
+    // Title
+    doc.setFontSize(18);
+    doc.setFont(undefined, 'bold');
+    doc.text('Student Emotion Report', 14, 20);
+    
+    // Add a separator line after title
+    doc.setLineWidth(0.5);
+    doc.line(14, 23, 283, 23); // Horizontal line across the page
+    
+    // Summary info
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    let yPos = 30;
+    doc.text(`PA Details: ${PADetails?.staffName || "N/A"}`, 14, yPos);
+    yPos += 6;
+    doc.text(`Total Students: ${dashboardData?.studentAssignedCount || 0}`, 14, yPos);
+    yPos += 6;
+    doc.text(`High Emotional Risk: ${highRiskMoodCount || 0}`, 14, yPos);
+    yPos += 6;
+    doc.text(`Export Date: ${new Date().toLocaleString()}`, 14, yPos);
+    yPos += 10;
+
+    // Table data
+    const tableHeaders = [
+        ['Matric', 'Name', 'Period', 'Mood Pos', 'Mood Neg', 'Mood Sum', 'Stress Low', 'Stress High', 'Stress Sum', 'Risk']
+    ];
+
+    const tableRows = studentData.map(student => {
+        const getArrowText = (trend) => {
+            if (!student.monthlyComparison?.stress) return '';
+            if (trend === 'increasing') return 'Rise';
+            if (trend === 'decreasing') return 'Drop';
+            return 'Unchanged';
+        };
+
+        const getOverallMessage = () => {
+            if (!student.monthlyComparison?.mood) return 'No data';
+            const { overallTrend } = student.monthlyComparison.mood;
+            if (overallTrend === 'improving') return 'Improving';
+            if (overallTrend === 'declining') return 'Declining';
+            return 'Stable';
+        };
+
+        const getStressMessage = () => {
+            if (!student.monthlyComparison?.stress) return 'No data';
+            const interpretation = student.monthlyComparison?.stress?.overallTrend;
+            if (interpretation === 'improving') return 'Improving';
+            if (interpretation === 'worsening') return 'Worsening';
+            return 'Stable';
+        };
+
+        const getRiskIndicator = () => {
+            const trendMood = student.monthlyComparison?.mood?.negative?.trend;
+            const trendStress = student.monthlyComparison?.stress?.high?.trend;
+            if (!trendMood && !trendStress) return "No Data";
+            if (trendMood === "increasing" && trendStress === "increasing") return "High";
+            if (trendMood === "increasing" || trendStress === "increasing") return "Moderate";
+            return "Low";
+        };
+
+        return [
+            student.matricNo || "N/A",
+            student.studentName || "N/A",
+            student.period || "N/A",
+            `${getArrowText(student.monthlyComparison?.mood?.positive?.trend)} ${student.monthlyComparison?.mood?.positive?.difference !== null && student.monthlyComparison?.mood?.positive?.difference !== undefined ? Math.abs(student.monthlyComparison.mood.positive.difference) + '%' : 'No Data'}`,
+            `${getArrowText(student.monthlyComparison?.mood?.negative?.trend)} ${student.monthlyComparison?.mood?.negative?.difference !== null && student.monthlyComparison?.mood?.negative?.difference !== undefined ? Math.abs(student.monthlyComparison.mood.negative.difference) + '%' : 'No Data'}`,
+            getOverallMessage(),
+            `${getArrowText(student.monthlyComparison?.stress?.low?.trend)} ${student.monthlyComparison?.stress?.low?.difference !== null &&  student.monthlyComparison?.stress?.low?.difference !== undefined ? Math.abs(student.monthlyComparison?.stress?.low?.difference) + "%" : "No Data"}`,
+            `${getArrowText(student.monthlyComparison?.stress?.high?.trend)} ${student.monthlyComparison?.stress?.high?.difference !== null &&  student.monthlyComparison?.stress?.high?.difference !== undefined ? Math.abs(student.monthlyComparison?.stress?.high?.difference) + "%" : "No Data"}`,
+            getStressMessage(),
+            getRiskIndicator(),
+        ];
+    });
+
+    // In exportMoodSummaryPDF - Replace the doc.autoTable section
+    autoTable(doc, {
+        head: tableHeaders,
+        body: tableRows,
+        startY: yPos,
+        styles: { 
+            fontSize: 8,
+            cellPadding: 2,
+            overflow: 'linebreak'
+        },
+        headStyles: { 
+            fillColor: [66, 139, 202],
+            fontStyle: 'bold',
+            halign: 'center'
+        },
+        columnStyles: {
+            0: { cellWidth: 25 }, // Matric
+            1: { cellWidth: 35 }, // Name
+            2: { cellWidth: 22 }, // Period
+            3: { cellWidth: 20 }, // Mood Pos
+            4: { cellWidth: 20 }, // Mood Neg
+            5: { cellWidth: 25 }, // Mood Sum
+            6: { cellWidth: 22 }, // Stress Low
+            7: { cellWidth: 22 }, // Stress High
+            8: { cellWidth: 25 }, // Stress Sum
+            9: { cellWidth: 20 }  // Risk
+        },
+        didParseCell: (data) => {
+            // Color code risk levels
+            if (data.column.index === 9 && data.section === 'body') {
+                const risk = data.cell.raw;
+                if (risk === 'High') {
+                    data.cell.styles.fillColor = [244, 67, 54]; // Red
+                    data.cell.styles.textColor = [255, 255, 255];
+                } else if (risk === 'Moderate') {
+                    data.cell.styles.fillColor = [255, 152, 0]; // Orange
+                } else if (risk === 'Low') {
+                    data.cell.styles.fillColor = [76, 175, 80]; // Green
+                }
+            }
+        }
+    });
+
+    doc.save(`Student_Mood_Summary_${new Date().toISOString().split('T')[0]}.pdf`);
+};
+
+// ============= NEW: PDF EXPORT FOR DASS =============
+   const exportDassSummaryPDF = (dassData) => {
         if (!dassData || dassData.length === 0) return;
 
-        // CSV Header Section with Title and Export Date
-        const headerSection = [
-            ["Student DASS Report"],
-            ["Export Date:", new Date().toLocaleString()],
-            [""],
-            [""]
+        const doc = new jsPDF({ orientation: 'landscape' });
+        
+        // Title
+        doc.setFontSize(18);
+        doc.setFont(undefined, 'bold');
+        doc.text('Student DASS Report', 14, 20);
+        
+        // Add a separator line after title
+        doc.setLineWidth(0.5);
+        doc.line(14, 23, 283, 23);
+        
+        // Summary info
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        let yPos = 32;
+        
+        doc.text(`PA Details: ${PADetails?.staffName || "N/A"}`, 14, yPos);
+        yPos += 7;
+        
+        doc.text(`Total Students: ${dashboardData?.studentAssignedCount || 0}`, 14, yPos);
+        yPos += 7;
+        
+        doc.text(`High DASS Risk: ${dashboardData?.highDassRiskCount || 0}`, 14, yPos);
+        yPos += 7;
+        
+        doc.text(`Export Date: ${new Date().toLocaleString()}`, 14, yPos);
+        yPos += 12;
+
+        const tableHeaders = [
+            ['Matric No', 'Student Name', 'Depression', 'Anxiety', 'Stress', 'Status', 'Date', 'Risk']
         ];
 
-        const headers = [
-            "Matric No",
-            "Student Name",
-            "Depression Level",
-            "Anxiety Level",
-            "Stress Level",
-            "Status",
-            "Completed Date",
-            "Risk Indicator",
-            "Today Contact Sent",
-            "Today Note Recorded",
-            'Num of Contact Sent (Total)',
-            'Num of Note Recorded (Total)'
-        ];
+        const getRiskIndicatorFromLevels = (levels) => {
+            let extremeSevereCount = 0;
+            let severeCount = 0;
+            let moderateCount = 0;
 
-        const rows = dassData.map(dass => {
+            for (let level of levels) {
+                if (level === "Extremely Severe") extremeSevereCount++;
+                else if (level === "Severe") severeCount++;
+                else if (level === "Moderate") moderateCount++;
+            }
             
+            if (extremeSevereCount > 0) return "Critical";
+            if (severeCount > 0) return "High";
+            if (moderateCount > 0) return "Medium";
+            return "Low";
+        };
+
+        const tableRows = dassData.map(dass => {
             const riskIndicator = getRiskIndicatorFromLevels([
                 dass.depressionLevel,
                 dass.anxietyLevel,
@@ -564,43 +844,65 @@ function StudentInformation({paId, studentData, dashboardData, dassData}) {
             ]);
 
             return [
-                dass.matricNo,
-                dass.studentName,
-                dass.depressionLevel,
-                dass.anxietyLevel,
-                dass.stressLevel,
-                dass.dassStatus,
-                dass.completedDate,
-                riskIndicator,
-                dass.contactRecord ? "Yes" : "No",
-                !dass.contactRecord ? "No" : dass.noteRecord ? "Yes" : "No",
-                dass.contactCount,
-                dass.noteCount
-
+                dass.matricNo || "N/A",
+                dass.studentName?.substring(0, 20) || "N/A",
+                dass.depressionLevel || "No Record",
+                dass.anxietyLevel || "No Record",
+                dass.stressLevel || "No Record",
+                dass.dassStatus || "No Record",
+                dass.completedDate || "No Record",
+                dass.dassStatus === "Pending" || dass.dassStatus === "No Record" ? "No Data" : riskIndicator
             ];
         });
 
-        const csvContent = [
-            // Header section with title and date
-            ...headerSection.map(row => row.join(",")),
-            // Table headers
-            headers.join(","),
-            ...rows.map(row =>
-                row.map(value => `"${value ?? ""}"`).join(",")
-            )
-        ].join("\n");
+        autoTable(doc, {
+            head: tableHeaders,
+            body: tableRows,
+            startY: yPos,
+            styles: { 
+                fontSize: 9,
+                cellPadding: 3
+            },
+            headStyles: { 
+                fillColor: [66, 139, 202],
+                fontStyle: 'bold',
+                halign: 'center'
+            },
+            columnStyles: {
+                0: { cellWidth: 30 },
+                1: { cellWidth: 45 },
+                2: { cellWidth: 30 },
+                3: { cellWidth: 30 },
+                4: { cellWidth: 30 },
+                5: { cellWidth: 25 },
+                6: { cellWidth: 28 },
+                7: { cellWidth: 22 }
+            },
+            didParseCell: (data) => {
+                // ✅ FIXED: Color code risk levels per cell
+                if (data.column.index === 7 && data.section === 'body') {
+                    const risk = data.cell.raw;
+                    
+                    // ✅ Don't color "No Data"
+                    if (risk === 'No Data') {
+                        data.cell.styles.fillColor = [220, 220, 220]; // Light gray
+                        data.cell.styles.textColor = [100, 100, 100]; // Dark gray text
+                    } else if (risk === 'Critical' || risk === 'High') {
+                        data.cell.styles.fillColor = [244, 67, 54]; // Red
+                        data.cell.styles.textColor = [255, 255, 255]; // White text
+                    } else if (risk === 'Medium') {
+                        data.cell.styles.fillColor = [255, 152, 0]; // Orange
+                        data.cell.styles.textColor = [0, 0, 0]; // Black text
+                    } else if (risk === 'Low') {
+                        data.cell.styles.fillColor = [76, 175, 80]; // Green
+                        data.cell.styles.textColor = [255, 255, 255]; // White text
+                    }
+                }
+            }
+        });
 
-        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
-
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "Student_Dass_Records.csv";
-        link.click();
-
-        URL.revokeObjectURL(url);
+        doc.save(`Student_Dass_Records_${new Date().toISOString().split('T')[0]}.pdf`);
     };
-
 
 
     return (
@@ -959,232 +1261,6 @@ function StudentInfoTable({paId, studentData, selected, setSelected}) {
             cancelText: "",
             noteType: "",
             currentStudent: null
-        });
-    };
-
-    // ✅ Separate confirm handler that checks purpose
-    const handleConfirmTextarea = async () => {
-        const token = localStorage.getItem("token");
-        const { currentStudent, message, purpose, noteType } = textareaModal;
-
-        if (!currentStudent) return;
-
-        // ✅ Validate message is not empty for BOTH purposes
-        if (!message || !message.trim()) {
-            // ❌ DON'T just show messagebox - it will overlap with textarea modal
-            // Instead, close the textarea modal first
-            const tempStudent = currentStudent;
-            const tempPurpose = purpose;
-            const tempNoteType = noteType;
-            
-            closeTextareaModal();
-            
-            setMessagebox({
-                show: true,
-                title: "Message Required",
-                message: "Please enter a message before submitting.",
-                buttonValue: "OK",
-                redirect: false
-            });
-            
-            // ✅ Reopen the modal after messagebox closes
-            setTimeout(() => {
-                if (tempPurpose === "contact") {
-                    handleContactBox(tempStudent);
-                } else {
-                    handleNoteBox(tempStudent);
-                    // Restore the noteType that was selected
-                    setTextareaModal(prev => ({
-                        ...prev,
-                        noteType: tempNoteType
-                    }));
-                }
-            }, 100);
-            
-            return;
-        }
-
-        try {
-            let response;
-            
-            if (purpose === "contact") {
-                response = await fetch(
-                    "http://localhost:8080/care_connect_system/backend/api/contactStudent.php",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": "Bearer " + token
-                        },
-                        body: JSON.stringify({
-                            studentId: currentStudent.studentId,
-                            message: message
-                        })
-                    }
-                );
-            } else if (purpose === "note") {
-                // Validate note type is selected
-                if (!noteType) {
-                    const tempStudent = currentStudent;
-                    const tempMessage = message;
-                    
-                    closeTextareaModal();
-                    
-                    setMessagebox({
-                        show: true,
-                        title: "Note Type Required",
-                        message: "Please select a note type before submitting.",
-                        buttonValue: "OK",
-                        redirect: false
-                    });
-                    
-                    // ✅ Reopen with the message preserved
-                    setTimeout(() => {
-                        handleNoteBox(tempStudent);
-                        setTextareaModal(prev => ({
-                            ...prev,
-                            message: tempMessage
-                        }));
-                    }, 100);
-                    
-                    return;
-                }
-                
-                response = await fetch(
-                    "http://localhost:8080/care_connect_system/backend/api/noteRecord.php",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": "Bearer " + token
-                        },
-                        body: JSON.stringify({
-                            studentId: currentStudent.studentId,
-                            noteType: noteType,
-                            message: message
-                        })
-                    }
-                );
-            }
-
-            const result = await response.json();
-
-            closeTextareaModal();
-
-            setMessagebox({
-                show: true,
-                title: result.success 
-                    ? (purpose === "contact" ? "Student Contacted Successfully" : "Note Added Successfully")
-                    : (purpose === "contact" ? "Contact Failed" : "Note Failed"),
-                message: result.success
-                    ? (purpose === "contact" 
-                        ? `A meeting notification has been sent to ${currentStudent.studentName}.`
-                        : `Note has been added for ${currentStudent.studentName}.`)
-                    : (result.message || `Failed to ${purpose === "contact" ? "send notification" : "add note"}.`),
-                buttonValue: "OK",
-                redirect: result.success
-            });
-
-        } catch (error) {
-            console.error(error);
-            closeTextareaModal();
-            setMessagebox({
-                show: true,
-                title: purpose === "contact" ? "Contact Failed" : "Note Failed",
-                message: "An error occurred while processing your request.",
-                buttonValue: "OK",
-                redirect: false
-            });
-        }
-    };
-
-    // ✅ Open contact modal
-    const handleContactBox = (student) => {
-        setTextareaModal({
-            isOpen: true,
-            purpose: "contact",
-            title: "Contact Student",
-            description: "Please review or customize the message before sending to the student.",
-            message: "We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.",
-            placeholder: "Write your message here...",
-            maxLength: 500,
-            confirmText: "Send",
-            cancelText: "Cancel",
-            noteType: "",
-            currentStudent: student
-        });
-    };
-
-    // ✅ Open note modal
-    const handleNoteBox = (student) => {
-        setTextareaModal({
-            isOpen: true,
-            purpose: "note",
-            title: "Student Case Note",
-            description: "This note is for internal reference only and will not be visible to the student.",
-            message: "",
-            placeholder: "Enter meeting summary, observations, or follow-up actions...",
-            maxLength: 100000,
-            confirmText: "Save Note",
-            cancelText: "Cancel",
-            noteType: "",
-            currentStudent: student
-        });
-    };
-
-    // For form handling and messageBox (Modal)
-    const [confirmationBox, setConfirmationBox] = useState({
-        show: false,
-        title: "",
-        message: "",
-        confirmText: "",
-        cancelText: "",
-        onConfirm: null,
-        onCancel: null
-    });
-
-    const openDassModal = async (student) => {
-        setConfirmationBox({
-            show: true,
-            title: "Send Dass to Student?",
-            message: "This action cannot be undone.",
-            confirmText: "Send",
-            cancelText: "Cancel",
-            onConfirm: async () => {
-                setConfirmationBox(prev => ({ ...prev, show: false }));
-
-                const token = localStorage.getItem("token");
-
-                try {
-                    const response = await fetch(`http://localhost:8080/care_connect_system/backend/api/sendDass.php?studentId=${student.studentId}`, {
-                            method: "GET",
-                            headers: { "Authorization": "Bearer " + token }
-                        }
-                    );
-
-                    const result = await response.json();
-                        setMessagebox({
-                            show: true,
-                            title: result.success ? "DASS Assessment Sent Successfully" : "DASS Assessment Failed To Send",
-                            message: result.success
-                                ? `DASS Assessment has been sent successfully to ${student.studentName}.`
-                                : `Failed to send DASS Assessment to ${student.studentName}.`,
-                            buttonValue: "OK"
-                        });
-
-                        navigate("/StudentTableData");
-                } catch (error) {
-                    console.error(error);
-                    setMessagebox({
-                        show: true,
-                        title: "DASS Assessment Failed To Send",
-                        message: `Failed to send DASS Assessment to ${student.studentName} due to error`,
-                        buttonValue: "OK"
-                    });
-                }
-            },
-            onCancel: () =>
-                setConfirmationBox(prev => ({ ...prev, show: false }))
         });
     };
 
@@ -1818,48 +1894,12 @@ function StudentInfoTable({paId, studentData, selected, setSelected}) {
                     })}
                 </tbody>
             </table>
-            <ConfirmationModal
-                show={confirmationBox.show}
-                title={confirmationBox.title}
-                message={confirmationBox.message}
-                confirmText={confirmationBox.confirmText}
-                cancelText={confirmationBox.cancelText}
-                onConfirm={confirmationBox.onConfirm}
-                onCancel={confirmationBox.onCancel}
-            />
             <MessageBox 
                 show={messagebox.show}
                 title={messagebox.title}
                 message={messagebox.message}
                 buttonValue={messagebox.buttonValue}
                 onClose={handleModalButton}
-            />
-            {/* ✅ Single TextareaModal that adapts based on purpose */}
-            <TextareaModal
-                show={textareaModal.isOpen}
-                purpose={textareaModal.purpose}
-                title={textareaModal.title}
-                description={textareaModal.description}
-                placeholder={textareaModal.placeholder}
-                value={textareaModal.message}
-                onChange={(value) =>
-                    setTextareaModal(prev => ({
-                        ...prev,
-                        message: value
-                    }))
-                }
-                noteType={textareaModal.noteType}
-                onNoteTypeChange={(value) =>
-                    setTextareaModal(prev => ({
-                        ...prev,
-                        noteType: value
-                    }))
-                }
-                maxLength={textareaModal.maxLength}
-                confirmText={textareaModal.confirmText}
-                cancelText={textareaModal.cancelText}
-                onConfirm={handleConfirmTextarea}
-                onCancel={closeTextareaModal}
             />
         </>
     );

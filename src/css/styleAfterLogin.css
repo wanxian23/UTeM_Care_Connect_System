@@ -44,6 +44,14 @@ header {
     z-index: 1000;
 }
 
+header.pa {
+    background-color: #cce8d4;
+}
+
+header.counsellor {
+    background-color: #fbe3e3;
+}
+
 header a#logo {
     display: flex;
     justify-content: center;

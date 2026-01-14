@@ -239,7 +239,7 @@ main.StudentInfoMain section.searchbarWrapper form.filterForm section.filterCont
 main.StudentInfoMain section.searchbarWrapper form.searchForm {
     display: flex;
     gap: 30px;
-    width: 60%;
+    width: 50%;
     /* border: 1px solid; */
 }
 
@@ -253,7 +253,7 @@ main.StudentInfoMain section.searchbarWrapper form input[type="text"] {
 }
 
 main.StudentInfoMain section.searchbarWrapper div {
-    width: 30%;
+    width: 40%;
     display: flex;
     justify-content: right;
     gap: 20px;
@@ -278,7 +278,8 @@ main.StudentInfoMain section.searchbarWrapper div button.inactive:hover {
     background-color: #819ec3;
 }
 
-main.StudentInfoMain section.searchbarWrapper div button.inactive {
+main.StudentInfoMain section.searchbarWrapper div button.inactive,
+button.inactive {
     cursor: not-allowed;
 }
 
@@ -422,6 +423,10 @@ main.StudentInfoMain table td.actionTd div button {
 
 main.StudentInfoMain table td.actionTd div button:hover {
     background-color: #97b3d7;
+}
+
+main.StudentInfoMain table td.actionTd div button.inactive:hover {
+    background-color: #b6cae2;
 }
 
 

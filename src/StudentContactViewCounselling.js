@@ -291,7 +291,7 @@ function StudentContactView() {
         <>
             <HeaderCounsellor />
             <main className="studentInfoContentMain">
-                <SubHeader studentId={studentId} />
+                <SubHeader paId={paId} studentId={studentId} />
                 <section className="studentInfoContentWrapper">
                     <article className="contactInfoWrapper">
                         <div className="contactHeader">
@@ -379,7 +379,7 @@ function StudentContactView() {
                                             padding: "5px",
                                             border: "1px solid" + getTrendColor(
                                                 'negative',
-                                                trendData.monthlyComparison?.mood?.positive?.trend
+                                                trendData.monthlyComparison?.mood?.negative?.trend
                                             ),
                                             color: getTrendColor(
                                                 'negative',

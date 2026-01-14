@@ -24,8 +24,8 @@ $user = null;   // store user data
 /* -------------------------------------------
    1️⃣ CHECK STAFF TABLE (PA)
 ------------------------------------------- */
-$stmt = $conn->prepare("SELECT * FROM staff WHERE (staffEmail=? OR staffNo LIKE ?) AND staffRole = 'PENASIHAT AKADEMIK' LIMIT 1");
-$stmt->bind_param("ss", $email, $numberForm);
+$stmt = $conn->prepare("SELECT * FROM staff WHERE (staffEmail=? OR staffNo=?) AND staffRole = 'PENASIHAT AKADEMIK' LIMIT 1");
+$stmt->bind_param("ss", $email, $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -38,8 +38,8 @@ if ($result->num_rows > 0) {
    1️⃣ CHECK STAFF TABLE (COUNTSELLOR)
 ------------------------------------------- */
 if ($type === "") {
-    $stmt = $conn->prepare("SELECT * FROM staff WHERE (staffEmail=? OR staffNo LIKE ?) AND staffRole != 'PENASIHAT AKADEMIK' LIMIT 1");
-    $stmt->bind_param("ss", $email, $numberForm);
+    $stmt = $conn->prepare("SELECT * FROM staff WHERE (staffEmail=? OR staffNo=?) AND staffRole != 'PENASIHAT AKADEMIK' LIMIT 1");
+    $stmt->bind_param("ss", $email, $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -53,8 +53,8 @@ if ($type === "") {
    2️⃣ IF NOT STAFF → CHECK STUDENT TABLE
 ------------------------------------------- */
 if ($type === "") {
-    $stmt = $conn->prepare("SELECT * FROM student WHERE (studentEmail=? OR matricNo LIKE ?) LIMIT 1");
-    $stmt->bind_param("ss", $email, $numberForm);
+    $stmt = $conn->prepare("SELECT * FROM student WHERE (studentEmail=? OR matricNo=?) LIMIT 1");
+    $stmt->bind_param("ss", $email, $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -68,7 +68,7 @@ if ($type === "") {
    3️⃣ IF NO USER FOUND
 ------------------------------------------- */
 if (!$user) {
-    echo json_encode(["success" => false, "message" => "User not found due to wrong email!"]);
+    echo json_encode(["success" => false, "message" => "User not found due to wrong email or matric number!"]);
     exit;
 }
 

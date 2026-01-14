@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 import "./css/StudentTableData.css";
 import {HeaderPa, Footer} from "./HeaderFooter";
@@ -10,11 +12,12 @@ import MessageBox, {ConfirmationModal, TextareaModal} from "./Modal";
 function StudentTableData() {
 
     useEffect(() => {
-        document.title = "Table Data";
+        document.title = "Dashboard";
     }, []);
 
     const [dashboardData, setDashbaordData] = useState(null);
     const [studentTableData, setStudentTableData] = useState([]);
+    const [profileData, setProfileData] = useState([]);
     const [dassData, setDassData] = useState([]);
 
     useEffect(() => {
@@ -40,6 +43,7 @@ function StudentTableData() {
                 setStudentTableData(data);
                 setDashbaordData(data.dashboardData);
                 setDassData(data);
+                setProfileData(data.PADetails);
 
             } else {
                 // Token invalid → clear storage & redirect
@@ -57,7 +61,7 @@ function StudentTableData() {
             {/* If u write only studentInfoData without ?. then here might return null */}
             {/* Cuz here is out of useEffect(), which means here is accessing the data that havent get return back the backend yet */}
             {/* If you add ?. then the data you get is definitely return by backend already */}
-            <StudentInformation studentData={studentTableData?.studentData} dassData={dassData?.studentDassData}/>
+            <StudentInformation PADetails={profileData} dashboardData={dashboardData} studentData={studentTableData?.studentData} dassData={dassData?.studentDassData}/>
             <Footer />
         </>
     );
@@ -484,7 +488,7 @@ export function StudentSearch({selected, activeTab, onSearchFilter, exportCSV}) 
                         onChange={handleSearchChange}
                     />
                 </form>
-                <div>
+                <div cl>
                     {activeTab === "studentList" ?
                     <button 
                         className={buttonActivation} 
@@ -499,7 +503,14 @@ export function StudentSearch({selected, activeTab, onSearchFilter, exportCSV}) 
                     :
                         <></>
                     }
-                    <button onClick={exportCSV}>
+                    <button onClick={() => exportCSV('pdf')}>
+                        Export PDF
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-file-earmark-pdf" viewBox="0 0 16 16">
+                            <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+                            <path d="M4.603 14.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.188-.012.396-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.066.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.7 11.7 0 0 0-1.997.406 11.3 11.3 0 0 1-1.02 1.51c-.292.35-.609.656-.927.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.245.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 7.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z"/>
+                        </svg>
+                    </button>
+                    <button onClick={() => exportCSV('csv')}>
                         Export CSV
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-filetype-csv" viewBox="0 0 16 16">
                             <path fillRule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM3.517 14.841a1.13 1.13 0 0 0 .401.823q.195.162.478.252.284.091.665.091.507 0 .859-.158.354-.158.539-.44.187-.284.187-.656 0-.336-.134-.56a1 1 0 0 0-.375-.357 2 2 0 0 0-.566-.21l-.621-.144a1 1 0 0 1-.404-.176.37.37 0 0 1-.144-.299q0-.234.185-.384.188-.152.512-.152.214 0 .37.068a.6.6 0 0 1 .246.181.56.56 0 0 1 .12.258h.75a1.1 1.1 0 0 0-.2-.566 1.2 1.2 0 0 0-.5-.41 1.8 1.8 0 0 0-.78-.152q-.439 0-.776.15-.337.149-.527.421-.19.273-.19.639 0 .302.122.524.124.223.352.367.228.143.539.213l.618.144q.31.073.463.193a.39.39 0 0 1 .152.326.5.5 0 0 1-.085.29.56.56 0 0 1-.255.193q-.167.07-.413.07-.175 0-.32-.04a.8.8 0 0 1-.248-.115.58.58 0 0 1-.255-.384zM.806 13.693q0-.373.102-.633a.87.87 0 0 1 .302-.399.8.8 0 0 1 .475-.137q.225 0 .398.097a.7.7 0 0 1 .272.26.85.85 0 0 1 .12.381h.765v-.072a1.33 1.33 0 0 0-.466-.964 1.4 1.4 0 0 0-.489-.272 1.8 1.8 0 0 0-.606-.097q-.534 0-.911.223-.375.222-.572.632-.195.41-.196.979v.498q0 .568.193.976.197.407.572.626.375.217.914.217.439 0 .785-.164t.55-.454a1.27 1.27 0 0 0 .226-.674v-.076h-.764a.8.8 0 0 1-.118.363.7.7 0 0 1-.272.25.9.9 0 0 1-.401.087.85.85 0 0 1-.478-.132.83.83 0 0 1-.299-.392 1.7 1.7 0 0 1-.102-.627zm8.239 2.238h-.953l-1.338-3.999h.917l.896 3.138h.038l.888-3.138h.879z"/>
@@ -527,7 +538,7 @@ export function StudentSearch({selected, activeTab, onSearchFilter, exportCSV}) 
     );
 }
 
-function StudentInformation({studentData, dassData}) {
+function StudentInformation({PADetails, dashboardData, studentData, dassData}) {
 
     const [activeTab, setActiveTab] = useState("studentList");
     const [selected, setSelected] = useState([]);
@@ -540,6 +551,27 @@ function StudentInformation({studentData, dassData}) {
     
     // ✅ Track if filter/search is active
     const [isFilterActive, setIsFilterActive] = useState(false);
+
+    let highRiskMoodCount = 0;
+
+    if (Array.isArray(studentData)) {
+        studentData.forEach(student => {
+            const trendMood = student.monthlyComparison?.mood?.positive?.trend;
+            const trendStress = student.monthlyComparison?.stress?.trend;  
+
+            // - Positive mood DECREASING = bad (less positive moods)
+            // - Stress INCREASING = bad (more stress)
+            if (trendMood === "decreasing" && trendStress === "increasing") {
+                // HIGH RISK: Both conditions are bad
+                highRiskMoodCount++;
+            } else if (trendMood === "decreasing" || trendStress === "increasing") {
+                // MODERATE RISK: One condition is bad
+                // If you want to count this as "high risk" too, keep this
+                // Otherwise, remove this else-if block
+                highRiskMoodCount++;
+            }
+        });
+    }
 
     // ✅ Update when props change (only if no filter is active)
     useEffect(() => {
@@ -589,11 +621,19 @@ function StudentInformation({studentData, dassData}) {
         setIsFilterActive(false);
     }, [activeTab]);
 
-    const handleExportCSV = () => {
+    const handleExportCSV = (format) => {
         if (activeTab === "studentList") {
-            exportMoodSummaryCSV(filteredStudentData);
+            if (format === 'csv') {
+                exportMoodSummaryCSV(filteredStudentData);
+            } else {
+                exportMoodSummaryPDF(filteredStudentData);
+            }
         } else {
-            exportDassSummaryCSV(filteredDassData);
+            if (format === 'csv') {
+                exportDassSummaryCSV(filteredDassData);
+            } else {
+                exportDassSummaryPDF(filteredDassData);
+            }
         }   
     };
 
@@ -601,96 +641,113 @@ function StudentInformation({studentData, dassData}) {
     const exportMoodSummaryCSV = (studentData) => {
         if (!studentData || studentData.length === 0) return;
 
-        // CSV Header Section with Title and Export Date
         const headerSection = [
             ["Student Emotion Report"],
-            ["Export Date:", new Date().toLocaleString()],
             [""],
+            ["Summary"],
+            ["PA Details", PADetails?.staffName || "N/A"],
+            ["Total Student Assigned", dashboardData?.studentAssignedCount || 0],
+            ["Students Who Recorded Mood Today", `${dashboardData?.moodRecordedTodayCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+            ["DASS Completion Status", `${dashboardData?.dassRecordedCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+            ["Students at High Emotional Risk", `${highRiskMoodCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+            ["Students at High DASS Risk", `${dashboardData?.highDassRiskCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+            ["Export Date", new Date().toLocaleString()],
             [""]
         ];
-
 
         const headers = [
             "Matric No",
             "Student Name",
+            "Period",
+            "Mood Pos Change",
+            "Mood Neg Change",
+            "Mood Summary",
+            "Stress Low Change",
+            "Stress High Change",
+            "Stress Summary",
             "Risk Indicator",
-            "Mood Pattern",
-            "Stress Pattern",
-            "Stress Trend",
-            "Last Recorded Date",
-            "Last Recorded Time",
-            "Risk Indicator",
-            "Today Contact Sent",
-            "Today Note Recorded",
-            'Num of Contact Sent (Total)',
-            'Num of Note Recorded (Total)'
+            // "Contact Today",
+            // "Note Today",
+            // "Total Contacts",
+            // "Total Notes"
         ];
 
         const rows = studentData.map(student => {
+            const getArrowText = (trend) => {
+                if (!student.monthlyComparison?.mood) {
+                    return '';
+                }
+                if (trend === 'increasing') return 'Rise';
+                if (trend === 'decreasing') return 'Drop';
+                return 'Unchanged';
+            };
 
+            const getOverallMessage = () => {
+                if (!student.monthlyComparison?.mood) {
+                    return 'No data';
+                }
+                const { overallTrend } = student.monthlyComparison.mood;
+                if (overallTrend === 'improving') return 'Positive improvement';
+                if (overallTrend === 'declining') return 'Mood balance changed';
+                return 'Remains stable';
+            };
+
+            const getStressMessage = () => {
+                if (!student.monthlyComparison?.stress) {
+                    return 'No Data';
+                }
+                const interpretation = student.monthlyComparison?.stress?.overallTrend;
+                if (interpretation === 'improving') return 'Moderate improvement';
+                if (interpretation === 'worsening') return 'Significant increase';
+                return 'Stable';
+            };
+
+            const getRiskIndicator = () => {
+                if (!student.monthlyComparison?.mood) {
+                    return 'No Data';
+                }
+                const trendMood = student.monthlyComparison?.mood?.negative?.trend;
+                const trendStress = student.monthlyComparison?.stress?.high?.trend;
+
+                if (!trendMood && !trendStress) return "No Data";
+                if (trendMood === "increasing" && trendStress === "increasing") return "High";
+                if (trendMood === "increasing" || trendStress === "increasing") return "Moderate";
+                return "Low";
+            };
+
+            // Build row data
             return [
-                student.matricNo,
-                student.studentName,
-                student.riskIndicator,
-                student.moodPattern,
-                student.stressPattern,
-                student.trend,
-                student.lastRecordedDate,
-                student.lastRecordedTime,
-                student.riskIndicator,
-                student.contactRecord ? "Yes" : "No",
-                !student.contactRecord ? "No" : student.noteRecord ? "Yes" : "No",
-                student.contactCount,
-                student.noteCount
-            ]
+                student.matricNo || "N/A",
+                student.studentName || "N/A",
+                student.period || "N/A",
+                `${getArrowText(student.monthlyComparison?.mood?.positive?.trend)} ${student.monthlyComparison?.mood?.positive?.difference !== null && student.monthlyComparison?.mood?.positive?.difference !== undefined ? Math.abs(student.monthlyComparison.mood.positive.difference) + '%' : 'No Data'}`,
+                `${getArrowText(student.monthlyComparison?.mood?.negative?.trend)} ${student.monthlyComparison?.mood?.negative?.difference !== null && student.monthlyComparison?.mood?.negative?.difference !== undefined ? Math.abs(student.monthlyComparison.mood.negative.difference) + '%' : 'No Data'}`,
+                getOverallMessage(),
+                `${getArrowText(student.monthlyComparison?.stress?.low?.trend)} ${student.monthlyComparison?.stress?.low?.difference !== null &&  student.monthlyComparison?.stress?.low?.difference !== undefined ? Math.abs(student.monthlyComparison?.stress?.low?.difference) + "%" : "No Data"}`,
+                `${getArrowText(student.monthlyComparison?.stress?.high?.trend)} ${student.monthlyComparison?.stress?.high?.difference !== null &&  student.monthlyComparison?.stress?.high?.difference !== undefined ? Math.abs(student.monthlyComparison?.stress?.high?.difference) + "%" : "No Data"}`,
+                getStressMessage(),
+                getRiskIndicator(),
+                // student.contactRecord ? "Yes" : "No",
+                // !student.contactRecord ? "No" : student.noteRecord ? "Yes" : "No",
+                // student.contactCount || 0,
+                // student.noteCount || 0
+            ];
         });
 
-        const csvContent = [
-            // Header section with title and date
-            ...headerSection.map(row => row.join(",")),
-            headers.join(","),
-            ...rows.map(row =>
-                row.map(value => `"${value ?? ""}"`).join(",")
-            )
-        ].join("\n");
+    const csvContent = [
+        ...headerSection.map(row => row.join(",")),
+        headers.join(","),
+        ...rows.map(row => row.map(value => `"${value}"`).join(","))
+    ].join("\n");
 
-        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
-
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `Student_Mood_Summary.csv`;
-        link.click();
-
-        URL.revokeObjectURL(url);
-    };
-
-    // Dass Report
-    const getRiskIndicatorFromLevels = (levels) => {
-        let normalCount = 0;
-        let mildCount = 0;
-        let moderateCount = 0;
-        let severeCount = 0;
-        let extremeSevereCount = 0;
-
-        for (let i = 0; i < levels.length; i++) {
-            if (levels[i] === "Normal") normalCount++;
-            else if (levels[i] === "Mild") mildCount++;
-            else if (levels[i] === "Moderate") moderateCount++;
-            else if (levels[i] === "Severe") severeCount++;
-            else if (levels[i] === "Extremely Severe") extremeSevereCount++;
-        }
-
-        if (extremeSevereCount > 0) {
-            return "Critical";
-        } else if (severeCount > 0) {
-            return "High";
-        } else if (moderateCount > 0) {
-            return "Medium";
-        } else {
-            return "Low";
-        }
-    };
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Student_Mood_Summary_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+};
 
     const exportDassSummaryCSV = (dassData) => {
         if (!dassData || dassData.length === 0) return;
@@ -717,6 +774,23 @@ function StudentInformation({studentData, dassData}) {
             'Num of Contact Sent (Total)',
             'Num of Note Recorded (Total)'
         ];
+
+        const getRiskIndicatorFromLevels = (levels) => {
+            let extremeSevereCount = 0;
+            let severeCount = 0;
+            let moderateCount = 0;
+
+            for (let level of levels) {
+                if (level === "Extremely Severe") extremeSevereCount++;
+                else if (level === "Severe") severeCount++;
+                else if (level === "Moderate") moderateCount++;
+            }
+
+            if (extremeSevereCount > 0) return "Critical";
+            if (severeCount > 0) return "High";
+            if (moderateCount > 0) return "Medium";
+            return "Low";
+        };
 
         const rows = dassData.map(dass => {
             
@@ -764,6 +838,252 @@ function StudentInformation({studentData, dassData}) {
         URL.revokeObjectURL(url);
     };
 
+    // ============= NEW: PDF EXPORT FOR MOOD =============
+    const exportMoodSummaryPDF = (studentData) => {
+        if (!studentData || studentData.length === 0) return;
+    
+        const doc = new jsPDF({ orientation: 'landscape' }); // Landscape for wide table
+        
+        // Title
+        doc.setFontSize(18);
+        doc.setFont(undefined, 'bold');
+        doc.text('Student Emotion Report', 14, 20);
+        
+        // Add a separator line after title
+        doc.setLineWidth(0.5);
+        doc.line(14, 23, 283, 23); // Horizontal line across the page
+        
+        // Summary info
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        let yPos = 30;
+        doc.text(`PA Details: ${PADetails?.staffName || "N/A"}`, 14, yPos);
+        yPos += 6;
+        doc.text(`Total Students: ${dashboardData?.studentAssignedCount || 0}`, 14, yPos);
+        yPos += 6;
+        doc.text(`High Emotional Risk: ${highRiskMoodCount || 0}`, 14, yPos);
+        yPos += 6;
+        doc.text(`Export Date: ${new Date().toLocaleString()}`, 14, yPos);
+        yPos += 10;
+    
+        // Table data
+        const tableHeaders = [
+            ['Matric', 'Name', 'Period', 'Mood Pos', 'Mood Neg', 'Mood Sum', 'Stress Low', 'Stress High', 'Stress Sum', 'Risk']
+        ];
+    
+        const tableRows = studentData.map(student => {
+            const getArrowText = (trend) => {
+                if (!student.monthlyComparison?.stress) return '';
+                if (trend === 'increasing') return 'Rise';
+                if (trend === 'decreasing') return 'Drop';
+                return 'Unchanged';
+            };
+    
+            const getOverallMessage = () => {
+                if (!student.monthlyComparison?.mood) return 'No data';
+                const { overallTrend } = student.monthlyComparison.mood;
+                if (overallTrend === 'improving') return 'Improving';
+                if (overallTrend === 'declining') return 'Declining';
+                return 'Stable';
+            };
+    
+            const getStressMessage = () => {
+                if (!student.monthlyComparison?.stress) return 'No data';
+                const interpretation = student.monthlyComparison?.stress?.overallTrend;
+                if (interpretation === 'improving') return 'Improving';
+                if (interpretation === 'worsening') return 'Worsening';
+                return 'Stable';
+            };
+    
+            const getRiskIndicator = () => {
+                const trendMood = student.monthlyComparison?.mood?.negative?.trend;
+                const trendStress = student.monthlyComparison?.stress?.high?.trend;
+                if (!trendMood && !trendStress) return "No Data";
+                if (trendMood === "increasing" && trendStress === "increasing") return "High";
+                if (trendMood === "increasing" || trendStress === "increasing") return "Moderate";
+                return "Low";
+            };
+    
+            return [
+                student.matricNo || "N/A",
+                student.studentName || "N/A",
+                student.period || "N/A",
+                `${getArrowText(student.monthlyComparison?.mood?.positive?.trend)} ${student.monthlyComparison?.mood?.positive?.difference !== null && student.monthlyComparison?.mood?.positive?.difference !== undefined ? Math.abs(student.monthlyComparison.mood.positive.difference) + '%' : 'No Data'}`,
+                `${getArrowText(student.monthlyComparison?.mood?.negative?.trend)} ${student.monthlyComparison?.mood?.negative?.difference !== null && student.monthlyComparison?.mood?.negative?.difference !== undefined ? Math.abs(student.monthlyComparison.mood.negative.difference) + '%' : 'No Data'}`,
+                getOverallMessage(),
+                `${getArrowText(student.monthlyComparison?.stress?.low?.trend)} ${student.monthlyComparison?.stress?.low?.difference !== null &&  student.monthlyComparison?.stress?.low?.difference !== undefined ? Math.abs(student.monthlyComparison?.stress?.low?.difference) + "%" : "No Data"}`,
+                `${getArrowText(student.monthlyComparison?.stress?.high?.trend)} ${student.monthlyComparison?.stress?.high?.difference !== null &&  student.monthlyComparison?.stress?.high?.difference !== undefined ? Math.abs(student.monthlyComparison?.stress?.high?.difference) + "%" : "No Data"}`,
+                getStressMessage(),
+                getRiskIndicator(),
+            ];
+        });
+    
+        // In exportMoodSummaryPDF - Replace the doc.autoTable section
+        autoTable(doc, {
+            head: tableHeaders,
+            body: tableRows,
+            startY: yPos,
+            styles: { 
+                fontSize: 8,
+                cellPadding: 2,
+                overflow: 'linebreak'
+            },
+            headStyles: { 
+                fillColor: [66, 139, 202],
+                fontStyle: 'bold',
+                halign: 'center'
+            },
+            columnStyles: {
+                0: { cellWidth: 25 }, // Matric
+                1: { cellWidth: 35 }, // Name
+                2: { cellWidth: 22 }, // Period
+                3: { cellWidth: 20 }, // Mood Pos
+                4: { cellWidth: 20 }, // Mood Neg
+                5: { cellWidth: 25 }, // Mood Sum
+                6: { cellWidth: 22 }, // Stress Low
+                7: { cellWidth: 22 }, // Stress High
+                8: { cellWidth: 25 }, // Stress Sum
+                9: { cellWidth: 20 }  // Risk
+            },
+            didParseCell: (data) => {
+                // Color code risk levels
+                if (data.column.index === 9 && data.section === 'body') {
+                    const risk = data.cell.raw;
+                    if (risk === 'High') {
+                        data.cell.styles.fillColor = [244, 67, 54]; // Red
+                        data.cell.styles.textColor = [255, 255, 255];
+                    } else if (risk === 'Moderate') {
+                        data.cell.styles.fillColor = [255, 152, 0]; // Orange
+                    } else if (risk === 'Low') {
+                        data.cell.styles.fillColor = [76, 175, 80]; // Green
+                    }
+                }
+            }
+        });
+    
+        doc.save(`Student_Mood_Summary_${new Date().toISOString().split('T')[0]}.pdf`);
+    };
+    
+    // ============= NEW: PDF EXPORT FOR DASS =============
+    const exportDassSummaryPDF = (dassData) => {
+        if (!dassData || dassData.length === 0) return;
+
+        const doc = new jsPDF({ orientation: 'landscape' });
+        
+        // Title
+        doc.setFontSize(18);
+        doc.setFont(undefined, 'bold');
+        doc.text('Student DASS Report', 14, 20);
+        
+        // Add a separator line after title
+        doc.setLineWidth(0.5);
+        doc.line(14, 23, 283, 23);
+        
+        // Summary info
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        let yPos = 32;
+        
+        doc.text(`PA Details: ${PADetails?.staffName || "N/A"}`, 14, yPos);
+        yPos += 7;
+        
+        doc.text(`Total Students: ${dashboardData?.studentAssignedCount || 0}`, 14, yPos);
+        yPos += 7;
+        
+        doc.text(`High DASS Risk: ${dashboardData?.highDassRiskCount || 0}`, 14, yPos);
+        yPos += 7;
+        
+        doc.text(`Export Date: ${new Date().toLocaleString()}`, 14, yPos);
+        yPos += 12;
+
+        const tableHeaders = [
+            ['Matric No', 'Student Name', 'Depression', 'Anxiety', 'Stress', 'Status', 'Date', 'Risk']
+        ];
+
+        const getRiskIndicatorFromLevels = (levels) => {
+            let extremeSevereCount = 0;
+            let severeCount = 0;
+            let moderateCount = 0;
+
+            for (let level of levels) {
+                if (level === "Extremely Severe") extremeSevereCount++;
+                else if (level === "Severe") severeCount++;
+                else if (level === "Moderate") moderateCount++;
+            }
+            
+            if (extremeSevereCount > 0) return "Critical";
+            if (severeCount > 0) return "High";
+            if (moderateCount > 0) return "Medium";
+            return "Low";
+        };
+
+        const tableRows = dassData.map(dass => {
+            const riskIndicator = getRiskIndicatorFromLevels([
+                dass.depressionLevel,
+                dass.anxietyLevel,
+                dass.stressLevel
+            ]);
+
+            return [
+                dass.matricNo || "N/A",
+                dass.studentName?.substring(0, 20) || "N/A",
+                dass.depressionLevel || "No Record",
+                dass.anxietyLevel || "No Record",
+                dass.stressLevel || "No Record",
+                dass.dassStatus || "No Record",
+                dass.completedDate || "No Record",
+                dass.dassStatus === "Pending" || dass.dassStatus === "No Record" ? "No Data" : riskIndicator
+            ];
+        });
+
+        autoTable(doc, {
+            head: tableHeaders,
+            body: tableRows,
+            startY: yPos,
+            styles: { 
+                fontSize: 9,
+                cellPadding: 3
+            },
+            headStyles: { 
+                fillColor: [66, 139, 202],
+                fontStyle: 'bold',
+                halign: 'center'
+            },
+            columnStyles: {
+                0: { cellWidth: 30 },
+                1: { cellWidth: 45 },
+                2: { cellWidth: 30 },
+                3: { cellWidth: 30 },
+                4: { cellWidth: 30 },
+                5: { cellWidth: 25 },
+                6: { cellWidth: 28 },
+                7: { cellWidth: 22 }
+            },
+            didParseCell: (data) => {
+                // ✅ FIXED: Color code risk levels per cell
+                if (data.column.index === 7 && data.section === 'body') {
+                    const risk = data.cell.raw;
+                    
+                    // ✅ Don't color "No Data"
+                    if (risk === 'No Data') {
+                        data.cell.styles.fillColor = [220, 220, 220]; // Light gray
+                        data.cell.styles.textColor = [100, 100, 100]; // Dark gray text
+                    } else if (risk === 'Critical' || risk === 'High') {
+                        data.cell.styles.fillColor = [244, 67, 54]; // Red
+                        data.cell.styles.textColor = [255, 255, 255]; // White text
+                    } else if (risk === 'Medium') {
+                        data.cell.styles.fillColor = [255, 152, 0]; // Orange
+                        data.cell.styles.textColor = [0, 0, 0]; // Black text
+                    } else if (risk === 'Low') {
+                        data.cell.styles.fillColor = [76, 175, 80]; // Green
+                        data.cell.styles.textColor = [255, 255, 255]; // White text
+                    }
+                }
+            }
+        });
+
+        doc.save(`Student_Dass_Records_${new Date().toISOString().split('T')[0]}.pdf`);
+    };
 
 
     return (
@@ -1572,7 +1892,8 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                             message: result.success
                                 ? `DASS Assessment has been sent successfully to ${student.studentName}.`
                                 : `Failed to send DASS Assessment to ${student.studentName}.`,
-                            buttonValue: "OK"
+                            buttonValue: "OK",
+                            redirect: true
                         });
 
                         navigate("/StudentTableData");
@@ -1582,7 +1903,8 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                         show: true,
                         title: "DASS Assessment Failed To Send",
                         message: `Failed to send DASS Assessment to ${student.studentName} due to error`,
-                        buttonValue: "OK"
+                        buttonValue: "OK",
+                        redirect: false
                     });
                 }
             },
@@ -1818,7 +2140,7 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
 
                         const getRiskIndicator = () => {
                             // Default values if data doesn't exist
-                            const trendMood = student.monthlyComparison?.mood?.positive?.trend;
+                            const trendMood = student.monthlyComparison?.mood?.negative?.trend;
                             const trendStress = student.monthlyComparison?.stress?.high?.trend;
 
                             // If no data, return low risk
@@ -1829,12 +2151,12 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                                 };
                             }
 
-                            if (trendMood === "decreasing" && trendStress === "increasing") {
+                            if (trendMood === "increasing" && trendStress === "increasing") {
                                 return {
                                     text: "High",
                                     color: "#F44336"
                                 };
-                            } else if (trendMood === "decreasing" || trendStress === "increasing") {
+                            } else if (trendMood === "increasing" || trendStress === "increasing") {
                                 return {
                                     text: "Moderate",
                                     color: "#f49e36ff"
@@ -1887,12 +2209,21 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                                                     <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                                                 </svg>
                                             </button>
-                                            <button onClick={() => openDassModal(student)}>
-                                                Send Dass
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
-                                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                                                </svg>
-                                            </button>
+                                            {student.dassStatus == "Pending" ?
+                                                <button onClick={() => openDassModal(student)} className="inactive" disabled>
+                                                    Send Dass
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                                        <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                                    </svg>
+                                                </button>
+                                            :
+                                                <button onClick={() => openDassModal(student)}>
+                                                    Send Dass
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                                        <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                                    </svg>
+                                                </button>
+                                            }
                                             {student.riskIndicator === "High" && 
                                                 <>
                                                     {student.contactRecord ?
@@ -2005,12 +2336,21 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                                                 <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                                             </svg>
                                         </button>
-                                        <button onClick={() => openDassModal(student)}>
-                                            Send Dass
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
-                                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                                            </svg>
-                                        </button>
+                                        {student.dassStatus == "Pending" ?
+                                            <button onClick={() => openDassModal(student)} className="inactive" disabled>
+                                                Send Dass
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                                </svg>
+                                            </button>
+                                        :
+                                            <button onClick={() => openDassModal(student)}>
+                                                Send Dass
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                                </svg>
+                                            </button>
+                                        }
                                         {student.riskIndicator === "High" && 
                                             <>
                                                 {student.contactRecord ?
@@ -2127,12 +2467,21 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                                                 <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                                             </svg>
                                         </button>
-                                        <button onClick={() => openDassModal(student)}>
-                                            Send Dass
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
-                                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                                            </svg>
-                                        </button>
+                                        {student.dassStatus == "Pending" ?
+                                            <button onClick={() => openDassModal(student)} className="inactive" disabled>
+                                                Send Dass
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                                </svg>
+                                            </button>
+                                        :
+                                            <button onClick={() => openDassModal(student)}>
+                                                Send Dass
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                                </svg>
+                                            </button>
+                                        }
                                         {student.riskIndicator === "High" && 
                                             <>
                                                 {student.contactRecord ?
@@ -2309,13 +2658,22 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                                                 <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                                             </svg>
                                         </button>
-                                        <button onClick={() => openDassModal(student)}>
-                                            Send Dass
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
-                                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                                            </svg>
-                                        </button>
-                                        {getRiskIndicator().text === "High" && 
+                                        {student.dassStatus == "Pending" ?
+                                            <button onClick={() => openDassModal(student)} className="inactive" disabled>
+                                                Send Dass
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                                </svg>
+                                            </button>
+                                        :
+                                            <button onClick={() => openDassModal(student)}>
+                                                Send Dass
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                                </svg>
+                                            </button>
+                                        }
+                                        {getRiskIndicator().text === "High" ?
                                             <>
                                                 {student.contactRecord ?
                                                     <>
@@ -2339,6 +2697,25 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                                                     </button>   
                                                 }
                                             </> 
+                                            :
+                                            <>
+                                                <button onClick={() => handleContactBox(student)} className="inactive" disabled>
+                                                    Contact Student
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                                        <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                                    </svg>
+                                                </button>  
+                                                {!student.noteRecord && 
+                                                    <button onClick={() => handleNoteBox(student)}>
+                                                        <label style={{width: "60%"}}>Add Note for Previous Contact</label>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-journal-plus" viewBox="0 0 16 16">
+                                                            <path fillRule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
+                                                            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+                                                            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+                                                        </svg>
+                                                    </button> 
+                                                }
+                                            </>
                                         }
                                     </div>
                                 </td>

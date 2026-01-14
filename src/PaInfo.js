@@ -129,7 +129,7 @@ function PaInfoContent({
                 <SubHeader paId={paId}/>
                 <section className="studentInfoContentWrapper">
                     <div className="profileWrapper">
-                        <h2>Student Information</h2>
+                        <h2>Academic Advisor (PA) Information</h2>
                         <div className="profileContentWrapper">
                             <div className="profileImg">{paDetails.staffName[0]}</div>
                             <section className="personalInfoWrapper">

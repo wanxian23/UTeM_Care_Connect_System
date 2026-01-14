@@ -81,7 +81,11 @@ function ContactDetails() {
                         <h2>MEETING REQUEST FROM PA</h2>
                     </section>
                     <section className="contactDetails">
-                        <p>
+                        <p 
+                            style={{
+                                width: "100%"
+                            }}
+                        >
                             Hi {contactDetails.studentData?.studentName}, <br /><br /><br />
 
                             {contactDetails.contactData?.message} <br /><br /><br />

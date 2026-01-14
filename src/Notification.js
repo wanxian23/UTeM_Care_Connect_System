@@ -6,6 +6,11 @@ import "./css/notification.css";
 import MessageBox from "./Modal";
 
 function Notification() {
+
+    useEffect(() => {
+        document.title = "Notification";
+    }, []);
+
     return(
         <>
             <Header />

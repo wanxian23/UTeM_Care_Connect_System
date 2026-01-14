@@ -328,7 +328,7 @@ if (!empty($latestNoteData['note'])) {
 // ============= NEW: THIS WEEK vs LAST WEEK + THIS MONTH vs LAST MONTH COMPARISON =============
 
     // ========== WEEK COMPARISON (Actual Calendar Weeks: Monday to Sunday) ==========
-    $today = new DateTime();
+    $today = new DateTime($selectedDate);
     $currentDayOfWeek = (int)$today->format('N'); // 1 (Monday) to 7 (Sunday)
 
     $thisWeekStart = (clone $today)->modify('-' . ($currentDayOfWeek - 1) . ' days')->setTime(0, 0, 0);

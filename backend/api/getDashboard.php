@@ -193,7 +193,7 @@ foreach ($moodDataWeekly as $weeklyRow) {
     }
 }
 
-if ($stressData) {
+if ($totalRows > 0) {
 
     // Get data of recommendation
     $stmtRecommendationChecking = $conn->prepare("
@@ -232,7 +232,7 @@ if ($stressData) {
     $recommendation = $resultRecommendation->fetch_assoc();
 
     // DAILY RECORD EXISTS
-    if ($stressData) {
+    if ($totalRows > 0) {
 
         echo json_encode([
             "success" => true,
@@ -258,26 +258,28 @@ if ($stressData) {
         ]);
 
         exit;
+    } else {
+         echo json_encode([
+            "success" => true,
+            "hasRecord" => false,
+
+            // Daily default values
+            "moodStatus" => null,
+            "moodRecordTime" => null,
+            "moodStoreLocation" => null,
+            "stressLevel" => "N/A",
+            "moodRecordCount" => 0,
+            "message" => "No mood record for today",
+            "recordAvailability" => $canRecord ?? null,
+
+            // WEEKLY DATA STILL RETURNED
+            "weeklyMoodCount" => $moodCount
+        ]);
+    
     }
-
-    // DAILY RECORD NOT FOUND
-    echo json_encode([
-        "success" => true,
-        "hasRecord" => false,
-
-        // Daily default values
-        "moodStatus" => null,
-        "moodRecordTime" => null,
-        "moodStoreLocation" => null,
-        "stressLevel" => "N/A",
-        "moodRecordCount" => 0,
-        "message" => "No mood record for today",
-        "recordAvailability" => $canRecord ?? null,
-
-        // WEEKLY DATA STILL RETURNED
-        "weeklyMoodCount" => $moodCount
-    ]);
     exit;
+    // DAILY RECORD NOT FOUND
+   
 
 } else {
     // No record for today

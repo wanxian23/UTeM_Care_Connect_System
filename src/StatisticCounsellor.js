@@ -5,7 +5,7 @@ import "./css/statistic.css";
 
 function StatisticCounsellor() {
     useEffect(() => {
-        document.title = "Counsellor Statistics";
+        document.title = "Statistics";
     }, []);
 
     const [activeTab, setActiveTab] = useState("moodTrend");
@@ -59,7 +59,7 @@ function StatisticCounsellor() {
                             className={activeTab === "dassTrend" ? "activeBtn" : ""} 
                             onClick={() => setActiveTab("dassTrend")}
                         >
-                            DASS-21 Statistics
+                            DASS Statistics
                         </button>
                     </div>
                 </nav>

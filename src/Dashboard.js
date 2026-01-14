@@ -227,7 +227,7 @@ function Body1({data, stressLevel, stressColor, quoteTitle}) {
 
     // const currentTime = getCurrentTime();
             
-    if (!data || !data.hasRecord || !data.moodStatus[0]) return (
+    if (!data || data?.recordAvailability.recordCount == 0) return (
         <main className="bodyDashboardFirst">
             <article className="moodRecordInfoWrapper">
                 <div className="dashboardMoodDateWrapper">

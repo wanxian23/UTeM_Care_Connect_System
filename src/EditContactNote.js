@@ -158,7 +158,7 @@ function StudentContactView() {
             setMessagebox({
                 show: true,
                 title: "Details Updated Successful",
-                message: "Student contact and note details updated successfully",
+                message: "Student note details updated successfully",
                 buttonValue: "OK",
                 redirect: true
             });

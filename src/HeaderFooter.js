@@ -360,7 +360,7 @@ export function HeaderPa() {
 
     return(
         <>
-            <header>
+            <header className="pa">
                 <a href='/StudentTableData' id='logo'>
                     <img src={careConnectIcon} alt='Logo'></img>
                     <label>UTeM CareConnect</label>
@@ -570,7 +570,7 @@ export function HeaderCounsellor() {
 
     return(
         <>
-            <header>
+            <header className="counsellor">
                 <a href='/StatisticCounsellor' id='logo'>
                     <img src={careConnectIcon} alt='Logo'></img>
                     <label>UTeM CareConnect</label>

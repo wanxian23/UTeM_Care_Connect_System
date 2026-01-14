@@ -274,6 +274,23 @@ $stmtGetAllStudent->execute();
 $resultGetAllStudent = $stmtGetAllStudent->get_result();
 $getAllStudentData = $resultGetAllStudent->fetch_all(MYSQLI_ASSOC);
 
+if (empty($paId)) {
+    $stmtGetPADetails = $conn->prepare("
+        SELECT * FROM Staff
+        WHERE staffId = ?
+    ");
+    $stmtGetPADetails->bind_param("i", $userId);
+} else {
+    $stmtGetPADetails = $conn->prepare("
+        SELECT * FROM Staff
+        WHERE staffId = ?
+    ");
+    $stmtGetPADetails->bind_param("i", $paId);
+}
+$stmtGetPADetails->execute();
+$resultGetPADetails = $stmtGetPADetails->get_result();
+$PADetails = $resultGetPADetails->fetch_assoc();
+
 $moodRecordedCount = 0;
 $dassRecordedCount = 0;
 $highMoodRiskCount = 0;
@@ -747,7 +764,7 @@ foreach ($getAllStudentData as $row) {
                 'thisMonth' => $thisMonthStart->format('F Y'),
                 'lastMonth' => $lastMonthStart->format('F Y')
             ]
-        ]
+        ],
     ];
 }
 
@@ -997,6 +1014,7 @@ echo json_encode([
     "success" => true,
     "studentData" => $allStudentMoodData,
     "studentDassData" => $allStudentDassData,
-    'dashboardData' => $dashboardData
+    'dashboardData' => $dashboardData,
+    'PADetails' => $PADetails
 ]);
 ?>

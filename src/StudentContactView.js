@@ -381,7 +381,7 @@ function StudentContactView() {
                                             padding: "5px",
                                             border: "1px solid" + getTrendColor(
                                                 'negative',
-                                                trendData.monthlyComparison?.mood?.positive?.trend
+                                                trendData.monthlyComparison?.mood?.negative?.trend
                                             ),
                                             color: getTrendColor(
                                                 'negative',

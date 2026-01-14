@@ -264,6 +264,7 @@ section.studentInfoContentWrapper div.studentProfileSection {
     font-size: 2vh;
     text-align: justify;
     line-height: 20px;
+    color: black;
 }
 
 .titleContent svg {

@@ -8,6 +8,16 @@ require "authStudent.php";
 // Run the auth function to fetch student data
 $user = validateToken($conn);
 
+$staffId = $user['staffId'];
+$stmtGetPADetails = $conn->prepare("
+    SELECT * FROM staff
+    WHERE staffId = ?
+");
+$stmtGetPADetails->bind_param("i", $staffId);
+$stmtGetPADetails->execute();
+$resultGetPADetails = $stmtGetPADetails->get_result();
+$PADetails = $resultGetPADetails->fetch_assoc();
+
 echo json_encode([
     "success" => true,
     "userId" => $user['studentId'],
@@ -20,6 +30,7 @@ echo json_encode([
     "faculty" => $user['studentFaculty'],
     "yearOfStudy" => $user['studentYearOfStudy'],
     "section" => $user['studentSection'],
-    "group" => $user['studentGrp']
+    "group" => $user['studentGrp'],
+    'PADetails' => $PADetails
 ]);
 ?>

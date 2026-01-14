@@ -192,6 +192,15 @@ function determineOverallStressTrend($current, $previous) {
 
 // ============= END HELPER FUNCTIONS =============
 
+$stmtGetPADetails = $conn->prepare("
+    SELECT * FROM Staff
+    WHERE staffId = ?
+");
+$stmtGetPADetails->bind_param("i", $userId);
+$stmtGetPADetails->execute();
+$resultGetPADetails = $stmtGetPADetails->get_result();
+$PADetails = $resultGetPADetails->fetch_assoc();
+
 // Count Student Assigned
 $stmtCountStudentAssigned = $conn->prepare("
     SELECT COUNT(*) as studentAssignedCount
@@ -670,6 +679,25 @@ foreach ($getAllStudentData as $row) {
                 $lastRecordedTime = $dateObj->format('H:i');
             }
         }
+
+        // DASS
+        // Get latest DASS for this student
+        $dassStatus = "No Record";
+        $stmtStudentDass = $conn->prepare("
+            SELECT * 
+            FROM dass 
+            WHERE studentId = ? 
+            ORDER BY dassId DESC 
+            LIMIT 1
+        ");
+        $stmtStudentDass->bind_param("i", $studentId);
+        $stmtStudentDass->execute();
+        $resultStudentDass = $stmtStudentDass->get_result();
+        $studentDassDataRow = $resultStudentDass->fetch_assoc();
+
+        if ($studentDassDataRow) {
+            $dassStatus = $studentDassDataRow['status'];
+        }
     }
 
     $allStudentMoodData[] = [
@@ -703,7 +731,8 @@ foreach ($getAllStudentData as $row) {
                 'thisMonth' => $thisMonthStart->format('F Y'),
                 'lastMonth' => $lastMonthStart->format('F Y')
             ]
-        ]
+        ],
+        'dassStatus' => $dassStatus ?? "No Record"
     ];
 }
 
@@ -942,6 +971,7 @@ echo json_encode([
     "success" => true,
     "studentData" => $allStudentMoodData,
     "studentDassData" => $allStudentDassData,
-    'dashboardData' => $dashboardData
+    'dashboardData' => $dashboardData,
+    'PADetails' => $PADetails
 ]);
 ?>

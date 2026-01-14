@@ -170,6 +170,25 @@ function ContactHistoryCalendar({ studentId, studentData, contactsByDate }) {
                                 const contacts = contactsByDate[dateString];
                                 const latestContact = contacts[0]; // Get the most recent contact
 
+                                if (!latestContact.note) {
+                                    return (
+                                        <>
+                                            <div className="titleContent">
+                                            <div className="noteStatus">
+                                                <span className="statusLabel">Note:</span>
+                                                    <span className="noteContent"
+                                                        style={{
+                                                            color: "#de782fff"
+                                                        }}
+                                                    >
+                                                        PENDING TO ADD
+                                                    </span>
+                                            </div>
+                                        </div>
+                                        </>
+                                    );
+                                }
+
                                 return (
                                     <>
                                         {/* <div className="titleContent">

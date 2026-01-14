@@ -1,6 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Authorization, Content-Type");
+header("Content-Type: application/json"); // ✅ ADD THIS
 
 require "../database.php";
 require "authPa.php";
@@ -11,6 +12,7 @@ $userId = $user['staffId'];
 $studentIdGet = $_GET['studentId'];
 
 $paId = $_GET['paId'] ?? null;
+$PADetails = [];
 
 // Get student personal information
 if (empty($paId)) {
@@ -21,6 +23,16 @@ if (empty($paId)) {
     ");
     $stmtGetAllStudent->bind_param("ii", $studentIdGet, $userId);
 } else {
+    // Get PA Details
+    $stmtGetPADetails = $conn->prepare("
+        SELECT * FROM staff
+        WHERE staffId = ?
+    ");
+    $stmtGetPADetails->bind_param("i", $paId);
+    $stmtGetPADetails->execute();
+    $resultGetPADetails = $stmtGetPADetails->get_result();
+    $PADetails = $resultGetPADetails->fetch_assoc();
+
     $stmtGetAllStudent = $conn->prepare("
         SELECT * FROM Student
         WHERE studentId = ?
@@ -28,14 +40,23 @@ if (empty($paId)) {
     ");
     $stmtGetAllStudent->bind_param("ii", $studentIdGet, $paId);
 }
+
 $stmtGetAllStudent->execute();
 $resultGetAllStudent = $stmtGetAllStudent->get_result();
 $getAllStudentData = $resultGetAllStudent->fetch_assoc();
 
+// ✅ ADD NULL CHECK HERE
+if (!$getAllStudentData) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Student not found"
+    ]);
+    exit;
+}
+
 $studentId = $getAllStudentData['studentId'];
+
 // Get student mood record information
-// Get latest mood for this student
-// Fetch ALL mood records for today
 $stmtMoodData = $conn->prepare("
     SELECT * FROM moodTracking 
     WHERE studentId = ? AND DATE(datetimeRecord) = CURDATE()
@@ -57,11 +78,11 @@ $stmtStress->execute();
 $resultStress = $stmtStress->get_result();
 $stressData = $resultStress->fetch_assoc();
 
+// ✅ INITIALIZE AS EMPTY ARRAY (not null)
 $finalRecords = [];
+
 if ($resultMoodData->num_rows > 0) {
-
     foreach ($allMoodRecords as $record) {
-
         $moodId = $record['moodId'];
 
         // Entries
@@ -77,7 +98,7 @@ if ($resultMoodData->num_rows > 0) {
         $stmtMoodType->execute();
         $moodType = $stmtMoodType->get_result()->fetch_assoc();
 
-        // Entries type (reuse prepared statement)
+        // Entries type
         $stmtEntriesType = $conn->prepare("SELECT entriesType FROM entriesType WHERE entriesTypeId = ?");
 
         $completeEntriesData = [];
@@ -85,108 +106,26 @@ if ($resultMoodData->num_rows > 0) {
             $stmtEntriesType->bind_param("i", $entry['entriesTypeId']);
             $stmtEntriesType->execute();
             $entriesType = $stmtEntriesType->get_result()->fetch_assoc();
-
             $completeEntriesData[] = array_merge($entry, $entriesType);
         }
 
-        // Build one mood record
         $finalRecords[] = [
-            "moodStatus" => $moodType['moodStatus'],
-            "moodStoreLocation" => $moodType['moodStoreLocation'],
-            "moodRecordTime" => $record['datetimeRecord'],
-            "stressLevel" => $stressData['stressLevel'],
-            "note" => nl2br(htmlspecialchars($record['note'])),
+            "moodStatus" => $moodType['moodStatus'] ?? null,
+            "moodStoreLocation" => $moodType['moodStoreLocation'] ?? null,
+            "moodRecordTime" => $record['datetimeRecord'] ?? null,
+            "stressLevel" => $stressData['stressLevel'] ?? null,
+            "note" => $record['note'] ? nl2br(htmlspecialchars($record['note'])) : null,
             "entriesData" => $completeEntriesData,
-            "notePrivacy" => (int)$record['notePrivacy']
+            "notePrivacy" => (int)($record['notePrivacy'] ?? 0)
         ];
     }
-
 }
 
-// Get data of averageStress
-// $stmtStressAvg = $conn->prepare("
-//     SELECT AVG(stressLevel) AS avgStress
-//     FROM moodTracking
-//     WHERE studentId = ?
-//     AND DATE(datetimeRecord) = CURDATE()
-// ");
-// $stmtStressAvg->bind_param("i", $studentId);
-// $stmtStressAvg->execute();
-// $resultStressAvg = $stmtStressAvg->get_result();
-// $stressData = $resultStressAvg->fetch_assoc();
-
-// $avgStress = $stressData['avgStress']; // this is the average
-
-
-// // Get data of averageScale
-// $stmtMoodAvg = $conn->prepare("
-//     SELECT 
-//         AVG(m.scale) AS avgMoodScale
-//     FROM moodTracking mt
-//     JOIN mood m ON mt.moodTypeId = m.moodTypeId
-//     WHERE mt.studentId = ?
-//     AND DATE(mt.datetimeRecord) = CURDATE()
-// ");
-// $stmtMoodAvg->bind_param("i", $studentId);
-// $stmtMoodAvg->execute();
-
-// $resultMoodAvg = $stmtMoodAvg->get_result();
-// $dataMood = $resultMoodAvg->fetch_assoc();
-
-// $avgMoodScale = $dataMood['avgMoodScale'];  // decimal (e.g., 5.7)
-
-// $finalMoodScale = round($avgMoodScale);
-
-// $stmtMoodInfo = $conn->prepare("
-//     SELECT *
-//     FROM mood
-//     WHERE scale = ?
-// ");
-// $stmtMoodInfo->bind_param("i", $finalMoodScale);
-// $stmtMoodInfo->execute();
-
-// $resultMoodInfo = $stmtMoodInfo->get_result();
-// $moodInfo = $resultMoodInfo->fetch_assoc();
-
-$moodStatus = [];
-$moodStoreLocation = [];
-$stmtGetAllMoodStatus = $conn->prepare("
-    SELECT * FROM moodTracking 
-    WHERE studentId = ?
-    AND DATE(datetimeRecord) = CURDATE()
-");
-$stmtGetAllMoodStatus->bind_param("i", $studentId);
-$stmtGetAllMoodStatus->execute();
-$resultGetAllMoodStatus = $stmtGetAllMoodStatus->get_result();
-$getAllMoodStatusData = $resultGetAllMoodStatus->fetch_all(MYSQLI_ASSOC);
-
-foreach ($getAllMoodStatusData as $row) {
-    $moodTypeId = $row['moodTypeId'];
-
-    $stmtGetMoodDetails = $conn->prepare("
-        SELECT * FROM mood
-        WHERE moodTypeId = ?
-    ");
-    $stmtGetMoodDetails->bind_param("i", $moodTypeId);
-    $stmtGetMoodDetails->execute();
-    $resultGetMoodDetails = $stmtGetMoodDetails->get_result();
-    $moodDetails = $resultGetMoodDetails->fetch_assoc();
-
-    $moodStatus[] = $moodDetails['moodStatus'];
-    $moodStoreLocation[] = $moodDetails['moodStoreLocation'];
-}
-
+// ✅ ALWAYS RETURN ARRAYS (never null)
 echo json_encode([
-        "success" => true, // <-- still true, but entriesData empty
-        "studentData" => $getAllStudentData,
-        "studentMoodData" => $finalRecords,
-
-        // Daily mood info (Avg)
-        // "avgTodayStudentMoodStatus" => $moodInfo['moodStatus'] ?? null,
-        // "avgTodayStudentMoodStoreLocation" => $moodInfo['moodStoreLocation'] ?? null,
-        "moodStatus" => $moodStatus ?? null,
-        "moodStoreLocation" => $moodStoreLocation ?? null,
-        "todayStressLevel" => $stressData['stressLevel'] ?? null,
-    ]);
-
+    "success" => true,
+    "studentData" => $getAllStudentData,
+    "studentMoodData" => $finalRecords, // ✅ Will be [] if empty, not null
+    "PADetails" => $PADetails ?: [] // ✅ Empty array if no PA details
+]);
 ?>

@@ -1,5 +1,5 @@
 import { Routes, Route, Link } from "react-router-dom";
-import Home from "./View";
+import Home from "./Overview";
 import ForgetPassword from "./ForgetPassword";
 
 import Dashboard from "./Dashboard";
