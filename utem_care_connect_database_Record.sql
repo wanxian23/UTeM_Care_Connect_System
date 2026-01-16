@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3301
--- Generation Time: Jan 11, 2026 at 05:39 AM
+-- Generation Time: Jan 16, 2026 at 07:03 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.2.12
 
@@ -28,7 +28,8 @@ USE `utem_care_connect`;
 --
 -- Table structure for table `contactnote`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
+-- Creation: Jan 16, 2026 at 08:23 AM
+-- Last update: Jan 16, 2026 at 10:57 AM
 --
 
 DROP TABLE IF EXISTS `contactnote`;
@@ -40,10 +41,14 @@ CREATE TABLE IF NOT EXISTS `contactnote` (
   `staffId` int(11) DEFAULT NULL,
   `note` longtext DEFAULT NULL,
   `noteType` enum('Meeting','Observation','Follow Up') DEFAULT NULL,
+  `pushToCounsellor` tinyint(1) DEFAULT 0,
+  `dassId` int(11) DEFAULT NULL,
+  `pushDatetime` datetime DEFAULT NULL,
   PRIMARY KEY (`contactId`),
   KEY `studentId` (`studentId`),
-  KEY `staffId` (`staffId`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
+  KEY `staffId` (`staffId`),
+  KEY `dassId` (`dassId`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4;
 
 --
 -- RELATIONSHIPS FOR TABLE `contactnote`:
@@ -51,25 +56,31 @@ CREATE TABLE IF NOT EXISTS `contactnote` (
 --       `student` -> `studentId`
 --   `staffId`
 --       `staff` -> `staffId`
+--   `dassId`
+--       `dass` -> `dassId`
 --
 
 --
 -- Dumping data for table `contactnote`
 --
 
-INSERT INTO `contactnote` (`contactId`, `message`, `datetimeRecord`, `studentId`, `staffId`, `note`, `noteType`) VALUES
-(4, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2025-12-28 05:28:24', 1, 2, 'Seem ok', 'Observation'),
-(10, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2026-01-01 19:11:10', 1, 2, 'So far ok!!!', 'Meeting'),
-(15, 'Meet me now at office!', '2026-01-08 13:57:47', 9, 2, 'She feels stress.... and ...', 'Meeting'),
-(17, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2026-01-08 18:17:27', 1, 2, 'she feels good and okokokkkoko ok ok ok oko ok \r\n', 'Meeting'),
-(18, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2026-01-09 18:13:41', 2, 1, 'Seem okokokokok', 'Meeting');
+INSERT INTO `contactnote` (`contactId`, `message`, `datetimeRecord`, `studentId`, `staffId`, `note`, `noteType`, `pushToCounsellor`, `dassId`, `pushDatetime`) VALUES
+(4, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2025-12-28 05:28:24', 1, 2, 'Seem ok', 'Observation', 0, NULL, NULL),
+(10, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2026-01-01 19:11:10', 1, 2, 'So far ok!!!', 'Meeting', 0, NULL, NULL),
+(15, 'Meet me now at office!', '2026-01-08 13:57:47', 9, 2, 'She feels stress.... and ...', 'Meeting', 0, NULL, NULL),
+(17, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2026-01-08 18:17:27', 1, 2, 'she feels good and okokokkkoko o\r\n', 'Meeting', 1, NULL, '2026-01-15 04:11:03'),
+(18, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2026-01-09 18:13:41', 2, 1, 'Seem okokokokok', 'Meeting', 1, NULL, '2026-01-16 18:57:50'),
+(19, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2026-01-11 15:35:06', 7, 4, 'She feels good today.', 'Meeting', 0, NULL, NULL),
+(20, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2026-01-12 22:02:57', 1, 2, 'okok33', 'Meeting', 0, NULL, NULL),
+(22, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability at 12pm', '2026-01-13 14:58:02', 9, 2, 'She feels good ......', 'Meeting', 0, NULL, NULL),
+(25, 'We would like to schedule a meeting to discuss your wellbeing and provide support. Please let us know your availability.', '2026-01-15 02:01:27', 9, 2, 'She seems like ok and didnt act any different', 'Meeting', 1, 18, '2026-01-15 03:58:59');
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `dass`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
+-- Creation: Jan 16, 2026 at 08:23 AM
 --
 
 DROP TABLE IF EXISTS `dass`;
@@ -83,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `dass` (
   PRIMARY KEY (`dassId`),
   KEY `staffId` (`staffId`),
   KEY `studentId` (`studentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4;
 
 --
 -- RELATIONSHIPS FOR TABLE `dass`:
@@ -107,14 +118,17 @@ INSERT INTO `dass` (`dassId`, `dassCreatedDateTime`, `status`, `staffId`, `stude
 (16, '2026-01-08 11:48:59', 'Completed', 1, 2, '2026-01-08 11:51:25'),
 (17, '2026-01-08 13:30:43', 'Completed', 2, 1, '2026-01-08 13:32:40'),
 (18, '2026-01-08 13:53:58', 'Completed', 2, 9, '2026-01-08 13:57:16'),
-(19, '2026-01-09 22:11:58', 'Completed', 5, 8, '2026-01-09 22:12:51');
+(19, '2026-01-09 22:11:58', 'Completed', 5, 8, '2026-01-09 22:12:51'),
+(20, '2026-01-11 14:52:03', 'Completed', 4, 7, '2026-01-11 14:53:41'),
+(24, '2026-01-13 10:34:58', 'Completed', 2, 1, '2026-01-13 10:36:15'),
+(26, '2026-01-13 14:55:26', 'Completed', 2, 1, '2026-01-13 14:56:41');
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `dassquestion`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
+-- Creation: Jan 16, 2026 at 08:23 AM
 --
 
 DROP TABLE IF EXISTS `dassquestion`;
@@ -161,7 +175,7 @@ INSERT INTO `dassquestion` (`dassQuestionId`, `question`, `type`) VALUES
 --
 -- Table structure for table `dassrecord`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
+-- Creation: Jan 16, 2026 at 08:23 AM
 --
 
 DROP TABLE IF EXISTS `dassrecord`;
@@ -374,14 +388,77 @@ INSERT INTO `dassrecord` (`dassId`, `dassQuestionId`, `scale`) VALUES
 (19, 18, 0),
 (19, 19, 1),
 (19, 20, 0),
-(19, 21, 1);
+(19, 21, 1),
+(20, 1, 2),
+(20, 2, 0),
+(20, 3, 2),
+(20, 4, 1),
+(20, 5, 2),
+(20, 6, 0),
+(20, 7, 2),
+(20, 8, 3),
+(20, 9, 2),
+(20, 10, 1),
+(20, 11, 0),
+(20, 12, 1),
+(20, 13, 2),
+(20, 14, 1),
+(20, 15, 1),
+(20, 16, 0),
+(20, 17, 1),
+(20, 18, 2),
+(20, 19, 2),
+(20, 20, 1),
+(20, 21, 0),
+(24, 1, 2),
+(24, 2, 3),
+(24, 3, 2),
+(24, 4, 3),
+(24, 5, 0),
+(24, 6, 0),
+(24, 7, 2),
+(24, 8, 1),
+(24, 9, 3),
+(24, 10, 1),
+(24, 11, 2),
+(24, 12, 2),
+(24, 13, 1),
+(24, 14, 0),
+(24, 15, 2),
+(24, 16, 2),
+(24, 17, 3),
+(24, 18, 2),
+(24, 19, 1),
+(24, 20, 2),
+(24, 21, 3),
+(26, 1, 2),
+(26, 2, 1),
+(26, 3, 0),
+(26, 4, 1),
+(26, 5, 2),
+(26, 6, 3),
+(26, 7, 3),
+(26, 8, 3),
+(26, 9, 2),
+(26, 10, 1),
+(26, 11, 0),
+(26, 12, 1),
+(26, 13, 2),
+(26, 14, 3),
+(26, 15, 2),
+(26, 16, 1),
+(26, 17, 0),
+(26, 18, 1),
+(26, 19, 2),
+(26, 20, 3),
+(26, 21, 2);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `entries`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
+-- Creation: Jan 16, 2026 at 08:23 AM
 --
 
 DROP TABLE IF EXISTS `entries`;
@@ -440,8 +517,7 @@ INSERT INTO `entries` (`entriesId`, `entries`, `entriesStoreLocation`, `entriesT
 --
 -- Table structure for table `entriesrecord`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
--- Last update: Jan 10, 2026 at 02:10 PM
+-- Creation: Jan 16, 2026 at 08:23 AM
 --
 
 DROP TABLE IF EXISTS `entriesrecord`;
@@ -452,7 +528,7 @@ CREATE TABLE IF NOT EXISTS `entriesrecord` (
   PRIMARY KEY (`entriesRecordId`),
   KEY `moodId` (`moodId`),
   KEY `entriesTypeId_2` (`entriesTypeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=224 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=254 DEFAULT CHARSET=utf8mb4;
 
 --
 -- RELATIONSHIPS FOR TABLE `entriesrecord`:
@@ -503,11 +579,6 @@ INSERT INTO `entriesrecord` (`entriesRecordId`, `moodId`, `entriesTypeId`) VALUE
 (158, 105, 1),
 (164, 62, 1),
 (165, 62, 5),
-(182, 123, 1),
-(183, 123, 2),
-(184, 123, 3),
-(185, 123, 4),
-(192, 127, 1),
 (193, 136, 1),
 (194, 136, 2),
 (195, 137, 1),
@@ -520,15 +591,25 @@ INSERT INTO `entriesrecord` (`entriesRecordId`, `moodId`, `entriesTypeId`) VALUE
 (212, 150, 1),
 (213, 151, 1),
 (217, 155, 1),
-(218, 154, 1),
-(220, 126, 1);
+(220, 126, 1),
+(227, 162, 1),
+(238, 165, 1),
+(239, 165, 2),
+(240, 165, 3),
+(241, 165, 5),
+(244, 164, 1),
+(245, 123, 1),
+(246, 123, 2),
+(247, 123, 3),
+(248, 123, 4),
+(253, 127, 1);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `entriestype`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
+-- Creation: Jan 16, 2026 at 08:23 AM
 --
 
 DROP TABLE IF EXISTS `entriestype`;
@@ -559,7 +640,7 @@ INSERT INTO `entriestype` (`entriesTypeId`, `entriesType`) VALUES
 --
 -- Table structure for table `mood`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
+-- Creation: Jan 16, 2026 at 08:23 AM
 --
 
 DROP TABLE IF EXISTS `mood`;
@@ -595,8 +676,7 @@ INSERT INTO `mood` (`moodTypeId`, `moodStatus`, `moodStoreLocation`, `priority`,
 --
 -- Table structure for table `moodtracking`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
--- Last update: Jan 10, 2026 at 02:10 PM
+-- Creation: Jan 16, 2026 at 08:23 AM
 --
 
 DROP TABLE IF EXISTS `moodtracking`;
@@ -610,7 +690,7 @@ CREATE TABLE IF NOT EXISTS `moodtracking` (
   PRIMARY KEY (`moodId`),
   KEY `studentId` (`studentId`),
   KEY `moodTypeId` (`moodTypeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=utf8mb4;
 
 --
 -- RELATIONSHIPS FOR TABLE `moodtracking`:
@@ -664,9 +744,9 @@ INSERT INTO `moodtracking` (`moodId`, `note`, `datetimeRecord`, `studentId`, `mo
 (105, 'Test 2', '2025-12-26 04:25:01', 1, 8, 1),
 (117, 'Today Still ok', '2025-12-30 18:00:01', 1, 2, 0),
 (121, 'Today felt fairly balanced and calm overall. My mood remained neutral throughout the day, without any strong emotional highs or lows. The stress level was at about 30%, which feels manageable and did not significantly interfere with my daily activities. There wasn’t any specific event or reason that triggered stress; instead, it felt like a normal, routine day with mild pressure that naturally comes from everyday responsibilities.\r\n\r\nI was able to go through my tasks steadily, even if I didn’t feel particularly motivated or excited. At the same time, I didn’t feel overwhelmed or emotionally drained. This neutral state allowed me to think more clearly and respond to situations in a more controlled way, without reacting emotionally.\r\n\r\nAlthough nothing special stood out today, I think this kind of calm and steady day is still important. It gives me time to rest mentally, reflect, and reset before facing more demanding days ahead. Maintaining a low stress level without a clear cause also reminds me that not every day has to be intense to be meaningful. Overall, today felt stable, quiet, and emotionally balanced, which I appreciate.', '2025-12-31 02:08:13', 1, 3, 0),
-(123, 'Still ok', '2025-12-31 02:24:19', 1, 2, 1),
+(123, 'Still ok', '2025-12-31 02:24:19', 1, 3, 1),
 (126, 'The presentation today has been cancelled by my lecturer. This is a bit annoying to my own schedule. ', '2026-01-05 16:30:48', 1, 5, 1),
-(127, 'okkkk', '2026-01-06 03:30:26', 1, 3, 1),
+(127, 'okkkk', '2026-01-06 03:30:26', 1, 8, 1),
 (128, 'It is ok!', '2026-01-07 23:51:24', 1, 7, 1),
 (129, 'OK x111111', '2026-01-08 00:08:43', 1, 2, 1),
 (136, 'ok', '2026-01-08 11:47:24', 2, 5, 1),
@@ -677,14 +757,19 @@ INSERT INTO `moodtracking` (`moodId`, `note`, `datetimeRecord`, `studentId`, `mo
 (150, 'not ok', '2026-01-09 15:21:29', 2, 6, 1),
 (151, 'Stillllll ok ....', '2026-01-09 22:05:16', 8, 2, 1),
 (154, 'okla', '2026-01-10 13:16:47', 1, 6, 1),
-(155, 'Panic', '2026-01-10 13:17:14', 7, 7, 1);
+(155, 'Panic', '2026-01-10 13:17:14', 7, 7, 1),
+(158, 'Not good', '2026-01-11 14:50:26', 7, 6, 1),
+(162, 'Today felt quite steady emotionally, even though there was a noticeable level of academic pressure. My mood stayed neutral, but my stress level rose to around 40% mainly because I was busy focusing on my Final Year Project and preparing for tomorrow’s presentation. There was a lot on my mind, from making sure the content is complete to thinking about how well I’ll be able to explain my ideas clearly.\r\n\r\nThe stress didn’t feel overwhelming, but it was constantly present in the background. I found myself thinking ahead and mentally rehearsing what I need to say, while also worrying slightly about whether everything is prepared properly. Even so, I managed to stay composed and continue working through my tasks step by step.\r\n\r\nDespite the pressure, I feel that this stress is manageable and somewhat expected given the situation. It pushed me to stay focused and productive rather than panicking. I’m hoping that once the presentation is done, I’ll feel more relieved and confident. For now, I’m just trying to stay calm, trust my preparation, and remind myself that I’ve put in the effort needed to get through this stage.', '2026-01-12 21:30:36', 1, 3, 1),
+(164, 'Blabladadwd', '2026-01-13 10:10:48', 1, 1, 1),
+(165, 'I feels happy because.... bbbb', '2026-01-13 10:26:46', 2, 3, 1);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `notification`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
+-- Creation: Jan 16, 2026 at 08:23 AM
+-- Last update: Jan 16, 2026 at 10:58 AM
 --
 
 DROP TABLE IF EXISTS `notification`;
@@ -693,7 +778,7 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `title` longtext DEFAULT NULL,
   `content` longtext DEFAULT NULL,
   `notiStatus` enum('UNREAD','READ') DEFAULT 'UNREAD',
-  `notiType` enum('mood','dass','contact','note','general') NOT NULL,
+  `notiType` enum('mood','dass','contact','note','push','general') NOT NULL,
   `notiCreatedDateTime` datetime DEFAULT current_timestamp(),
   `dassId` int(11) DEFAULT NULL,
   `studentId` int(11) DEFAULT NULL,
@@ -706,7 +791,7 @@ CREATE TABLE IF NOT EXISTS `notification` (
   KEY `staffId` (`staffId`),
   KEY `dassId` (`dassId`),
   KEY `moodId` (`moodId`)
-) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8mb4;
 
 --
 -- RELATIONSHIPS FOR TABLE `notification`:
@@ -755,23 +840,34 @@ INSERT INTO `notification` (`notificationId`, `title`, `content`, `notiStatus`, 
 (104, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2026-01-08 11:48:59', NULL, 2, NULL, NULL, 'The DASS assessment for 08-01-2026 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/16'),
 (105, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2026-01-08 11:51:25', NULL, NULL, 1, NULL, 'DASS Assessment has completed by D032310456! Click and check it out.', NULL),
 (106, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2026-01-08 13:30:43', NULL, 1, NULL, NULL, 'The DASS assessment for 08-01-2026 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/17'),
-(107, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2026-01-08 13:31:38', NULL, 1, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/14'),
-(108, 'DASS Assessment Completed By A Student!', NULL, 'UNREAD', 'dass', '2026-01-08 13:32:40', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310439! Click and check it out.', NULL),
+(108, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2026-01-08 13:32:40', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310439! Click and check it out.', NULL),
 (109, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2026-01-08 13:53:58', NULL, 9, NULL, NULL, 'The DASS assessment for 08-01-2026 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/18'),
-(110, 'DASS Assessment Completed By A Student!', NULL, 'UNREAD', 'dass', '2026-01-08 13:57:16', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310126! Click and check it out.', NULL),
+(110, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2026-01-08 13:57:16', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310126! Click and check it out.', NULL),
 (111, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2026-01-08 13:57:47', NULL, 9, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/15'),
-(112, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2026-01-08 14:18:53', NULL, 1, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/16'),
 (113, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2026-01-08 18:17:27', NULL, 1, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/17'),
-(114, 'Meeting Request from Your PA', NULL, 'UNREAD', 'contact', '2026-01-09 18:13:41', NULL, 2, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/18'),
+(114, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2026-01-09 18:13:41', NULL, 2, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/18'),
 (115, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2026-01-09 22:11:58', NULL, 8, NULL, NULL, 'The DASS assessment for 09-01-2026 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/19'),
-(116, 'DASS Assessment Completed By A Student!', NULL, 'UNREAD', 'dass', '2026-01-09 22:12:51', NULL, NULL, 5, NULL, 'DASS Assessment has completed by B112420015! Click and check it out.', NULL);
+(116, 'DASS Assessment Completed By A Student!', NULL, 'UNREAD', 'dass', '2026-01-09 22:12:51', NULL, NULL, 5, NULL, 'DASS Assessment has completed by B112420015! Click and check it out.', NULL),
+(117, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2026-01-11 14:52:03', NULL, 7, NULL, NULL, 'The DASS assessment for 11-01-2026 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/20'),
+(118, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2026-01-11 14:53:41', NULL, NULL, 4, NULL, 'DASS Assessment has completed by D032310460! Click and check it out.', NULL),
+(119, 'Meeting Request from Your PA', NULL, 'UNREAD', 'contact', '2026-01-11 15:35:06', NULL, 7, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/19'),
+(123, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2026-01-12 22:02:57', NULL, 1, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/20'),
+(124, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2026-01-13 10:34:58', NULL, 1, NULL, NULL, 'The DASS assessment for 13-01-2026 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/24'),
+(125, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2026-01-13 10:36:15', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310439! Click and check it out.', NULL),
+(128, 'Complete Your DASS Assessment', NULL, 'READ', 'dass', '2026-01-13 14:55:26', NULL, 1, NULL, NULL, 'The DASS assessment for 13-01-2026 has assigned by your PA. Kindly click here to fill it in.', '/DassAssessment/26'),
+(129, 'DASS Assessment Completed By A Student!', NULL, 'READ', 'dass', '2026-01-13 14:56:41', NULL, NULL, 2, NULL, 'DASS Assessment has completed by D032310439! Click and check it out.', NULL),
+(130, 'Meeting Request from Your PA', NULL, 'READ', 'contact', '2026-01-13 14:58:02', NULL, 9, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/22'),
+(133, 'Meeting Request from Your PA', NULL, 'UNREAD', 'contact', '2026-01-15 02:01:27', NULL, 9, NULL, NULL, 'Your PA has scheduled a meeting with you. Check the details inside.', '/ContactDetails/25'),
+(146, 'Alert! New Contact Note Pushed', NULL, 'READ', 'push', '2026-01-15 03:58:59', NULL, NULL, 6, NULL, 'A new student contact note has been pushed by PA S032310002 for your review.', '/StudentContactViewSpecific/9/2/2026-01-15/25'),
+(147, 'Alert! New Contact Note Pushed', NULL, 'READ', 'push', '2026-01-15 04:11:03', NULL, NULL, 6, NULL, 'A new student contact note has been pushed by PA S032310002 for your review.', '/StudentContactViewSpecific/1/2/2026-01-08/17'),
+(148, 'Alert! New Contact Note Pushed', NULL, 'READ', 'push', '2026-01-16 18:57:50', NULL, NULL, 6, NULL, 'A new student contact note has been pushed by PA S032310001 for your review.', '/StudentContactViewSpecific/2/1/2026-01-09/18');
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `recommendation`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
+-- Creation: Jan 16, 2026 at 08:23 AM
 --
 
 DROP TABLE IF EXISTS `recommendation`;
@@ -792,23 +888,23 @@ CREATE TABLE IF NOT EXISTS `recommendation` (
 --
 
 INSERT INTO `recommendation` (`recommendId`, `quote`, `type`, `hyperlink`) VALUES
-(1, 'Every small step counts.', 'positive', NULL),
+(1, 'Do the best you can until you know better. Then when you know better, do better.', 'positive', NULL),
 (2, 'Progress is still progress, no matter how slow.', 'positive', NULL),
 (3, 'You are capable of amazing things.', 'positive', NULL),
 (4, 'Believe in your journey.', 'positive', NULL),
-(5, 'Take it one day at a time.', 'positive', NULL),
+(5, 'We can’t become what we need to be by remaining what we are.', 'positive', NULL),
 (6, 'Your future needs you—your past does not.', 'positive', NULL),
 (7, 'Be kind to yourself. You’re learning.', 'positive', NULL),
-(8, 'You have survived 100% of your bad days so far.', 'positive', NULL),
+(8, 'Be not afraid of growing slowly; be afraid only of standing still.', 'positive', NULL),
 (9, 'It’s okay to rest. Rest is part of the process.', 'positive', NULL),
-(10, 'Even the quiet moments matter.', 'positive', NULL),
+(10, 'Let your smile change the world, don\'t let the world change your smile.', 'positive', NULL),
 (11, 'Breathe. You’re going to be okay.', 'calm', NULL),
 (12, 'Peace begins with a single breath.', 'calm', NULL),
 (13, 'You deserve to feel calm.', 'calm', NULL),
 (14, 'Your feelings are valid.', 'calm', NULL),
 (15, 'Slow down. You’re allowed to.', 'calm', NULL),
 (16, 'Resting is not wasting time.', 'calm', NULL),
-(17, 'It’s okay not to be okay.', 'calm', NULL),
+(17, 'Don’t try to force anything. Let life be a deep let-go. God opens millions of flowers every day without forcing their buds.', 'calm', NULL),
 (18, 'Take a break. You need it.', 'calm', NULL),
 (19, 'Release what you cannot control.', 'calm', NULL),
 (20, 'Calmness is your superpower.', 'calm', NULL),
@@ -838,8 +934,7 @@ INSERT INTO `recommendation` (`recommendId`, `quote`, `type`, `hyperlink`) VALUE
 --
 -- Table structure for table `recommendationdisplay`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
--- Last update: Jan 10, 2026 at 02:10 PM
+-- Creation: Jan 16, 2026 at 08:23 AM
 --
 
 DROP TABLE IF EXISTS `recommendationdisplay`;
@@ -852,7 +947,7 @@ CREATE TABLE IF NOT EXISTS `recommendationdisplay` (
   PRIMARY KEY (`recommendationDisplayId`),
   KEY `studentId` (`studentId`),
   KEY `recommendationdisplay_ibfk_1` (`recommendId`)
-) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8mb4;
 
 --
 -- RELATIONSHIPS FOR TABLE `recommendationdisplay`:
@@ -1019,15 +1114,35 @@ INSERT INTO `recommendationdisplay` (`recommendId`, `studentId`, `displayCount`,
 (25, 1, 1, 3, 188),
 (1, 6, 1, 3, 189),
 (7, 6, 1, 3, 190),
-(12, 6, 1, 3, 191);
+(12, 6, 1, 3, 191),
+(25, 7, 1, 3, 192),
+(13, 1, 1, 3, 193),
+(12, 1, 1, 3, 194),
+(9, 1, 1, 3, 195),
+(5, 1, 1, 3, 196),
+(7, 1, 1, 3, 197),
+(1, 1, 1, 0, 198),
+(7, 1, 1, 3, 199),
+(25, 1, 1, 3, 200),
+(22, 1, 1, 3, 201),
+(16, 2, 1, 3, 202),
+(13, 2, 1, 0, 203),
+(11, 2, 1, 3, 204),
+(20, 1, 1, 0, 205),
+(6, 1, 1, 3, 206),
+(16, 1, 1, 0, 207),
+(14, 10, 1, 3, 208),
+(20, 1, 1, 3, 209),
+(23, 1, 1, 3, 210),
+(16, 1, 1, 3, 211);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `staff`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
--- Last update: Jan 10, 2026 at 04:58 PM
+-- Creation: Jan 16, 2026 at 08:23 AM
+-- Last update: Jan 16, 2026 at 10:57 AM
 --
 
 DROP TABLE IF EXISTS `staff`;
@@ -1058,20 +1173,19 @@ CREATE TABLE IF NOT EXISTS `staff` (
 --
 
 INSERT INTO `staff` (`staffId`, `staffNo`, `staffName`, `staffEmail`, `staffContact`, `staffFaculty`, `staffProPic`, `staffOffice`, `staffMemberSince`, `staffRole`, `staffPassword`, `loginToken`, `expiresAt`) VALUES
-(1, 'S032310001', 'TEN LEE KONG', 's032310001@utem.edu.my', '0126785432', 'FTMK', '', 'RIGHT WING 2nd FLOOR B01', '2025-11-24 19:47:01', 'PENASIHAT AKADEMIK', '$2y$10$VPhoKWYfWdHNdvLXjheuq.DIVouy6n2QhOOE.1glEU.YSyrQP4Kee', '0d6dd8e2886e4bc3e2dfd786ad6d141f76f598436536e2ca6f2f0fd87153cff3', NULL),
-(2, 'S032310002', 'LEE XING RU', 's032310002@utem.edu.my', '0166571254', 'FTMK', '', 'RIGHT WING 1st FLOOR B05', '2025-11-23 19:30:40', 'PENASIHAT AKADEMIK', '$2y$10$ZBaZ85aT2uOpp/F3VAx1gOtxFX9TCZbS4VciehdkCC8XXIlPm0/7a', 'a420ae0534934e4c004b2a393aa46ab3c978bc79e8ff13c1ca048bf54854a413', NULL),
-(3, 'S032310003', 'NG JIA SENG', 's032310003@utem.edu.my', '0104571685', 'FTMK', '', 'LEFT WING 1st FLOOR B07', '2025-11-24 14:30:45', 'PENASIHAT AKADEMIK', '$2y$10$atrL3atMEo82Uc32ajT1F.x/DA5ZbCCQ1Zb5t3HsyoGXOun5eOeme', '960c3a91ebf889a4db121450c8878b6da937bf364a628d64abc0f7591fbba0e0', NULL),
-(4, 'S032310004', 'CHIN ZHI ROU', 's032310004@utem.edu.my', '0146241524', 'FTMK', '', 'LEFT WING 3rd FLOOR B02', '2025-12-27 15:09:00', 'PENASIHAT AKADEMIK', '$2y$10$8bkUPoDQco4F1sxIfXV0seeGFVQesDivHDwQn35ynI2IhcHGc7kDC', 'aad184cc3865fe1f0c974762bdcfc0a1801e72e452f17375e012635466620116', NULL),
+(1, 'S032310001', 'TEN LEE KONG', 's032310001@utem.edu.my', '0126785432', 'FTMK', '', 'RIGHT WING 2nd FLOOR B01', '2025-11-24 19:47:01', 'PENASIHAT AKADEMIK', '$2y$10$VPhoKWYfWdHNdvLXjheuq.DIVouy6n2QhOOE.1glEU.YSyrQP4Kee', '10ad0f8b440267f92d806cd8ec2f15aed60f6a1260ae7deebd4caf67cfdc4d41', NULL),
+(2, 'S032310002', 'LEE XING RU', 's032310002@utem.edu.my', '0166571254', 'FTMK', '', 'RIGHT WING 1st FLOOR B05', '2025-11-23 19:30:40', 'PENASIHAT AKADEMIK', '$2y$10$ZBaZ85aT2uOpp/F3VAx1gOtxFX9TCZbS4VciehdkCC8XXIlPm0/7a', '42b8839eda5a75bf637f42abd6db45320d9988d682c4b163511b7068bce984bd', NULL),
+(3, 'S032310003', 'NG JIA SENG', 's032310003@utem.edu.my', '0104571685', 'FTMK', '', 'LEFT WING 1st FLOOR B07', '2025-11-24 14:30:45', 'PENASIHAT AKADEMIK', '$2y$10$atrL3atMEo82Uc32ajT1F.x/DA5ZbCCQ1Zb5t3HsyoGXOun5eOeme', '973f4b300003a52a27d40035b93ef8cb0a1106164304fac1420d9e56b70d3b74', NULL),
+(4, 'S032310004', 'CHIN ZHI ROU', 's032310004@utem.edu.my', '0146241524', 'FTMK', '', 'LEFT WING 3rd FLOOR B02', '2025-12-27 15:09:00', 'PENASIHAT AKADEMIK', '$2y$10$8bkUPoDQco4F1sxIfXV0seeGFVQesDivHDwQn35ynI2IhcHGc7kDC', '2795a38e9d072b78d43451698c712a7636b04792907ed4b72d58982d43756109', NULL),
 (5, 'S032210001', 'NG KAH MING', 's032210001@utem.edu.my', '0123542165', 'FTKE', '', '1st FLOOR K03', '2025-12-25 09:30:50', 'PENASIHAT AKADEMIK', '$2y$10$NuaQM4E7ftMepgJ4MGvuHu6B9rxBRO8WALrl6YpvZMUvjPe0Lplq.', 'ed9e5332e5d914db1385195ceffa00590c7ca493c4f847b701f379e843093b74', NULL),
-(6, 'C032310001', 'CHANG YEE QI', 'changyeeqi@utem.edu.my', '0162487513', 'HEPA', '', 'Aras 1, Pusat Persatuan Pelajar (PPP)', '2025-12-26 18:49:29', 'PEGAWAI PSIKOLOGI', '$2y$10$1..skBPbrRYGK.mUPiElhesyL3AOZzo/VW6yxslAL4PiW1qj4kIFa', '74ba8a1424cc5038b4c6e1f431a3fd0a84e0fc9c385f859c573817c1bb125896', NULL);
+(6, 'C032310001', 'CHANG YEE QI', 'changyeeqi@utem.edu.my', '0162487513', 'HEPA', '', 'Aras 1, Pusat Persatuan Pelajar (PPP)', '2025-12-26 18:49:29', 'PEGAWAI PSIKOLOGI', '$2y$10$1..skBPbrRYGK.mUPiElhesyL3AOZzo/VW6yxslAL4PiW1qj4kIFa', '1578b45e945346a85e0d7f38122dc522820207c3a643a93c4e857d89191bf275', NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `stress`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
--- Last update: Jan 10, 2026 at 02:10 PM
+-- Creation: Jan 16, 2026 at 08:23 AM
 --
 
 DROP TABLE IF EXISTS `stress`;
@@ -1082,7 +1196,7 @@ CREATE TABLE IF NOT EXISTS `stress` (
   `studentId` int(11) DEFAULT NULL,
   PRIMARY KEY (`stressId`),
   KEY `studentId` (`studentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4;
 
 --
 -- RELATIONSHIPS FOR TABLE `stress`:
@@ -1107,10 +1221,10 @@ INSERT INTO `stress` (`stressId`, `stressLevel`, `datetimeRecord`, `studentId`) 
 (23, 76, '2025-12-26 01:30:18', 1),
 (31, 50, '2025-12-10 00:00:00', 7),
 (35, 30, '2025-12-30 18:00:01', 1),
-(38, 30, '2025-12-31 02:08:13', 1),
+(38, 19, '2025-12-31 02:08:13', 1),
 (41, 60, '2026-01-05 16:30:48', 1),
-(42, 55, '2026-01-06 03:30:26', 1),
-(44, 28, '2026-01-07 23:51:24', 1),
+(42, 65, '2026-01-06 03:30:26', 1),
+(44, 90, '2026-01-07 23:51:24', 1),
 (46, 68, '2026-01-08 00:08:43', 1),
 (47, 58, '2026-01-08 11:47:24', 2),
 (48, 8, '2026-01-08 13:28:39', 7),
@@ -1121,15 +1235,17 @@ INSERT INTO `stress` (`stressId`, `stressLevel`, `datetimeRecord`, `studentId`) 
 (60, 7, '2025-12-01 00:00:00', 2),
 (61, 65, '2026-01-09 22:05:16', 8),
 (64, 90, '2026-01-10 13:16:47', 1),
-(65, 60, '2026-01-10 13:17:14', 7);
+(65, 60, '2026-01-10 13:17:14', 7),
+(68, 95, '2026-01-11 14:50:26', 7),
+(71, 80, '2026-01-12 21:30:36', 1),
+(72, 40, '2026-01-13 12:14:18', 1);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `student`
 --
--- Creation: Jan 10, 2026 at 03:21 AM
--- Last update: Jan 10, 2026 at 07:29 PM
+-- Creation: Jan 16, 2026 at 08:23 AM
 --
 
 DROP TABLE IF EXISTS `student`;
@@ -1165,16 +1281,16 @@ CREATE TABLE IF NOT EXISTS `student` (
 --
 
 INSERT INTO `student` (`studentId`, `matricNo`, `studentName`, `studentEmail`, `studentContact`, `studentFaculty`, `studentYearOfStudy`, `studentSection`, `studentGrp`, `studentProPic`, `studentPassword`, `staffId`, `studentCourse`, `studentMemberSince`, `loginToken`, `expiresAt`) VALUES
-(1, 'D032310439', 'CHONG WAN XIAN CASEY', 'd032310439@student.utem.edu.my', '0122643499', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$BgAJz4Lla1XATh86MctbE.NJwvZA0wLGv9wvCDT18V4P8FfN2qUZ2', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', 'f30ab25772dd04190f47bc167b687524d862fcad5a10c298d3a4c8d4ac41979d', NULL),
-(2, 'D032310456', 'CHIEW CHIN KUAN', 'd032310456@student.utem.edu.my', '0129318660', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$qVJ6AV0SqRc25DSJYjMsTOBS5.U3o2erBPvbh./8yXy6.nGGUJ2da', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', 'd81338e53fe756fb92944be49e5bbb991dbca512e2e85fc32e3780b1e3067dbe', NULL),
+(1, 'D032310439', 'CHONG WAN XIAN CASEY', 'd032310439@student.utem.edu.my', '0122643499', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$SQz7fOUIlYBNJpyRijAymu5btBJnZZD0v05jCZdWB5SJS5ktDaTRC', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '6d196e05cd6f7de036e1c0c3a33c3ed2b47ed06b214790a967c797eb5921147f', '2026-01-12 21:32:17'),
+(2, 'D032310456', 'CHIEW CHIN KUAN', 'd032310456@student.utem.edu.my', '0129318660', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$qVJ6AV0SqRc25DSJYjMsTOBS5.U3o2erBPvbh./8yXy6.nGGUJ2da', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '4206f348b926f977558b286b9ee25284270b974d9c8a5808f3b2a893e7ae4bad', NULL),
 (3, 'D032310403', 'A\'SYAH INSYIRAH BINTI MOHD NIZAM', 'd032310403@student.utem.edu.my', '0163249854', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$eQwLVlu2NELlJOVCmhW2F.XwegeDD0Qs03I6bnaAY9Nkey03d0D5q', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '860d0b17f1a3a0613fdd7a53acef112df8943ea32b717f3274bbad8442343f09', NULL),
 (4, 'D032310149', 'SIA XIN WAN', 'd032310149@student.utem.edu.my', '01110356547', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$GJ/TBuE.U9JoWDMMyMVkve04D/CHJ382FH4D53ht1XKEKkzPRuAiC', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', NULL, NULL),
 (5, 'D032310347', 'TEOH HUI YU', 'd032310347@student.utem.edu.my', '0125428971', 'FTMK', 3, 'SECTION 1', 'GROUP 1', '', '$2y$10$RSUuBTnnwB0VEaYFacCI8errJuhc4tRmoxrlddWfYt3Ht9IkrA0Ma', 1, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', NULL, NULL),
 (6, 'D032310490', 'FELICIA TEE JIA XUAN', 'd032310490@student.utem.edu.my', '0125468751', 'FTMK', 3, 'SECTION 3', 'GROUP 2', '', '$2y$10$RDxGSe2VagOKi4UhR/sgMO/GYLLY2ntI.aFFEPRnS8JZno7MIezHK', 3, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '9250ac6f82f9bc32866df9a39f76660bfd63df907078b6e412eef06aaa0efe63', NULL),
-(7, 'D032310460', 'CHAN MEI YEANG', 'd032310460@student.utem.edu.my', '01110265475', 'FTMK', 3, 'SECTION 3', 'GROUP 1', '', '$2y$10$7/YG5UbsmlPY5JHO2r89jOv9wTJVKDwxm.CvTeV.Dh8jzusUV31wS', 4, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', '6909e3503721b5da3616515e7b4dde69895e02df2f5722d33d157fa13a6b1c45', NULL),
+(7, 'D032310460', 'CHAN MEI YEANG', 'd032310460@student.utem.edu.my', '01110265475', 'FTMK', 3, 'SECTION 3', 'GROUP 1', '', '$2y$10$7/YG5UbsmlPY5JHO2r89jOv9wTJVKDwxm.CvTeV.Dh8jzusUV31wS', 4, 'DIPLOMA IN COMPUTER SCIENCE', '2025-11-25 16:03:10', 'aea08691cd38c9b669c7a03e43b497f31d5dfcf8a8496d3a18b8297800041b91', NULL),
 (8, 'B112420015', 'LIM KE ROU', 'b1112420015@student.utem.edu.my', '0162195483', 'FTKE', 2, 'SECTION 1', 'GROUP 1', '', '$2y$10$BhO/EVlGjtiJwJBkvGrnFeqNE5BIlgaznlwsZ5SV2EFLWEcE0xtMi', 5, 'BACHELOR IN ELECTRICAL', '2025-11-25 16:03:10', '29bab9a5d673a4c99090f4683d804a935b08af97dc366329668777a8b844bf40', NULL),
-(9, 'D032310126', 'EISYAH MAISARAH BINTI AZHARI', 'eisyahmaisarah@student.utem.edu.my', '0162195489', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$/FzRDss7RcetMi4pkchwA.OjfRpPDAuYALUe0WJwQ3eraBuPVN2/m', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-15 13:39:45', '264cedfa5b703beba0b3238146d29b3e08e79c2333133b8fced56a1f099a301b', NULL),
-(10, 'D032310322', 'CHONG PUI YI', 'chongpuiyi@student.utem.edu.my', '0124568542', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$RjhVTN18Ah0HYM8bouPEhefaZr3P9HPtT.5/GMs6/.ZI0FjDdqTXq', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-25 17:17:49', '6c42c16396898be15737869be98d769da5ca0bade7d0bd93a08750c0a9af7006', NULL);
+(9, 'D032310126', 'EISYAH MAISARAH BINTI AZHARI', 'eisyahmaisarah@student.utem.edu.my', '0162195489', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$/FzRDss7RcetMi4pkchwA.OjfRpPDAuYALUe0WJwQ3eraBuPVN2/m', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-15 13:39:45', '27f16563c6e5976c4b6d8a894d1639618b828629c41ea9fbec63db747180386a', NULL),
+(10, 'D032310322', 'CHONG PUI YI', 'chongpuiyi@student.utem.edu.my', '0124568542', 'FTMK', 3, 'SECTION 2', 'GROUP 2', '', '$2y$10$RjhVTN18Ah0HYM8bouPEhefaZr3P9HPtT.5/GMs6/.ZI0FjDdqTXq', 2, 'DIPLOMA IN COMPUTER SCIENCE', '2025-12-25 17:17:49', 'dec898fec95a3d02a146b46c4355505c454b1acb1692fa8f8e1135d889081804', NULL);
 
 --
 -- Constraints for dumped tables
@@ -1185,7 +1301,8 @@ INSERT INTO `student` (`studentId`, `matricNo`, `studentName`, `studentEmail`, `
 --
 ALTER TABLE `contactnote`
   ADD CONSTRAINT `contactnote_ibfk_1` FOREIGN KEY (`studentId`) REFERENCES `student` (`studentId`),
-  ADD CONSTRAINT `contactnote_ibfk_2` FOREIGN KEY (`staffId`) REFERENCES `staff` (`staffId`);
+  ADD CONSTRAINT `contactnote_ibfk_2` FOREIGN KEY (`staffId`) REFERENCES `staff` (`staffId`),
+  ADD CONSTRAINT `contactnote_ibfk_3` FOREIGN KEY (`dassId`) REFERENCES `dass` (`dassId`);
 
 --
 -- Constraints for table `dass`
