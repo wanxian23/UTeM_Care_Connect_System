@@ -954,7 +954,8 @@ foreach ($getAllStudentDassData as $row) {
         'contactRecord' => $contactSent,
         'noteRecord' => $noteRecord,
         'contactCount' => $contactCount,
-        'noteCount' => $noteCount
+        'noteCount' => $noteCount,
+        'dassId' => $dassId
     ];
 }
 

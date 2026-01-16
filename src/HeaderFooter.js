@@ -571,13 +571,14 @@ export function HeaderCounsellor() {
     return(
         <>
             <header className="counsellor">
-                <a href='/StatisticCounsellor' id='logo'>
+                <a href='/TableDataCounselling' id='logo'>
                     <img src={careConnectIcon} alt='Logo'></img>
                     <label>UTeM CareConnect</label>
                 </a>
                 <nav>
                     <Link to='/TableDataCounselling' >Dashboard</Link>
                     <Link to='/StatisticCounsellor' >Statistic</Link>
+                    <Link to='/CounsellorAlert' >Counsellor Alert</Link>
                 </nav>
                 <aside>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">

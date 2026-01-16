@@ -8,6 +8,7 @@ require "authPa.php";
 
 $user = validateToken($conn);
 $staffId = $user['staffId'];
+$dassId = $_GET['dassId'] ?? null;
 
 // Use to get data from body (JSON.stringify)
 $data = json_decode(file_get_contents("php://input"), true);
@@ -36,11 +37,19 @@ $stmtInsertNotification = $conn->prepare("
 ");
 $stmtInsertNotification->bind_param("isss", $studentId, $title, $description, $type);
 
-$stmtInsertContact = $conn->prepare("
-    INSERT INTO contactNote (message, studentId, staffId) 
-    VALUES (?, ?, ?);
-");
-$stmtInsertContact->bind_param("sii", $message, $studentId, $staffId);
+if (empty($dassId)) {
+    $stmtInsertContact = $conn->prepare("
+        INSERT INTO contactNote (message, studentId, staffId) 
+        VALUES (?, ?, ?);
+    ");
+    $stmtInsertContact->bind_param("sii", $message, $studentId, $staffId);
+} else {
+    $stmtInsertContact = $conn->prepare("
+        INSERT INTO contactNote (message, studentId, staffId, dassId) 
+        VALUES (?, ?, ?, ?);
+    ");
+    $stmtInsertContact->bind_param("siii", $message, $studentId, $staffId, $dassId);    
+}
 
 if ($stmtInsertNotification->execute()) {
 

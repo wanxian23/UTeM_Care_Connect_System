@@ -1,6 +1,5 @@
 import { Routes, Route, Link } from "react-router-dom";
 import Home from "./Overview";
-import ForgetPassword from "./ForgetPassword";
 
 import Dashboard from "./Dashboard";
 import MoodRecord from "./MoodRecord";
@@ -34,13 +33,14 @@ import StudentInfoCounselling from "./StudentInfoCounselling";
 import StudentInfoStatisticCounselling from "./StudentInfoStatisticCounselling";
 import StudentContactHistoryCounselling from "./StudentContactHistoryCounselling";
 import StudentContactViewCounselling from "./StudentContactViewCounselling";
+import StudentContactViewSpecific from "./StudentContactViewSpecific";
+import CounsellorAlert from "./CounsellorAlert";
 
 function App() {
   return (
     <div>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/ForgetPassword" element={<ForgetPassword />} />
 
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/MoodRecord" element={<MoodRecord />} />
@@ -77,7 +77,8 @@ function App() {
         <Route path="/StudentInfoStatisticCounselling/:studentId/:paId" element={<StudentInfoStatisticCounselling />} />
         <Route path="/StudentContactHistoryCounselling/:studentId/:paId" element={<StudentContactHistoryCounselling />} />
         <Route path="/StudentContactViewCounselling/:studentId/:paId/:date" element={<StudentContactViewCounselling />} />
-
+        <Route path="/StudentContactViewSpecific/:studentId/:paId/:date/:contactId" element={<StudentContactViewSpecific />} />
+        <Route path="/CounsellorAlert" element={<CounsellorAlert />} />
       </Routes>
     </div>
   );

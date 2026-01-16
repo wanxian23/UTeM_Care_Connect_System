@@ -287,6 +287,21 @@ function StudentContactView() {
     const trendColorHigh = trendHigh === 'decreasing' ? '#4CAF50' : trendHigh === 'increasing' ? '#F44336' : '#757575';
     const differenceHigh = highStressData?.difference || 0;
 
+    const getDassLevelColor = (level) => {
+        if (!level) return "#ffffff";
+        if (level == "Normal") {
+            return "#BFE5C8"
+        } else if (level == "Mild") {
+            return "#e4e8ccff"
+        } else if (level == "Moderate") {
+            return "#e4b995ff"
+        } else if (level == "Severe") {
+            return "#ff3a3a"
+        } else if (level == "Extremely Severe") {
+            return "#ff3a3a"
+        }
+    }
+
     return (
         <>
             <HeaderCounsellor />
@@ -327,133 +342,208 @@ function StudentContactView() {
                             </div>
                         </div>
 
-                        <div className="studentInfoBox">
-                            <h3 className="sectionTitle smallTitle" style={{
-                                fontSize: "3vh"
-                            }}>Mood Condition Monthly Changes</h3>
-                            <div className="infoGrid">
-                                <div className="infoItem">
-                                    <h4 className="infoLabel">Timeline</h4>
-                                    <span className="infoValue">{trendData.monthlyComparison?.period?.lastMonth} - {trendData.monthlyComparison?.period?.thisMonth}</span>
-                                </div>
-                                <div className="infoItem">
-                                    <h4 className="infoLabel">Mood Changes</h4>
-                                    <div
-                                        style={{
-                                            width: '100%',
-                                            display: 'flex',
-                                            justifyContent: "center",
-                                            gap: "10px"
-                                        }}
-                                    >
-                                        {/* Positive */}
-                                        <div style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            textWrap: "nowrap",
-                                            gap: "5px 10px",
-                                            backgroundColor: "#BFE5C8",
-                                            borderRadius: "10px",
-                                            padding: "5px",
-                                            border: "1px solid" + getTrendColor(
-                                                'positive',
-                                                trendData.monthlyComparison?.mood?.positive?.trend
-                                            ),
-                                            color: getTrendColor(
-                                                'positive',
-                                                trendData.monthlyComparison?.mood?.positive?.trend
-                                            )
-                                        }}>
-                                            Pos (+): {getArrowIcon(trendData.monthlyComparison?.mood?.positive?.trend)}
-                                            {Math.abs(trendData.monthlyComparison?.mood?.positive?.difference ?? 0)}%
-                                        </div>
+                        {!trendData.dassContact ?
+                            <div className="studentInfoBox">
+                                <h3 className="sectionTitle smallTitle" style={{
+                                    fontSize: "3vh"
+                                }}>Mood Condition Monthly Changes</h3>
+                                <div className="infoGrid">
+                                    <div className="infoItem">
+                                        <h4 className="infoLabel">Timeline</h4>
+                                        <span className="infoValue">{trendData.monthlyComparison?.period?.lastMonth} - {trendData.monthlyComparison?.period?.thisMonth}</span>
+                                    </div>
+                                    <div className="infoItem">
+                                        <h4 className="infoLabel">Mood Changes</h4>
+                                        <div
+                                            style={{
+                                                width: '100%',
+                                                display: 'flex',
+                                                justifyContent: "center",
+                                                gap: "10px"
+                                            }}
+                                        >
+                                            {/* Positive */}
+                                            <div style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                textWrap: "nowrap",
+                                                gap: "5px 10px",
+                                                backgroundColor: "#BFE5C8",
+                                                borderRadius: "10px",
+                                                padding: "5px",
+                                                border: "1px solid" + getTrendColor(
+                                                    'positive',
+                                                    trendData.monthlyComparison?.mood?.positive?.trend
+                                                ),
+                                                color: getTrendColor(
+                                                    'positive',
+                                                    trendData.monthlyComparison?.mood?.positive?.trend
+                                                )
+                                            }}>
+                                                Pos (+): {getArrowIcon(trendData.monthlyComparison?.mood?.positive?.trend)}
+                                                {Math.abs(trendData.monthlyComparison?.mood?.positive?.difference ?? 0)}%
+                                            </div>
 
-                                        {/* Negative */}
-                                        <div style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            textWrap: "nowrap",
-                                            gap: "5px 10px",
-                                            backgroundColor: "#fac7c7ff",
-                                            borderRadius: "10px",
-                                            padding: "5px",
-                                            border: "1px solid" + getTrendColor(
-                                                'negative',
-                                                trendData.monthlyComparison?.mood?.negative?.trend
-                                            ),
-                                            color: getTrendColor(
-                                                'negative',
-                                                trendData.monthlyComparison?.mood?.negative?.trend
-                                            )
-                                        }}>
-                                            Neg (-): {getArrowIcon(trendData.monthlyComparison?.mood?.negative?.trend)}
-                                            {Math.abs(trendData.monthlyComparison?.mood?.negative?.difference ?? 0)}%
+                                            {/* Negative */}
+                                            <div style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                textWrap: "nowrap",
+                                                gap: "5px 10px",
+                                                backgroundColor: "#fac7c7ff",
+                                                borderRadius: "10px",
+                                                padding: "5px",
+                                                border: "1px solid" + getTrendColor(
+                                                    'negative',
+                                                    trendData.monthlyComparison?.mood?.negative?.trend
+                                                ),
+                                                color: getTrendColor(
+                                                    'negative',
+                                                    trendData.monthlyComparison?.mood?.negative?.trend
+                                                )
+                                            }}>
+                                                Neg (-): {getArrowIcon(trendData.monthlyComparison?.mood?.negative?.trend)}
+                                                {Math.abs(trendData.monthlyComparison?.mood?.negative?.difference ?? 0)}%
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="infoItem">
-                                    <h4 className="infoLabel">Mood Summary</h4>
-                                    <span className="infoValue"
-                                        style={{
-                                            color: overallMessage.color
-                                        }}
-                                    >
-                                        {overallMessage.text}
-                                    </span>
-                                </div>
-                                <div className="infoItem">
-                                    <h4 className="infoLabel">Stress Changes</h4>
-                                    <div
-                                        style={{
-                                            width: '100%',
-                                            display: 'flex',
-                                            justifyContent: "center",
-                                            gap: "10px"
-                                        }}
-                                    >
-                                        {/* Low */}
-                                        <div style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            textWrap: "nowrap",
-                                            gap: "5px 10px",
-                                            backgroundColor: "#BFE5C8",
-                                            borderRadius: "10px",
-                                            padding: "5px",
-                                            border: "1px solid" + trendColorLow,
-                                            color: trendColorLow
-                                        }}>
-                                            Low: {getStressArrowIcon(trendData.monthlyComparison?.stress?.low?.trend)}
-                                            {Math.abs(trendData.monthlyComparison?.stress?.low?.difference ?? 0)}%
-                                        </div>
+                                    <div className="infoItem">
+                                        <h4 className="infoLabel">Mood Summary</h4>
+                                        <span className="infoValue"
+                                            style={{
+                                                color: overallMessage.color
+                                            }}
+                                        >
+                                            {overallMessage.text}
+                                        </span>
+                                    </div>
+                                    <div className="infoItem">
+                                        <h4 className="infoLabel">Stress Changes</h4>
+                                        <div
+                                            style={{
+                                                width: '100%',
+                                                display: 'flex',
+                                                justifyContent: "center",
+                                                gap: "10px"
+                                            }}
+                                        >
+                                            {/* Low */}
+                                            <div style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                textWrap: "nowrap",
+                                                gap: "5px 10px",
+                                                backgroundColor: "#BFE5C8",
+                                                borderRadius: "10px",
+                                                padding: "5px",
+                                                border: "1px solid" + trendColorLow,
+                                                color: trendColorLow
+                                            }}>
+                                                Low: {getStressArrowIcon(trendData.monthlyComparison?.stress?.low?.trend)}
+                                                {Math.abs(trendData.monthlyComparison?.stress?.low?.difference ?? 0)}%
+                                            </div>
 
-                                        {/* High */}
-                                        <div style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            textWrap: "nowrap",
-                                            gap: "5px 10px",
-                                            backgroundColor: "#fac7c7ff",
-                                            borderRadius: "10px",
-                                            padding: "5px",
-                                            border: "1px solid" + trendColorHigh,
-                                            color: trendColorHigh
-                                        }}>
-                                            High: {getStressArrowIcon(trendData.monthlyComparison?.stress?.high?.trend)}
-                                            {Math.abs(trendData.monthlyComparison?.stress?.high?.difference ?? 0)}%
+                                            {/* High */}
+                                            <div style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                textWrap: "nowrap",
+                                                gap: "5px 10px",
+                                                backgroundColor: "#fac7c7ff",
+                                                borderRadius: "10px",
+                                                padding: "5px",
+                                                border: "1px solid" + trendColorHigh,
+                                                color: trendColorHigh
+                                            }}>
+                                                High: {getStressArrowIcon(trendData.monthlyComparison?.stress?.high?.trend)}
+                                                {Math.abs(trendData.monthlyComparison?.stress?.high?.difference ?? 0)}%
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="infoItem">
-                                    <h4 className="infoLabel">Stress Summary</h4>
-                                    <span className="infoValue"
-                                        style={{
-                                            color: message.color
-                                        }}
-                                    >{message.text}</span>
+                                    <div className="infoItem">
+                                        <h4 className="infoLabel">Stress Summary</h4>
+                                        <span className="infoValue"
+                                            style={{
+                                                color: message.color
+                                            }}
+                                        >{message.text}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        :
+                            <div className="studentInfoBox">
+                                <h3 className="sectionTitle smallTitle" style={{
+                                    fontSize: "3vh"
+                                }}>DASS Condition</h3>
+                                <div className="infoGrid">
+                                    <div className="infoItem"
+                                        style={{
+                                            flex: "45%"
+                                        }}
+                                    >
+                                        <h4 className="infoLabel">DASS Creation Date</h4>
+                                        <span className="infoValue">{trendData.creationDate}</span>
+                                    </div>
+                                    <div className="infoItem"
+                                        style={{
+                                            flex: "45%"
+                                        }}
+                                    >
+                                        <h4 className="infoLabel">DASS Completed Date</h4>
+                                        <span className="infoValue">{trendData.completedDate}</span>
+                                    </div>
+                                    <div className="infoItem"
+                                        style={{
+                                            flex: "30%"
+                                        }}
+                                    >
+                                        <h4 className="infoLabel">Depression Level</h4>
+                                        <div
+                                            style={{
+                                                padding: "5px 20px",
+                                                borderRadius: "5px",
+                                                backgroundColor: getDassLevelColor(trendData.depressionLevel)
+                                            }} 
+                                        >
+                                            {trendData.depressionLevel}
+                                        </div>
+                                    </div>
+                                    <div className="infoItem"
+                                        style={{
+                                            flex: "30%"
+                                        }}
+                                    >
+                                        <h4 className="infoLabel">Anxiety Level</h4>
+                                        <div
+                                            style={{
+                                                padding: "5px 20px",
+                                                borderRadius: "5px",
+                                                backgroundColor: getDassLevelColor(trendData.anxietyLevel)
+                                            }} 
+                                        >
+                                            {trendData.anxietyLevel}
+                                        </div>
+                                    </div>
+                                    <div className="infoItem"
+                                        style={{
+                                            flex: "30%"
+                                        }}
+                                    >
+                                        <h4 className="infoLabel">Stress Level</h4>
+                                        <div
+                                            style={{
+                                                padding: "5px 20px",
+                                                borderRadius: "5px",
+                                                backgroundColor: getDassLevelColor(trendData.stressLevel)
+                                            }} 
+                                        >
+                                            {trendData.stressLevel}
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        }
 
                         <div className="contactRecordBox">
                             {/* <div className="messageSection">

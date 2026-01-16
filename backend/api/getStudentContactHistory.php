@@ -40,12 +40,7 @@ if (!$studentData) {
 
 // Get all contact records for this student
 $stmtGetAllContacts = $conn->prepare("
-    SELECT 
-        contactId,
-        message,
-        datetimeRecord,
-        note,
-        noteType
+    SELECT *
     FROM contactNote
     WHERE studentId = ?
     ORDER BY datetimeRecord DESC
@@ -77,7 +72,8 @@ foreach ($allContactsData as $contact) {
         'datetime' => $contact['datetimeRecord'],
         'note' => $contact['note'],
         'noteType' => $contact['noteType'],
-        'noteStatus' => $noteStatus
+        'noteStatus' => $noteStatus,
+        'pushToCounsellor' => $contact['pushToCounsellor']
     ];
 }
 

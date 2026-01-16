@@ -126,7 +126,8 @@ export function TextareaModal({
     maxLength,
     purpose,
     noteType,
-    onNoteTypeChange
+    onNoteTypeChange,
+    dassId
 }) {
     if (!show) return null;
 
@@ -137,6 +138,8 @@ export function TextareaModal({
                 <h2 className="modal-title sectionTitle">{title}</h2>
 
                 {description && <p className="textareaDescription">{description}</p>}
+
+                <input type="text" name="dassId" value={dassId} onChange={(e) => onChange(e.target.value)} hidden></input>
 
                 {/* ✅ NOTE TYPE (only for note purpose) */}
                 {purpose === "note" && (

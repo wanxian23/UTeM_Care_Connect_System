@@ -211,6 +211,7 @@ function determineOverallStressTrend($current, $previous) {
 
 $getStudentId = $_GET['studentId'];
 $selectedDate = $_GET['selectedDate'];
+$contactId = $_GET['contactId'] ?? null;
 $paId = $_GET['paId'] ?? null;
 
 // Verify this student belongs to this PA
@@ -262,15 +263,26 @@ $dassRecordedCount = 0;
 $highMoodRiskCount = 0;
 
 // Get contact record for this student on selected date
-$stmtGetContact = $conn->prepare("
-    SELECT *
-    FROM contactNote
-    WHERE studentId = ?
-    AND date(datetimeRecord) = ?
-    ORDER BY datetimeRecord DESC
-    LIMIT 1
-");
-$stmtGetContact->bind_param("is", $getStudentId, $selectedDate);
+if (!empty($contactId)) {
+    $stmtGetContact = $conn->prepare("
+        SELECT *
+        FROM contactNote
+        WHERE studentId = ?
+        AND date(datetimeRecord) = ? AND
+        contactId = ?
+    ");
+    $stmtGetContact->bind_param("isi", $getStudentId, $selectedDate, $contactId);
+} else {
+    $stmtGetContact = $conn->prepare("
+        SELECT *
+        FROM contactNote
+        WHERE studentId = ?
+        AND date(datetimeRecord) = ?
+        ORDER BY datetimeRecord DESC
+        LIMIT 1
+    ");
+    $stmtGetContact->bind_param("is", $getStudentId, $selectedDate);
+}
 $stmtGetContact->execute();
 $resultGetContact = $stmtGetContact->get_result();
 $contactData = $resultGetContact->fetch_assoc();
@@ -676,125 +688,138 @@ if (!empty($stressLevelData)) {
 
 // ============= DASS DATA SECTION =============
 
-// Get latest DASS for this student
-$stmtStudentDass = $conn->prepare("
-    SELECT * 
-    FROM dass 
-    WHERE studentId = ? 
-    ORDER BY dassId DESC 
-    LIMIT 1
-");
-$stmtStudentDass->bind_param("i", $getStudentId);
-$stmtStudentDass->execute();
-$resultStudentDass = $stmtStudentDass->get_result();
-$studentDassDataRow = $resultStudentDass->fetch_assoc();
+$contactDass = false;
 
 $dassStatus = "No Record";
 $dassId = null;
 $depressionLevel = "No Record";
 $anxietyLevel = "No Record";
 $stressLevel = "No Record";
+$creationDate = "No Record";
 $recordedDate = "No Record";
 
-if ($studentDassDataRow) {
-    $dassStatus = $studentDassDataRow['status'];
-    $dassId = $studentDassDataRow['dassId'];
+if (!empty($contactData['dassId'])) {
+    $dassId = $contactData['dassId'];
+    $contactDass = true;
 
-    // Only calculate levels if DASS exists and is completed
-    if ($dassId && $studentDassDataRow['status'] === "Completed") {
-        $sumEachLevel = [];
+    // Get latest DASS for this student
+    $stmtStudentDass = $conn->prepare("
+        SELECT * 
+        FROM dass 
+        WHERE studentId = ? 
+        ORDER BY dassId DESC 
+        LIMIT 1
+    ");
+    $stmtStudentDass->bind_param("i", $getStudentId);
+    $stmtStudentDass->execute();
+    $resultStudentDass = $stmtStudentDass->get_result();
+    $studentDassDataRow = $resultStudentDass->fetch_assoc();
 
-        // Calculate Depression
-        $stmtCalculateDassDepression = $conn->prepare("
-            SELECT SUM(dr.scale) as total 
-            FROM dassRecord dr
-            JOIN dassQuestion dq ON dr.dassQuestionId = dq.dassQuestionId
-            WHERE dr.dassId = ? AND dq.type = 'Depression'
-        ");
-        $stmtCalculateDassDepression->bind_param("i", $dassId);
-        $stmtCalculateDassDepression->execute();
-        $resultDassDepression = $stmtCalculateDassDepression->get_result();
-        $dassDepressionData = $resultDassDepression->fetch_assoc();
-        $sumEachLevel[0] = $dassDepressionData['total'] ?? 0;
+        if ($studentDassDataRow) {
+        $dassStatus = $studentDassDataRow['status'];
+        $dassId = $studentDassDataRow['dassId'];
 
-        // Calculate Anxiety
-        $stmtCalculateDassAnxiety = $conn->prepare("
-            SELECT SUM(dr.scale) as total 
-            FROM dassRecord dr
-            JOIN dassQuestion dq ON dr.dassQuestionId = dq.dassQuestionId
-            WHERE dr.dassId = ? AND dq.type = 'Anxiety'
-        ");
-        $stmtCalculateDassAnxiety->bind_param("i", $dassId);
-        $stmtCalculateDassAnxiety->execute();
-        $resultDassAnxiety = $stmtCalculateDassAnxiety->get_result();
-        $dassAnxietyData = $resultDassAnxiety->fetch_assoc();
-        $sumEachLevel[1] = $dassAnxietyData['total'] ?? 0;
+        // Only calculate levels if DASS exists and is completed
+        if ($dassId && $studentDassDataRow['status'] === "Completed") {
+            $sumEachLevel = [];
 
-        // Calculate Stress
-        $stmtCalculateDassStress = $conn->prepare("
-            SELECT SUM(dr.scale) as total 
-            FROM dassRecord dr
-            JOIN dassQuestion dq ON dr.dassQuestionId = dq.dassQuestionId
-            WHERE dr.dassId = ? AND dq.type = 'Stress'
-        ");
-        $stmtCalculateDassStress->bind_param("i", $dassId);
-        $stmtCalculateDassStress->execute();
-        $resultDassStress = $stmtCalculateDassStress->get_result();
-        $dassStressData = $resultDassStress->fetch_assoc();
-        $sumEachLevel[2] = $dassStressData['total'] ?? 0;
+            // Calculate Depression
+            $stmtCalculateDassDepression = $conn->prepare("
+                SELECT SUM(dr.scale) as total 
+                FROM dassRecord dr
+                JOIN dassQuestion dq ON dr.dassQuestionId = dq.dassQuestionId
+                WHERE dr.dassId = ? AND dq.type = 'Depression'
+            ");
+            $stmtCalculateDassDepression->bind_param("i", $dassId);
+            $stmtCalculateDassDepression->execute();
+            $resultDassDepression = $stmtCalculateDassDepression->get_result();
+            $dassDepressionData = $resultDassDepression->fetch_assoc();
+            $sumEachLevel[0] = $dassDepressionData['total'] ?? 0;
 
-        $temporaryHighRiskDassCount = 0;
-        
-        // Determine Depression Level
-        if ($sumEachLevel[0] >= 0 && $sumEachLevel[0] <= 9) {
-            $depressionLevel = "Normal";
-        } else if ($sumEachLevel[0] >= 10 && $sumEachLevel[0] <= 13) {
-            $depressionLevel = "Mild";
-        } else if ($sumEachLevel[0] >= 14 && $sumEachLevel[0] <= 20) {
-            $depressionLevel = "Moderate";
-        } else if ($sumEachLevel[0] >= 21 && $sumEachLevel[0] <= 27) {
-            $depressionLevel = "Severe";
-            $temporaryHighRiskDassCount++;
-        } else if ($sumEachLevel[0] >= 28) {
-            $depressionLevel = "Extremely Severe";
-            $temporaryHighRiskDassCount++;
-        }
+            // Calculate Anxiety
+            $stmtCalculateDassAnxiety = $conn->prepare("
+                SELECT SUM(dr.scale) as total 
+                FROM dassRecord dr
+                JOIN dassQuestion dq ON dr.dassQuestionId = dq.dassQuestionId
+                WHERE dr.dassId = ? AND dq.type = 'Anxiety'
+            ");
+            $stmtCalculateDassAnxiety->bind_param("i", $dassId);
+            $stmtCalculateDassAnxiety->execute();
+            $resultDassAnxiety = $stmtCalculateDassAnxiety->get_result();
+            $dassAnxietyData = $resultDassAnxiety->fetch_assoc();
+            $sumEachLevel[1] = $dassAnxietyData['total'] ?? 0;
 
-        // Determine Anxiety Level
-        if ($sumEachLevel[1] >= 0 && $sumEachLevel[1] <= 7) {
-            $anxietyLevel = "Normal";
-        } else if ($sumEachLevel[1] >= 8 && $sumEachLevel[1] <= 9) {
-            $anxietyLevel = "Mild";
-        } else if ($sumEachLevel[1] >= 10 && $sumEachLevel[1] <= 14) {
-            $anxietyLevel = "Moderate";
-        } else if ($sumEachLevel[1] >= 15 && $sumEachLevel[1] <= 19) {
-            $anxietyLevel = "Severe";
-            $temporaryHighRiskDassCount++;
-        } else if ($sumEachLevel[1] >= 20) {
-            $anxietyLevel = "Extremely Severe";
-            $temporaryHighRiskDassCount++;
-        }
+            // Calculate Stress
+            $stmtCalculateDassStress = $conn->prepare("
+                SELECT SUM(dr.scale) as total 
+                FROM dassRecord dr
+                JOIN dassQuestion dq ON dr.dassQuestionId = dq.dassQuestionId
+                WHERE dr.dassId = ? AND dq.type = 'Stress'
+            ");
+            $stmtCalculateDassStress->bind_param("i", $dassId);
+            $stmtCalculateDassStress->execute();
+            $resultDassStress = $stmtCalculateDassStress->get_result();
+            $dassStressData = $resultDassStress->fetch_assoc();
+            $sumEachLevel[2] = $dassStressData['total'] ?? 0;
 
-        // Determine Stress Level
-        if ($sumEachLevel[2] >= 0 && $sumEachLevel[2] <= 14) {
-            $stressLevel = "Normal";
-        } else if ($sumEachLevel[2] >= 15 && $sumEachLevel[2] <= 18) {
-            $stressLevel = "Mild";
-        } else if ($sumEachLevel[2] >= 19 && $sumEachLevel[2] <= 25) {
-            $stressLevel = "Moderate";
-        } else if ($sumEachLevel[2] >= 26 && $sumEachLevel[2] <= 33) {
-            $stressLevel = "Severe";
-            $temporaryHighRiskDassCount++;
-        } else if ($sumEachLevel[2] >= 34) {
-            $stressLevel = "Extremely Severe";
-            $temporaryHighRiskDassCount++;
-        }
+            $temporaryHighRiskDassCount = 0;
+            
+            // Determine Depression Level
+            if ($sumEachLevel[0] >= 0 && $sumEachLevel[0] <= 9) {
+                $depressionLevel = "Normal";
+            } else if ($sumEachLevel[0] >= 10 && $sumEachLevel[0] <= 13) {
+                $depressionLevel = "Mild";
+            } else if ($sumEachLevel[0] >= 14 && $sumEachLevel[0] <= 20) {
+                $depressionLevel = "Moderate";
+            } else if ($sumEachLevel[0] >= 21 && $sumEachLevel[0] <= 27) {
+                $depressionLevel = "Severe";
+                $temporaryHighRiskDassCount++;
+            } else if ($sumEachLevel[0] >= 28) {
+                $depressionLevel = "Extremely Severe";
+                $temporaryHighRiskDassCount++;
+            }
 
-        // Extract date
-        $datetime = $studentDassDataRow['dassCompletedDateTime'] ?? null;
-        if ($datetime) {
-            $dateObj = new DateTime($datetime);
-            $recordedDate = $dateObj->format('Y-m-d');
+            // Determine Anxiety Level
+            if ($sumEachLevel[1] >= 0 && $sumEachLevel[1] <= 7) {
+                $anxietyLevel = "Normal";
+            } else if ($sumEachLevel[1] >= 8 && $sumEachLevel[1] <= 9) {
+                $anxietyLevel = "Mild";
+            } else if ($sumEachLevel[1] >= 10 && $sumEachLevel[1] <= 14) {
+                $anxietyLevel = "Moderate";
+            } else if ($sumEachLevel[1] >= 15 && $sumEachLevel[1] <= 19) {
+                $anxietyLevel = "Severe";
+                $temporaryHighRiskDassCount++;
+            } else if ($sumEachLevel[1] >= 20) {
+                $anxietyLevel = "Extremely Severe";
+                $temporaryHighRiskDassCount++;
+            }
+
+            // Determine Stress Level
+            if ($sumEachLevel[2] >= 0 && $sumEachLevel[2] <= 14) {
+                $stressLevel = "Normal";
+            } else if ($sumEachLevel[2] >= 15 && $sumEachLevel[2] <= 18) {
+                $stressLevel = "Mild";
+            } else if ($sumEachLevel[2] >= 19 && $sumEachLevel[2] <= 25) {
+                $stressLevel = "Moderate";
+            } else if ($sumEachLevel[2] >= 26 && $sumEachLevel[2] <= 33) {
+                $stressLevel = "Severe";
+                $temporaryHighRiskDassCount++;
+            } else if ($sumEachLevel[2] >= 34) {
+                $stressLevel = "Extremely Severe";
+                $temporaryHighRiskDassCount++;
+            }
+
+            // Extract date
+            $creationDate = $studentDassDataRow['dassCreatedDateTime'] ?? null;
+            $datetime = $studentDassDataRow['dassCompletedDateTime'] ?? null;
+            if ($creationDate) {
+                $dateObj = new DateTime($creationDate);
+                $creationDate = $dateObj->format('d F Y');
+            }
+            if ($datetime) {
+                $dateObj = new DateTime($datetime);
+                $recordedDate = $dateObj->format('d F Y');
+            }
         }
     }
 }
@@ -833,7 +858,9 @@ $trendDataResponse = [
     'depressionLevel' => $depressionLevel,
     'anxietyLevel' => $anxietyLevel,
     'stressLevel' => $stressLevel,
-    'completedDate' => $recordedDate
+    'completedDate' => $recordedDate,
+    'dassContact' => $contactDass,
+    'creationDate' => $creationDate
 ];
 
 echo json_encode([
@@ -854,6 +881,6 @@ echo json_encode([
     ],
     'contactData' => $contactData,
     'noteStatus' => $contactData['note'] ?? "Pending",
-    'trendData' => $trendDataResponse
+    'trendData' => $trendDataResponse,
 ]);
 ?>

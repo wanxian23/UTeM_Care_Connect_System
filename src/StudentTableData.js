@@ -1136,7 +1136,7 @@ function StudentInformation({PADetails, dashboardData, studentData, dassData}) {
     );
 }
 
- export function DassTable({dassData}) {
+export function DassTable({dassData}) {
 
     const navigate = useNavigate();
 
@@ -1169,7 +1169,8 @@ function StudentInformation({PADetails, dashboardData, studentData, dassData}) {
         confirmText: "",
         cancelText: "",
         noteType: "", // Only used for notes
-        currentStudent: null
+        currentStudent: null,
+        dassId: null
     });
 
     const closeTextareaModal = () => {
@@ -1191,7 +1192,7 @@ function StudentInformation({PADetails, dashboardData, studentData, dassData}) {
     // ✅ Separate confirm handler that checks purpose
     const handleConfirmTextarea = async () => {
         const token = localStorage.getItem("token");
-        const { currentStudent, message, purpose, noteType } = textareaModal;
+        const { currentStudent, message, purpose, noteType, dassId } = textareaModal;
 
         if (!currentStudent) return;
 
@@ -1235,7 +1236,7 @@ function StudentInformation({PADetails, dashboardData, studentData, dassData}) {
             
             if (purpose === "contact") {
                 response = await fetch(
-                    "http://localhost:8080/care_connect_system/backend/api/contactStudent.php",
+                    `http://localhost:8080/care_connect_system/backend/api/contactStudent.php?dassId=${dassId}`,
                     {
                         method: "POST",
                         headers: {
@@ -1337,7 +1338,8 @@ function StudentInformation({PADetails, dashboardData, studentData, dassData}) {
             confirmText: "Send",
             cancelText: "Cancel",
             noteType: "",
-            currentStudent: student
+            currentStudent: student,
+            dassId: student.dassId
         });
     };
 

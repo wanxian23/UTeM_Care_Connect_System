@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { HeaderPa, Footer } from "./HeaderFooter";
+import { HeaderCounsellor, Footer } from "./HeaderFooter";
 import { NavLink } from "react-router-dom";
-import MessageBox, { ConfirmationModal } from "./Modal";
 
 import "./css/StudentContactView.css";
+import { SubHeader } from "./StudentInfoCounselling";
+import { Label } from "recharts";
 
 function StudentContactView() {
     useEffect(() => {
@@ -17,16 +18,8 @@ function StudentContactView() {
     const [trendData, setTrendData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const { studentId, date } = useParams();
+    const { studentId, paId, date, contactId } = useParams();
     const navigate = useNavigate();
-
-    const [messagebox, setMessagebox] = useState({
-        show: false,
-        title: "",
-        message: "",
-        buttonValue: "",
-        redirect: true
-    });
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -36,7 +29,7 @@ function StudentContactView() {
             return;
         }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getStudentContactCalendarDetails.php?studentId=${studentId}&selectedDate=${date}`, {
+        fetch(`http://localhost:8080/care_connect_system/backend/api/getStudentContactCalendarDetails.php?studentId=${studentId}&selectedDate=${date}&paId=${paId}&contactId=${contactId}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -67,76 +60,10 @@ function StudentContactView() {
         });
     }, [studentId, date]);
 
-    // For form handling and messageBox (Modal)
-    const [confirmationBox, setConfirmationBox] = useState({
-        show: false,
-        title: "",
-        message: "",
-        confirmText: "",
-        cancelText: "",
-        onConfirm: null,
-        onCancel: null
-    });
-
-    const handleModalButton = () => {
-        const shouldRedirect = messagebox.redirect;
-        setMessagebox({ ...messagebox, show: false });
-        if (shouldRedirect) {
-            window.location.href = `/StudentContactView/${studentId}/${date}`;
-        }
-    };
-
-    const handlePushToCounsellor = async (student) => {
-        setConfirmationBox({
-            show: true,
-            title: "Push Contact & Note To Counsellor?",
-            message: "Are you sure you wanna push this contact & note details to counsellor as reference? This action cannot be undone.",
-            confirmText: "Push",
-            cancelText: "Cancel",
-            onConfirm: async () => {
-                setConfirmationBox(prev => ({ ...prev, show: false }));
-
-                const token = localStorage.getItem("token");
-
-                try {
-                    const response = await fetch(`http://localhost:8080/care_connect_system/backend/api/pushNoteToCounsellor.php?contactId=${contactData.contactId}&date=${date}`, {
-                            method: "GET",
-                            headers: { "Authorization": "Bearer " + token }
-                        }
-                    );
-
-                    const result = await response.json();
-                        setMessagebox({
-                            show: true,
-                            title: result.success ? "Contact & Note Pushed Successfully" : "Contact & Note Failed to Push",
-                            message: result.success
-                                ? `This contact & note details has successfully pushed to counselling unit.`
-                                : `Failed to push contact & note details to counselling unit.`,
-                            buttonValue: "OK",
-                            redirect: true
-                        });
-
-                } catch (error) {
-                    console.error(error);
-                    setMessagebox({
-                        show: true,
-                        title: "Contact & Note Failed to Push",
-                        message: `Failed to push contact & note details to counselling unit due to error.`,
-                        buttonValue: "OK",
-                        redirect: false
-                    });
-                }
-            },
-            onCancel: () =>
-                setConfirmationBox(prev => ({ ...prev, show: false }))
-        });
-    };
-
-
     if (loading) {
         return (
             <>
-                <HeaderPa />
+                <HeaderCounsellor />
                 <main className="contactViewMain">
                     <div style={{ textAlign: "center", padding: "50px" }}>
                         Loading...
@@ -150,7 +77,7 @@ function StudentContactView() {
     if (!contactData || contactData.length === 0) {
         return (
             <>
-                <HeaderPa />
+                <HeaderCounsellor />
                 <main className="contactViewMain">
                     <div className="contactViewWrapper">
                         <h2>No Contact Record Found</h2>
@@ -195,10 +122,6 @@ function StudentContactView() {
 
         return `${formatDate(startDate)} - ${formatDate(endDate)}`;
     };
-
-    const gotoEditNote = () => {
-        navigate(`/EditContactNote/${studentId}/${date}`);
-    }
 
     const getArrowIcon = (trend) => {
         if (trend === 'increasing') {
@@ -378,12 +301,12 @@ function StudentContactView() {
             return "#ff3a3a"
         }
     }
-    
+
     return (
         <>
-            <HeaderPa />
+            <HeaderCounsellor />
             <main className="studentInfoContentMain">
-                <SubHeader studentId={studentId} />
+                <SubHeader paId={paId} studentId={studentId} />
                 <section className="studentInfoContentWrapper">
                     <article className="contactInfoWrapper">
                         <div className="contactHeader">
@@ -678,76 +601,10 @@ function StudentContactView() {
                                 </div>
                             </div>
                         </div>
-                        <div
-                            style={{
-                                width: "100%",
-                                display: "flex",
-                            }}
-                        >
-                            <div className="buttonWrapper">
-                                <button onClick={gotoEditNote}>Edit</button>
-                            </div>
-                            {contactData.note && !contactData.pushToCounsellor && 
-                                <div className="buttonWrapper">
-                                    <button onClick={handlePushToCounsellor}>Push To Counsellor</button>
-                                </div>
-                            } 
-                        </div>
                     </article>
                 </section>
             </main>
-            <ConfirmationModal
-                show={confirmationBox.show}
-                title={confirmationBox.title}
-                message={confirmationBox.message}
-                confirmText={confirmationBox.confirmText}
-                cancelText={confirmationBox.cancelText}
-                onConfirm={confirmationBox.onConfirm}
-                onCancel={confirmationBox.onCancel}
-            />
-            <MessageBox 
-                show={messagebox.show}
-                title={messagebox.title}
-                message={messagebox.message}
-                buttonValue={messagebox.buttonValue}
-                onClose={handleModalButton}
-            />
             <Footer />
-        </>
-    );
-}
-
-function SubHeader({ studentId }) {
-    return (
-        <>
-            <aside className="studentInfoAsideWrapper">
-                <NavLink
-                    to={"/StudentInfo/" + studentId}
-                    className={({ isActive }) =>
-                        isActive ? "subButton selectedSubHeader studentInfo" : "subButton"
-                    }
-                >
-                    Student Information
-                </NavLink>
-
-                <NavLink
-                    to={"/StudentInfoStatistic/" + studentId}
-                    className={({ isActive }) =>
-                        isActive ? "subButton selectedSubHeader trendView" : "subButton"
-                    }
-                >
-                    Trend View
-                </NavLink>
-
-                <NavLink
-                    to={"/StudentContactHistory/" + studentId}
-                    className={({ isActive }) =>
-                        isActive ? "subButton selectedSubHeader contactHistory" : "subButton"
-                    }
-                >
-                    Contact History
-                </NavLink>
-            </aside>
         </>
     );
 }
