@@ -689,7 +689,7 @@ function StudentContactView() {
                             </div>
                             {contactData.note && !contactData.pushToCounsellor && 
                                 <div className="buttonWrapper">
-                                    <button onClick={handlePushToCounsellor}>Push To Counsellor</button>
+                                    <button onClick={handlePushToCounsellor}>Refer To Counsellor</button>
                                 </div>
                             } 
                         </div>

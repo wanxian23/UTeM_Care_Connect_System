@@ -609,6 +609,25 @@ foreach ($getAllStudentData as $row) {
     $riskIndicator = "No Record";
     $lastRecordedDate = "No Record";
     $lastRecordedTime = "No Record";
+    $dassStatus = "No Record";
+
+    // DASS
+        // Get latest DASS for this student
+        $stmtStudentDass = $conn->prepare("
+            SELECT * 
+            FROM dass 
+            WHERE studentId = ? 
+            ORDER BY dassId DESC 
+            LIMIT 1
+        ");
+        $stmtStudentDass->bind_param("i", $studentId);
+        $stmtStudentDass->execute();
+        $resultStudentDass = $stmtStudentDass->get_result();
+        $studentDassDataRow = $resultStudentDass->fetch_assoc();
+
+        if ($studentDassDataRow) {
+            $dassStatus = $studentDassDataRow['status'];
+        }
     
     if (!empty($stressLevelData)) {
         foreach ($stressLevelData as $rowTrend) {
@@ -679,25 +698,6 @@ foreach ($getAllStudentData as $row) {
                 $lastRecordedTime = $dateObj->format('H:i');
             }
         }
-
-        // DASS
-        // Get latest DASS for this student
-        $dassStatus = "No Record";
-        $stmtStudentDass = $conn->prepare("
-            SELECT * 
-            FROM dass 
-            WHERE studentId = ? 
-            ORDER BY dassId DESC 
-            LIMIT 1
-        ");
-        $stmtStudentDass->bind_param("i", $studentId);
-        $stmtStudentDass->execute();
-        $resultStudentDass = $stmtStudentDass->get_result();
-        $studentDassDataRow = $resultStudentDass->fetch_assoc();
-
-        if ($studentDassDataRow) {
-            $dassStatus = $studentDassDataRow['status'];
-        }
     }
 
     $allStudentMoodData[] = [
@@ -740,7 +740,7 @@ foreach ($getAllStudentData as $row) {
 
 // Get all student DASS data
 $stmtGetAllStudentDass = $conn->prepare("
-    SELECT s.*, d.dassId, d.status, d.dassCompletedDateTime
+    SELECT s.*, d.*
     FROM student s
     LEFT JOIN dass d ON s.studentId = d.studentId
     WHERE s.staffId = ?

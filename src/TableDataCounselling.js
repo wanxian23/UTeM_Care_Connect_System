@@ -641,7 +641,7 @@ function PAInformation({allPADetails, dashboardData}) {
                 PADetails.PAData.staffName?.substring(0, 20) || "N/A",
                 PADetails.PAData.staffFaculty,
                 PADetails.studentAssigned,
-                PADetails.period?.split(' to ')[1]?.substring(0, 8) || "N/A",
+                PADetails.period,
                 PADetails.highRiskMood,
                 PADetails.highRiskDass,
                 PADetails.contactedStudent,

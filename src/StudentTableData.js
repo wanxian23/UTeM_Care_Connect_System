@@ -137,7 +137,7 @@ export function DashboardInfo({dashboardData, studentData}) {
                         </div>
                         <div className="content">
                             <label>Students at High Emotional Risk</label>
-                            <h2>{highRiskMoodCount} / {dashboardData?.studentAssignedCount}</h2>
+                            <h2>{dashboardData?.highMoodRiskCount} / {dashboardData?.studentAssignedCount}</h2>
                         </div>
                     </div>
                     <div className="dashbaordItemWrapper">
@@ -2443,7 +2443,7 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                                 </td>
                                 <td><p style={{ margin: 0, color: overallMessage.color, fontWeight: 'bold', fontSize: "2.2vh" }}>{overallMessage.text}</p></td>
                                 <td colSpan={2}>
-                                    No monthly comparison data available
+                                    No monthly comparison data available 
                                 </td>
                                 <td>
                                     <label style={{
@@ -2641,7 +2641,7 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                                         padding: "5px",
                                         backgroundColor: getRiskIndicator().color
                                     }}>
-                                        {getRiskIndicator().text}
+                                        {getRiskIndicator().text} 
                                     </label>
                                 </td>
 
@@ -2707,7 +2707,7 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                                                         <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
                                                     </svg>
                                                 </button>  
-                                                {!student.noteRecord && 
+                                                {student.contactRecord && !student.noteRecord && 
                                                     <button onClick={() => handleNoteBox(student)}>
                                                         <label style={{width: "60%"}}>Add Note for Previous Contact</label>
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-journal-plus" viewBox="0 0 16 16">

@@ -72,7 +72,7 @@ function DashboardInfo({dashboardDetails}) {
                             </svg>
                         </div>
                         <div className="content">
-                            <label>Total Alerts (Pushed Notes)</label>
+                            <label>Total Referral (Alerts)</label>
                             <h2>{dashboardDetails?.totalAlert}</h2>
                         </div>
                     </div>
@@ -585,9 +585,9 @@ function PAInformation({allNoteDetails, dashboardDetails}) {
 
         // CSV Header Section with Title and Export Date
         const headerSection = [
-            ["Alert Summary (Pushed Contact & Notes", ""],
+            ["Counselling Referral Summary", ""],
             ["", ""],
-            ["Total Alerts (Pushed Notes)", dashboardDetails?.totalAlert],
+            ["Total Referral (Alerts)", dashboardDetails?.totalAlert],
             [
                 "Mood & Stress Alerts",
                 `${dashboardDetails?.totalMoodAlert ?? 0} | ${dashboardDetails?.totalAlert ?? 0}`
@@ -646,7 +646,7 @@ function PAInformation({allNoteDetails, dashboardDetails}) {
 
             const link = document.createElement("a");
             link.href = url;
-            link.download = `Alert_Summary_(Pushed Notes)_${today}.csv`;
+            link.download = `Counselling_Referral_Summary_${today}.csv`;
             link.click();
 
             URL.revokeObjectURL(url);
@@ -661,7 +661,7 @@ function PAInformation({allNoteDetails, dashboardDetails}) {
             // Title
             doc.setFontSize(18);
             doc.setFont(undefined, 'bold');
-            doc.text('Alert Summary (Pushed Contact & Notes)', 14, 20);
+            doc.text('Counselling Referral Summary', 14, 20);
             
             // Add separator line
             doc.setLineWidth(0.5);
@@ -672,7 +672,7 @@ function PAInformation({allNoteDetails, dashboardDetails}) {
             doc.setFont(undefined, 'normal');
             let yPos = 32;
             
-            doc.text(`Total Alerts: ${dashboardDetails?.totalAlert ?? 0}`, 14, yPos);
+            doc.text(`Total Referral (Alerts): ${dashboardDetails?.totalAlert ?? 0}`, 14, yPos);
             yPos += 7;
             
             doc.text(`Mood & Stress Alerts: ${dashboardDetails?.totalMoodAlert ?? 0} / ${dashboardDetails?.totalAlert ?? 0}`, 14, yPos);
@@ -756,7 +756,7 @@ function PAInformation({allNoteDetails, dashboardDetails}) {
                 }
             });
 
-            doc.save(`Alert_Summary_(Pushed Notes)_${today}.pdf`);
+            doc.save(`Counselling_Referral_Summary_${today}.pdf`);
         };
 
     return (
@@ -771,7 +771,7 @@ function PAInformation({allNoteDetails, dashboardDetails}) {
                                 width: "400px"
                             }}
                         >
-                            Alert Summary (Pushed Contact & Notes)
+                            Counselling Referral Summary
                         </button>
                     </div>
                 </nav>

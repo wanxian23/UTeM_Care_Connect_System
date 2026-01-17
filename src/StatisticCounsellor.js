@@ -354,8 +354,8 @@ function FacultyMoodComparison({ data, type, offset, setOffset, weekInfo, monthI
                                 transform: "translateX(-50%)"
                             }}
                         />
-                        <Bar dataKey="positive" fill="#b1d5baff" name="Positive Moods (Excited/ Happy)" radius={[6, 6, 0, 0]}/>
-                        <Bar dataKey="neutral" fill="#e4b995ff" name="Neutral Moods (Neutral)" radius={[6, 6, 0, 0]}/>
+                        <Bar dataKey="positive" fill="#6dad7dff" name="Positive Moods (Excited/ Happy)" radius={[6, 6, 0, 0]}/>
+                        <Bar dataKey="neutral" fill="#dfa677ff" name="Neutral Moods (Neutral)" radius={[6, 6, 0, 0]}/>
                         <Bar dataKey="negative" fill="#ee7878ff" name="Negative Moods (Sad/ Crying/ Angry/ Anxious/ Annoying)" radius={[6, 6, 0, 0]}/>
                     </BarChart>
                 </ResponsiveContainer>
@@ -580,8 +580,8 @@ function FacultyStressComparison({ data, type, offset, setOffset, weekInfo, mont
                             }}
                         />
 
-                        {chartData.some(d => d.low > 0) && <Bar dataKey="low" fill="#b1d5baff" name="Low Stress (0 - 39)" radius={[6, 6, 0, 0]} />}
-                        {chartData.some(d => d.moderate > 0) && <Bar dataKey="moderate" fill="#e4b995ff" name="Moderate Stress (40 - 60)" radius={[6, 6, 0, 0]} />}
+                        {chartData.some(d => d.low > 0) && <Bar dataKey="low" fill="#6dad7dff" name="Low Stress (0 - 39)" radius={[6, 6, 0, 0]} />}
+                        {chartData.some(d => d.moderate > 0) && <Bar dataKey="moderate" fill="#dfa677ff" name="Moderate Stress (40 - 60)" radius={[6, 6, 0, 0]} />}
                         {chartData.some(d => d.high > 0) && <Bar dataKey="high" fill="#ee7878ff" name="High Stress (61 - 100)" radius={[6, 6, 0, 0]} />}
                     </BarChart>
                 </ResponsiveContainer>

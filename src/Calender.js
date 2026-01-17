@@ -159,7 +159,11 @@ function CalendarDesign({ data }) {
 
                     return (
                         <>
-                            <div className="titleContent">
+                            <div className="titleContent"
+                                style={{
+                                    flexDirection: "row"
+                                }}
+                            >
                                 {moodList.map((mood, i) => (
                                     <React.Fragment key={i}>
                                     <img

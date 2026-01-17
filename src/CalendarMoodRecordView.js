@@ -277,7 +277,7 @@ function Body1({data, stressLevel, stressColor, stressValue, onNext, onPrev, dis
                         <p>You Haven't Record Any Mood During {formattedDate}!</p>
                     }
                     {/* Show stress even if no mood */}
-                    {stressValue !== null && (
+                    {/* {stressValue !== null && (
                         <section style={{ marginTop: '20px' }}>
                             <h3 className="sectionTitle">Stress Level for This Day</h3>
                             <div className="moodResultWrapper">
@@ -288,7 +288,7 @@ function Body1({data, stressLevel, stressColor, stressValue, onNext, onPrev, dis
                                 <h3>{stressLevel}</h3>
                             </div>
                         </section>
-                    )}
+                    )} */}
                 </div>
             </article>
         </main>

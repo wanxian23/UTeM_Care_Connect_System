@@ -703,7 +703,7 @@ function NoteAdd() {
                     <textarea placeholder="Write Some Notes For Today Feeling!" name="note" required>
 
                     </textarea>
-                    <label><input type="checkbox" name="notePrivacy" value="1" defaultChecked={true}></input>Keep Note As Privacy? Note Will Be Shared To PA and Counsellor If This Option Isn't Get Checked</label>
+                    {/* <label><input type="checkbox" name="notePrivacy" value="1" defaultChecked={true}></input>Keep Note As Privacy? Note Will Be Shared To PA and Counsellor If This Option Isn't Get Checked</label> */}
                 </div>
             </main>
         </>
@@ -805,7 +805,9 @@ function RecordMoodNote() {
                 
                 const value = result.stressLevel;
                 let level = "", color = "";
-                if (value <= 20) {
+                if (value == null) {
+                    level = "Haven't Completed";
+                } else if (value <= 20) {
                     color = "#BFE5C8";
                     level = "Very Low Stress";
                 } else if (value <= 40) {

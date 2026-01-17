@@ -727,7 +727,7 @@ function NoteAdd({moodData}) {
                         defaultValue={moodData?.note || ""}
                         required
                     />
-                    <label>
+                    {/* <label>
                         <input 
                             type="checkbox" 
                             name="notePrivacy" 
@@ -736,7 +736,7 @@ function NoteAdd({moodData}) {
                             onChange={(e) => setPrivacy(e.target.checked)}
                         />
                         Keep Note As Privacy? Note Will Be Shared To PA and Counsellor If This Option Isn't Get Checked
-                    </label>
+                    </label> */}
                 </div>
             </main>
         </>
@@ -873,7 +873,7 @@ function RecordMoodNote() {
     return(
         <>
             <form id="formFirst" onSubmit={handleMoodRecord}>
-                <StressLevelRecord moodData={moodRecordData?.stressLevel}/>
+                {moodRecordData?.stressRecord && <StressLevelRecord moodData={moodRecordData?.stressLevel}/>}
                 <MoodChoose moodData={moodRecordData?.moodRecord}/>
                 <EntriesAdd moodData={moodRecordData}/>
                 <NoteAdd moodData={moodRecordData?.moodRecord}/>

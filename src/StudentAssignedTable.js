@@ -469,7 +469,7 @@ function StudentInformation({paId, PADetails, studentData, dashboardData, dassDa
             ["Total Student Assigned", dashboardData?.studentAssignedCount || 0],
             ["Students Who Recorded Mood Today", `${dashboardData?.moodRecordedTodayCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
             ["DASS Completion Status", `${dashboardData?.dassRecordedCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
-            ["Students at High Emotional Risk", `${highRiskMoodCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
+            ["Students at High Emotional Risk", `${dashboardData?.highMoodRiskCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
             ["Students at High DASS Risk", `${dashboardData?.highDassRiskCount || 0} | ${dashboardData?.studentAssignedCount || 0}`],
             ["Export Date", new Date().toLocaleString()],
             [""]
@@ -680,7 +680,7 @@ const exportMoodSummaryPDF = (studentData) => {
     yPos += 6;
     doc.text(`Total Students: ${dashboardData?.studentAssignedCount || 0}`, 14, yPos);
     yPos += 6;
-    doc.text(`High Emotional Risk: ${highRiskMoodCount || 0}`, 14, yPos);
+    doc.text(`High Emotional Risk: ${dashboardData?.highMoodRiskCount || 0}`, 14, yPos);
     yPos += 6;
     doc.text(`Export Date: ${new Date().toLocaleString()}`, 14, yPos);
     yPos += 10;

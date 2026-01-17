@@ -8,6 +8,17 @@ header("Content-Type: application/json");
 require "../database.php";
 require "authStudent.php";
 
+// ============= CONFIGURATION =============
+date_default_timezone_set("Asia/Kuala_Lumpur");
+
+// Define time window for stress recording (after second mood)
+define('STRESS_START', '12:00:00');    // 6:00 PM
+define('STRESS_END', '23:59:59');      // 11:59 PM
+
+$todayDate = date('Y-m-d');
+$currentTime = date('H:i:s');
+$currentDateTime = new DateTime();
+
 $user = validateToken($conn);
 $studentId = $user['studentId'];
 $moodId = $_GET['moodId'];
@@ -36,7 +47,6 @@ if ($date == "Today" || $date == "Specific") {
     $stressData = $resultStress->fetch_assoc();
 }
 
-// Handle null stress data - set default or null
 $stressLevel = $stressData ? (float)$stressData['stressLevel'] : null;
 
 // Get data of recorded mood
@@ -49,6 +59,18 @@ $stmtCheckMoodData->bind_param("ii", $studentId, $moodId);
 $stmtCheckMoodData->execute();
 $resultCheckMoodData = $stmtCheckMoodData->get_result();
 $moodData = $resultCheckMoodData->fetch_assoc();
+
+$recordTime = $moodData['datetimeRecord']; // e.g. 2026-01-17 09:30:00
+
+$recordDate = date('Y-m-d', strtotime($recordTime));
+$todayDate  = date('Y-m-d');
+
+$inStressWindow = ($currentTime >= STRESS_START && $currentTime <= STRESS_END);
+// Check timing
+$stressRecord = false;
+if ($inStressWindow || ($date != "Today" && $date != "Specific" && $recordDate != $todayDate)) {
+    $stressRecord = true;
+}
 
 if ($moodData) {
     // Get entries for this mood
@@ -67,7 +89,8 @@ if ($moodData) {
         "success" => true,
         "moodRecord" => $moodData,
         "stressLevel" => $stressLevel, // Now safely handles null
-        "entries" => $entryIds  // Array of entry IDs like [1, 3, 5]
+        "entries" => $entryIds,  // Array of entry IDs like [1, 3, 5]
+        "stressRecord" => $stressRecord
     ]);
 } else {
     echo json_encode([

@@ -31,9 +31,9 @@ $stmtGetPADetails->execute();
 $resultGetPADetails = $stmtGetPADetails->get_result();
 $PADetails = $resultGetPADetails->fetch_assoc();
 
-$title = "Alert! New Contact Note Pushed";
+$title = "New Counselling Referral";
 $todayDate = date("d-m-Y");
-$description = 'A new student contact note has been pushed by PA '. $PADetails['staffNo'] .' for your review.';
+$description = 'A new counselling referral has been submitted by PA '. $PADetails['staffNo'] .' for your review.';
 $type = "push";
 $location = "/StudentContactViewSpecific/".$studentId."/".$paId."/".$date."/".$contactId;
 $notificationId = "";

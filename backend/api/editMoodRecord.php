@@ -16,7 +16,7 @@ function runInBackground($url) {
 }
 
 $mood = $_POST["mood"];
-$stress = $_POST['stress'];
+$stress = $_POST['stress'] ?? null;
 $note = $_POST['note'];
 $notePrivacy = isset($_POST['notePrivacy']) ? 1 : 0;
 $entries = isset($_POST['entries']) ? $_POST['entries'] : [];
@@ -28,44 +28,46 @@ $studentId = $user['studentId'];
 $moodId = $_GET['moodId'];
 $date = $_GET['date'];
 
-if ($date == "Today" || $date == "Specific") {
-    $stmtRecordMood = $conn->prepare("
-        UPDATE stress
-        SET stressLevel = ?
-        WHERE studentId = ? AND
-        DATE(datetimeRecord) = CURDATE()
-    ");
-    $stmtRecordMood->bind_param("ii", $stress, $studentId);
-    $stmtRecordMood->execute();
-} else {
-
-    // Get stress level
-    $stmtStress = $conn->prepare("
-        SELECT * FROM stress
-        WHERE studentId = ?
-        AND DATE(datetimeRecord) = ?
-    ");
-    $stmtStress->bind_param("is", $studentId, $date);
-    $stmtStress->execute();
-    $resultStress = $stmtStress->get_result();
-    $stressData = $resultStress->fetch_assoc();
-
-    if ($resultStress->num_rows > 0) {
-        $stmtRecordStress = $conn->prepare("
+if (!empty($stress)) {
+    if ($date == "Today" || $date == "Specific") {
+        $stmtRecordMood = $conn->prepare("
             UPDATE stress
             SET stressLevel = ?
             WHERE studentId = ? AND
-            date(datetimeRecord) = ?
+            DATE(datetimeRecord) = CURDATE()
         ");
-        $stmtRecordStress->bind_param("iis", $stress, $studentId, $date);
-        $stmtRecordStress->execute();
+        $stmtRecordMood->bind_param("ii", $stress, $studentId);
+        $stmtRecordMood->execute();
     } else {
-         $stmtRecordStress = $conn->prepare("
-            INSERT INTO stress(stressLevel, studentId, datetimeRecord)
-            VALUES (?, ?, ?)
+
+        // Get stress level
+        $stmtStress = $conn->prepare("
+            SELECT * FROM stress
+            WHERE studentId = ?
+            AND DATE(datetimeRecord) = ?
         ");
-        $stmtRecordStress->bind_param("iis", $stress, $studentId, $date);
-        $stmtRecordStress->execute();
+        $stmtStress->bind_param("is", $studentId, $date);
+        $stmtStress->execute();
+        $resultStress = $stmtStress->get_result();
+        $stressData = $resultStress->fetch_assoc();
+
+        if ($resultStress->num_rows > 0) {
+            $stmtRecordStress = $conn->prepare("
+                UPDATE stress
+                SET stressLevel = ?
+                WHERE studentId = ? AND
+                date(datetimeRecord) = ?
+            ");
+            $stmtRecordStress->bind_param("iis", $stress, $studentId, $date);
+            $stmtRecordStress->execute();
+        } else {
+            $stmtRecordStress = $conn->prepare("
+                INSERT INTO stress(stressLevel, studentId, datetimeRecord)
+                VALUES (?, ?, ?)
+            ");
+            $stmtRecordStress->bind_param("iis", $stress, $studentId, $date);
+            $stmtRecordStress->execute();
+        }
     }
 }
 
