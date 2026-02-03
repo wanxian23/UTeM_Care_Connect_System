@@ -902,7 +902,7 @@ function PADetailsTable({allNoteDetails}) {
                         <th>PA Name</th>
                         <th>Student Name</th>
                         <th>Faculty</th>
-                        <th>Pushed Date</th>
+                        <th>Referrel Date</th>
                         <th>Triggered By</th>
                         <th>Action</th>
                     </tr>
@@ -922,7 +922,7 @@ function PADetailsTable({allNoteDetails}) {
                         <th>PA Name</th>
                         <th>Student Name</th>
                         <th>Faculty</th>
-                        <th>Pushed Date</th>
+                        <th>Referrel Date</th>
                         <th>Triggered By</th>
                         <th>Action</th>
                     </tr>
