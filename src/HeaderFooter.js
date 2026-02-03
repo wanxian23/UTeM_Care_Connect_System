@@ -43,7 +43,7 @@ export function Header() {
             return;
         }
 
-        fetch("http://localhost:8080/care_connect_system/backend/api/getStudentDetails.php", {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getStudentDetails.php`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -73,7 +73,7 @@ export function Header() {
             return;
         }
 
-        fetch("http://localhost:8080/care_connect_system/backend/api/getNotification.php", {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getNotification.php`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -109,7 +109,7 @@ export function Header() {
 
             // Call the API to update the status
         const token = localStorage.getItem("token");
-        fetch(`http://localhost:8080/care_connect_system/backend/api/updateNotificationStatus.php?notificationId=${notiData.notificationId}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/updateNotificationStatus.php?notificationId=${notiData.notificationId}`, {
             method: "GET", // since your PHP expects GET
             headers: {
                 "Authorization": "Bearer " + token
@@ -256,7 +256,7 @@ export function HeaderPa() {
             return;
         }
 
-        fetch("http://localhost:8080/care_connect_system/backend/api/getPADetails.php", {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getPADetails.php`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -286,7 +286,7 @@ export function HeaderPa() {
             return;
         }
 
-        fetch("http://localhost:8080/care_connect_system/backend/api/getNotificationPa.php", {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getNotificationPa.php`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -322,7 +322,7 @@ export function HeaderPa() {
 
             // Call the API to update the status
         const token = localStorage.getItem("token");
-        fetch(`http://localhost:8080/care_connect_system/backend/api/updateNotificationStatusPa.php?notificationId=${notiData.notificationId}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/updateNotificationStatusPa.php?notificationId=${notiData.notificationId}`, {
             method: "GET", // since your PHP expects GET
             headers: {
                 "Authorization": "Bearer " + token
@@ -466,7 +466,7 @@ export function HeaderCounsellor() {
             return;
         }
 
-        fetch("http://localhost:8080/care_connect_system/backend/api/getPADetails.php", {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getPADetails.php`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -496,7 +496,7 @@ export function HeaderCounsellor() {
             return;
         }
 
-        fetch("http://localhost:8080/care_connect_system/backend/api/getNotificationPa.php", {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getNotificationPa.php`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -532,7 +532,7 @@ export function HeaderCounsellor() {
 
             // Call the API to update the status
         const token = localStorage.getItem("token");
-        fetch(`http://localhost:8080/care_connect_system/backend/api/updateNotificationStatusPa.php?notificationId=${notiData.notificationId}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/updateNotificationStatusPa.php?notificationId=${notiData.notificationId}`, {
             method: "GET", // since your PHP expects GET
             headers: {
                 "Authorization": "Bearer " + token

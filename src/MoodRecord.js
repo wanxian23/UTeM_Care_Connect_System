@@ -762,7 +762,7 @@ function RecordMoodNote() {
                      return;
                  }
          
-                 fetch("http://localhost:8080/care_connect_system/backend/api/getMoodRecord.php", {
+                 fetch(`${process.env.REACT_APP_API_BASE_URL}/getMoodRecord.php`, {
                      method: "GET",
                      headers: {
                          "Authorization": "Bearer " + token
@@ -791,7 +791,7 @@ function RecordMoodNote() {
     
             const formData = new FormData(e.target);
 
-            const response = await fetch("http://localhost:8080/care_connect_system/backend/api/moodRecord.php", {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/moodRecord.php`, {
                 method: "POST",
                 body: formData,
                 headers: {

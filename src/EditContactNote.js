@@ -45,7 +45,7 @@ function StudentContactView() {
             return;
         }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getStudentContactCalendarDetails.php?studentId=${studentId}&selectedDate=${date}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getStudentContactCalendarDetails.php?studentId=${studentId}&selectedDate=${date}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -144,7 +144,7 @@ function StudentContactView() {
 
         const formData = new FormData(e.target);
 
-        const response = await fetch(`http://localhost:8080/care_connect_system/backend/api/updateStudentContact.php?studentId=${studentId}&date=${date}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/updateStudentContact.php?studentId=${studentId}&date=${date}`, {
             method: "POST",
             body: formData,
             headers: {

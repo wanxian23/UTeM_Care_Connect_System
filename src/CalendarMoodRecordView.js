@@ -26,7 +26,7 @@ function MoodRecordEntries() {
         const token = localStorage.getItem("token");
         if(!token){ window.location.href = "/"; return; }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getCalendarMoodRecordView.php?selectedDate=${selectedDate}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getCalendarMoodRecordView.php?selectedDate=${selectedDate}`, {
             method: "GET",
             headers: { "Authorization": "Bearer " + token }
         })
@@ -217,7 +217,7 @@ function Body1({data, stressLevel, stressColor, stressValue, onNext, onPrev, dis
 
                 try {
                     const response = await fetch(
-                        `http://localhost:8080/care_connect_system/backend/api/deleteMoodRecord.php?moodId=${currentRecord?.moodId}&date=${date}`,
+                        `${process.env.REACT_APP_API_BASE_URL}/deleteMoodRecord.php?moodId=${currentRecord?.moodId}&date=${date}`,
                         {
                             method: "GET", // match PHP
                             headers: { "Authorization": "Bearer " + token }

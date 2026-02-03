@@ -25,7 +25,7 @@ function Profile() {
             return;
         }
 
-        fetch("http://localhost:8080/care_connect_system/backend/api/getProfile.php", {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getProfile.php`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -177,7 +177,7 @@ function Body1({data}) {
 
             const formData = new FormData(e.target);
 
-            const response = await fetch("http://localhost:8080/care_connect_system/backend/api/changePassword.php", {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/changePassword.php`, {
                 method: "POST",
                 body: formData,
                 headers: {

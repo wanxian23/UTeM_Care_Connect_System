@@ -21,7 +21,7 @@ function StatisticCounsellor() {
             return;
         }
 
-        const url = `http://localhost:8080/care_connect_system/backend/api/getStatisticCounsellor.php?weekOffset=${weekOffset}&monthOffset=${monthOffset}`;
+        const url = `${process.env.REACT_APP_API_BASE_URL}/getStatisticCounsellor.php?weekOffset=${weekOffset}&monthOffset=${monthOffset}`;
 
         fetch(url, {
             method: "GET",

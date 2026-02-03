@@ -36,7 +36,7 @@ function StudentAssignedTable() {
             return;
         }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getStudentAssignedTable.php?paId=${paId}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getStudentAssignedTable.php?paId=${paId}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -115,7 +115,7 @@ function StudentSearch({paId, selected, activeTab, onSearchFilter, exportCSV}) {
         
         try {
             const response = await fetch(
-                `http://localhost:8080/care_connect_system/backend/api/searchStudentAssigned.php?paId=${paId}&query=${encodeURIComponent(query)}&tab=${activeTab}`,
+                `${process.env.REACT_APP_API_BASE_URL}/searchStudentAssigned.php?paId=${paId}&query=${encodeURIComponent(query)}&tab=${activeTab}`,
                 {
                     method: "GET",
                     headers: { "Authorization": "Bearer " + token }
@@ -159,7 +159,7 @@ function StudentSearch({paId, selected, activeTab, onSearchFilter, exportCSV}) {
 
         try {
             const response = await fetch(
-                `http://localhost:8080/care_connect_system/backend/api/filterStudentAssigned.php?paId=${paId}&sortSName=${sortSName}&sortRLevel=${sortRLevel}&tab=${activeTab}`,
+                `${process.env.REACT_APP_API_BASE_URL}/filterStudentAssigned.php?paId=${paId}&sortSName=${sortSName}&sortRLevel=${sortRLevel}&tab=${activeTab}`,
                 {
                     method: "GET",
                     headers: { "Authorization": "Bearer " + token }

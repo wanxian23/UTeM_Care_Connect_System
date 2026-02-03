@@ -67,7 +67,7 @@ function NotificationBody() {
             return;
         }
 
-        fetch("http://localhost:8080/care_connect_system/backend/api/getNotification.php", {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getNotification.php`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -97,7 +97,7 @@ function NotificationBody() {
 
         // Update status in database
         fetch(
-            `http://localhost:8080/care_connect_system/backend/api/updateNotificationStatus.php?notificationIdReadOnly=${notiData.notificationId}`,
+            `${process.env.REACT_APP_API_BASE_URL}/updateNotificationStatus.php?notificationIdReadOnly=${notiData.notificationId}`,
             {
                 method: "GET",
                 headers: {
@@ -153,7 +153,7 @@ function NotificationBody() {
         const token = localStorage.getItem("token");
 
         // API call for multiple IDs
-        fetch("http://localhost:8080/care_connect_system/backend/api/updateNotificationBulk.php", {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/updateNotificationBulk.php`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -196,7 +196,7 @@ function NotificationBody() {
 
         const token = localStorage.getItem("token");
 
-        fetch("http://localhost:8080/care_connect_system/backend/api/updateNotificationBulk.php", {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/updateNotificationBulk.php`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -239,7 +239,7 @@ function NotificationBody() {
         const token = localStorage.getItem("token");
 
         fetch(
-            `http://localhost:8080/care_connect_system/backend/api/updateNotificationStatus.php?notificationId=${notificationId}`,
+            `${process.env.REACT_APP_API_BASE_URL}/updateNotificationStatus.php?notificationId=${notificationId}`,
             {
                 method: "POST",
                 headers: {

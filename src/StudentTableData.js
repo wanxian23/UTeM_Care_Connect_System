@@ -29,7 +29,7 @@ function StudentTableData() {
             return;
         }
 
-        fetch("http://localhost:8080/care_connect_system/backend/api/getStudentTableData.php", {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getStudentTableData.php`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -204,7 +204,7 @@ export function StudentSearch({selected, activeTab, onSearchFilter, exportCSV}) 
                 
                 try {
                     const promises = selected.map(studentId => 
-                        fetch(`http://localhost:8080/care_connect_system/backend/api/sendDass.php?studentId=${studentId}`, {
+                        fetch(`${process.env.REACT_APP_API_BASE_URL}/sendDass.php?studentId=${studentId}`, {
                             method: "GET",
                             headers: {
                                 "Authorization": "Bearer " + token
@@ -274,7 +274,7 @@ export function StudentSearch({selected, activeTab, onSearchFilter, exportCSV}) 
         
         try {
             const response = await fetch(
-                `http://localhost:8080/care_connect_system/backend/api/searchbarPa.php?query=${encodeURIComponent(query)}&tab=${activeTab}`,
+                `${process.env.REACT_APP_API_BASE_URL}/searchbarPa.php?query=${encodeURIComponent(query)}&tab=${activeTab}`,
                 {
                     method: "GET",
                     headers: { "Authorization": "Bearer " + token }
@@ -318,7 +318,7 @@ export function StudentSearch({selected, activeTab, onSearchFilter, exportCSV}) 
 
         try {
             const response = await fetch(
-                `http://localhost:8080/care_connect_system/backend/api/filterPa.php?sortSName=${sortSName}&sortRLevel=${sortRLevel}&tab=${activeTab}`,
+                `${process.env.REACT_APP_API_BASE_URL}/filterPa.php?sortSName=${sortSName}&sortRLevel=${sortRLevel}&tab=${activeTab}`,
                 {
                     method: "GET",
                     headers: { "Authorization": "Bearer " + token }
@@ -1236,7 +1236,7 @@ export function DassTable({dassData}) {
             
             if (purpose === "contact") {
                 response = await fetch(
-                    `http://localhost:8080/care_connect_system/backend/api/contactStudent.php?dassId=${dassId}`,
+                    `${process.env.REACT_APP_API_BASE_URL}/contactStudent.php?dassId=${dassId}`,
                     {
                         method: "POST",
                         headers: {
@@ -1278,7 +1278,7 @@ export function DassTable({dassData}) {
                 }
                 
                 response = await fetch(
-                    "http://localhost:8080/care_connect_system/backend/api/noteRecord.php",
+                    `${process.env.REACT_APP_API_BASE_URL}/noteRecord.php`,
                     {
                         method: "POST",
                         headers: {
@@ -1734,7 +1734,7 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
             
             if (purpose === "contact") {
                 response = await fetch(
-                    "http://localhost:8080/care_connect_system/backend/api/contactStudent.php",
+                    `${process.env.REACT_APP_API_BASE_URL}/contactStudent.php`,
                     {
                         method: "POST",
                         headers: {
@@ -1776,7 +1776,7 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                 }
                 
                 response = await fetch(
-                    "http://localhost:8080/care_connect_system/backend/api/noteRecord.php",
+                    `${process.env.REACT_APP_API_BASE_URL}/noteRecord.php`,
                     {
                         method: "POST",
                         headers: {
@@ -1881,7 +1881,7 @@ export function StudentInfoTable({studentData, selected, setSelected}) {
                 const token = localStorage.getItem("token");
 
                 try {
-                    const response = await fetch(`http://localhost:8080/care_connect_system/backend/api/sendDass.php?studentId=${student.studentId}`, {
+                    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/sendDass.php?studentId=${student.studentId}`, {
                             method: "GET",
                             headers: { "Authorization": "Bearer " + token }
                         }

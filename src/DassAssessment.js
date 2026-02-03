@@ -59,7 +59,7 @@ function DassForm() {
             return;
         }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getDassAssessment.php?dassId=${dassId}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getDassAssessment.php?dassId=${dassId}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -88,7 +88,7 @@ function DassForm() {
         const token = localStorage.getItem("token");
         const formData = new FormData(e.target);
 
-        const response = await fetch(`http://localhost:8080/care_connect_system/backend/api/recordDass.php?dassId=${dassId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/recordDass.php?dassId=${dassId}`, {
             method: "POST",
             body: formData,
             headers: {

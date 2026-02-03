@@ -26,7 +26,7 @@ function MoodRecordEntries() {
         const token = localStorage.getItem("token");
         if(!token){ window.location.href = "/"; return; }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getMoodRecordView.php?moodId=${moodId}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getMoodRecordView.php?moodId=${moodId}`, {
             method: "GET",
             headers: { "Authorization": "Bearer " + token }
         })
@@ -199,7 +199,7 @@ function Body1({data, stressLevel, stressColor, currentRecord, moodId}) {
 
                 try {
                     const response = await fetch(
-                        `http://localhost:8080/care_connect_system/backend/api/deleteMoodRecord.php?moodId=${currentRecord?.moodId}&date=specific`,
+                        `${process.env.REACT_APP_API_BASE_URL}/deleteMoodRecord.php?moodId=${currentRecord?.moodId}&date=specific`,
                         {
                             method: "GET", // match PHP
                             headers: { "Authorization": "Bearer " + token }

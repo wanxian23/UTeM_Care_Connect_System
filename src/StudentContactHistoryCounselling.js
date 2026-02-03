@@ -27,7 +27,7 @@ function StudentContactHistory() {
             return;
         }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getStudentContactHistory.php?studentId=${studentId}&paId=${paId}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getStudentContactHistory.php?studentId=${studentId}&paId=${paId}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token

@@ -50,7 +50,7 @@ function ContactDetails() {
             return;
         }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getContactDetails.php?contactId=${contactId}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getContactDetails.php?contactId=${contactId}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token

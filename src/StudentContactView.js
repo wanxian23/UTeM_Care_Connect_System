@@ -36,7 +36,7 @@ function StudentContactView() {
             return;
         }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getStudentContactCalendarDetails.php?studentId=${studentId}&selectedDate=${date}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getStudentContactCalendarDetails.php?studentId=${studentId}&selectedDate=${date}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -99,7 +99,7 @@ function StudentContactView() {
                 const token = localStorage.getItem("token");
 
                 try {
-                    const response = await fetch(`http://localhost:8080/care_connect_system/backend/api/pushNoteToCounsellor.php?contactId=${contactData.contactId}&date=${date}`, {
+                    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/pushNoteToCounsellor.php?contactId=${contactData.contactId}&date=${date}`, {
                             method: "GET",
                             headers: { "Authorization": "Bearer " + token }
                         }

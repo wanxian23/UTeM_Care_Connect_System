@@ -20,7 +20,7 @@ function View() {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        
+
         if(token){
             // Token exists → user already logged in → redirect to dashboard
             window.location.href = "/Dashboard";
@@ -64,7 +64,7 @@ function Login() {
 
         try {
             const response = await fetch(
-                "http://localhost:8080/care_connect_system/backend/api/login.php",
+                `${process.env.REACT_APP_API_BASE_URL}/login.php`,
                 { method: "POST", body: formData }
             );
 
@@ -128,7 +128,7 @@ function Login() {
 
         try {
             const response = await fetch(
-                "http://localhost:8080/care_connect_system/backend/api/forgetPassword.php",
+                `${process.env.REACT_APP_API_BASE_URL}/forgetPassword.php`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -203,7 +203,7 @@ function Login() {
 
         try {
             const response = await fetch(
-                "http://localhost:8080/care_connect_system/backend/api/verifyPin.php",
+                `${process.env.REACT_APP_API_BASE_URL}/verifyPin.php`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -275,7 +275,7 @@ function Login() {
 
         try {
             const response = await fetch(
-                "http://localhost:8080/care_connect_system/backend/api/resetPassword.php",
+                `${process.env.REACT_APP_API_BASE_URL}/resetPassword.php`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

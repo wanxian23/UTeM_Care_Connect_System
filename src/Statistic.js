@@ -30,7 +30,7 @@ function Statistic() {
             return;
         }
 
-        const url = `http://localhost:8080/care_connect_system/backend/api/getStatistic.php?weekOffset=${weekOffset}&monthOffset=${monthOffset}`;
+        const url = `${process.env.REACT_APP_API_BASE_URL}/getStatistic.php?weekOffset=${weekOffset}&monthOffset=${monthOffset}`;
         console.log("Fetching from:", url);
 
         fetch(url, {

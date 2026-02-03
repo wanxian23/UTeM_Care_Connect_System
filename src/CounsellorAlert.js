@@ -26,7 +26,7 @@ function CounsellorAlert() {
              return;
          }
  
-         fetch("http://localhost:8080/care_connect_system/backend/api/getPushedNote.php", {
+         fetch(`${process.env.REACT_APP_API_BASE_URL}/getPushedNote.php`, {
              method: "GET",
              headers: {
                  "Authorization": "Bearer " + token
@@ -160,7 +160,7 @@ function PASearch({onSearchFilter, exportCSV}) {
         
         try {
             const response = await fetch(
-                `http://localhost:8080/care_connect_system/backend/api/searchPushedNote.php?query=${encodeURIComponent(query)}`,
+                `${process.env.REACT_APP_API_BASE_URL}/searchPushedNote.php?query=${encodeURIComponent(query)}`,
                 {
                     method: "GET",
                     headers: { "Authorization": "Bearer " + token }
@@ -207,7 +207,7 @@ function PASearch({onSearchFilter, exportCSV}) {
         try {
             // ✅ FIXED: Include sortFaculty in the API call
             const response = await fetch(
-                `http://localhost:8080/care_connect_system/backend/api/filterPushedNote.php?sortPName=${sortPName}&sortSName=${sortSName}&sortRLevel=${sortRLevel}&sortFaculty=${sortFaculty}`,
+                `${process.env.REACT_APP_API_BASE_URL}/filterPushedNote.php?sortPName=${sortPName}&sortSName=${sortSName}&sortRLevel=${sortRLevel}&sortFaculty=${sortFaculty}`,
                 {
                     method: "GET",
                     headers: { "Authorization": "Bearer " + token }

@@ -28,7 +28,7 @@ function Dashboard() {
              return;
          }
  
-         fetch("http://localhost:8080/care_connect_system/backend/api/getDashboard.php", {
+         fetch(`${process.env.REACT_APP_API_BASE_URL}/getDashboard.php`, {
              method: "GET",
              headers: {
                  "Authorization": "Bearer " + token
@@ -159,7 +159,7 @@ function Body1({data, stressLevel, stressColor, quoteTitle}) {
         formData.append("thumbUp", feedbackValue); // PHP will receive this
 
         const response = await fetch(
-            "http://localhost:8080/care_connect_system/backend/api/quoteFeedbackRecord.php",
+            `${process.env.REACT_APP_API_BASE_URL}/quoteFeedbackRecord.php`,
             {
                 method: "POST",
                 body: formData,

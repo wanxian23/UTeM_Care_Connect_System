@@ -31,7 +31,7 @@ function StudentInfo() {
             return;
         }
 
-        const url = `http://localhost:8080/care_connect_system/backend/api/getStatisticPa.php?studentId=${studentId}&weekOffset=${weekOffset}&monthOffset=${monthOffset}&paId=${paId}`;
+        const url = `${process.env.REACT_APP_API_BASE_URL}/getStatisticPa.php?studentId=${studentId}&weekOffset=${weekOffset}&monthOffset=${monthOffset}&paId=${paId}`;
         console.log("Fetching from:", url);
 
         fetch(url, {

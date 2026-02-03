@@ -29,7 +29,7 @@ function StudentContactView() {
             return;
         }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getStudentContactCalendarDetails.php?studentId=${studentId}&selectedDate=${date}&paId=${paId}&contactId=${contactId}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getStudentContactCalendarDetails.php?studentId=${studentId}&selectedDate=${date}&paId=${paId}&contactId=${contactId}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token

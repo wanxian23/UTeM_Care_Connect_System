@@ -28,7 +28,7 @@ function PaInfo() {
             return;
         }
 
-        fetch(`http://localhost:8080/care_connect_system/backend/api/getPaInfo.php?paId=${paId}`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/getPaInfo.php?paId=${paId}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
